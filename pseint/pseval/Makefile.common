@@ -1,0 +1,20 @@
+OBJS=${OBJS_DIR}/Application.o ${OBJS_DIR}/Package.o ${OBJS_DIR}/mxSingleCaseWindow.o ${OBJS_DIR}/mxMainWindow.o ${OBJS_DIR}/mxCreatorWindow.o ${OBJS_DIR}/osdep.o 
+
+${OBJS_DIR}/Application.o: Application.cpp Application.h Package.h mxMainWindow.h version.h ../pseint/version_common.h mxCreatorWindow.h ../wxPSeInt/osdep.h
+	${GPP} ${CXXFLAGS} -c Application.cpp -o $@
+
+${OBJS_DIR}/Package.o: Package.cpp version.h ../pseint/version_common.h Package.h ../wxPSeInt/string_conversions.h ../hoewrap/hoewrap.h
+	${GPP} ${CXXFLAGS} -c Package.cpp -o $@
+
+${OBJS_DIR}/mxSingleCaseWindow.o: mxSingleCaseWindow.cpp Application.h Package.h mxSingleCaseWindow.h
+	${GPP} ${CXXFLAGS} -c mxSingleCaseWindow.cpp -o $@
+
+${OBJS_DIR}/mxMainWindow.o: mxMainWindow.cpp mxMainWindow.h Package.h mxSingleCaseWindow.h Application.h version.h ../pseint/version_common.h
+	${GPP} ${CXXFLAGS} -c mxMainWindow.cpp -o $@
+
+${OBJS_DIR}/mxCreatorWindow.o: mxCreatorWindow.cpp mxCreatorWindow.h Package.h mxMainWindow.h Application.h
+	${GPP} ${CXXFLAGS} -c mxCreatorWindow.cpp -o $@
+
+${OBJS_DIR}/osdep.o: ../wxPSeInt/osdep.cpp ../wxPSeInt/osdep.h
+	${GPP} ${CXXFLAGS} -c ../wxPSeInt/osdep.cpp -o $@
+

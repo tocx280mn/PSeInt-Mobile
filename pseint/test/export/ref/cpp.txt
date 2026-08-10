@@ -1,0 +1,18 @@
+make: Entering directory '/mnt/ex/pseint/psexport'
+make: Nothing to be done for 'all'.
+make: Leaving directory '/mnt/ex/pseint/psexport'
+LANG: cpp
+make: Entering directory '/mnt/ex/pseint/pseint'
+make: Nothing to be done for 'all'.
+make: Leaving directory '/mnt/ex/pseint/pseint'
+=== 00-programa.psc
+=== 01-tipos.psc
+=== 02-entrada-salida.psc
+=== 03-estructuras.psc
+=== 04-arreglos.psc
+=== 05-para.psc
+=== 06-segun.psc
+=== 07-subprocesos.psc
+=== 08-operadores.psc
+=== 09-funciones.psc
+=== 10-otros.psc

@@ -1,0 +1,9 @@
+
+Este programa (todo lo contenido en estos fuentes con la única excepción de los bibliotecas mencionadas más abajo) se distribuye bajo licencia GPL v2. El texto completo de la licencia se encuentra en los archivos dist/license.txt y bin/help/gpl.html. 
+
+This program (everything included in this sources with the exception of the libraries mentioned below) is distributed under GPL v2 license. Full license text in files dist/license.txt and bin/help/gpl.html.
+
+
+Los directorios "hoewrap/hoedown" y "dtl" contienen bibliotecas de terceros, con sus propios textos de licencias.
+
+Directories "hoewrap/hoedown" and "dtl" contain third party libraries. You can find their respective licenses there.

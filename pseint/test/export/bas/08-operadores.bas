@@ -1,0 +1,34 @@
+DIM a AS DOUBLE
+DIM b AS DOUBLE
+DIM c AS INTEGER
+DIM d AS INTEGER
+DIM e AS STRING
+DIM f AS STRING
+a = 11
+b = 2
+c = 1
+d = 0
+e = "Hola"
+f = "Mundo"
+PRINT a+b
+PRINT a*b
+PRINT a/b
+PRINT a-b
+PRINT a^b
+PRINT a MOD b
+PRINT a=b
+PRINT a<>b
+PRINT a<b
+PRINT a>b
+PRINT a<=b
+PRINT a>=b
+PRINT c AND d
+PRINT c OR d
+PRINT NOT (c AND d)
+PRINT e+" "+f
+PRINT e=f
+PRINT e<>f
+PRINT e<f
+PRINT e>f
+PRINT e<=f
+PRINT e>=f

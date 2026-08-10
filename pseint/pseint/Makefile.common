@@ -1,0 +1,65 @@
+OBJS=${OBJS_DIR}/SynCheck.o ${OBJS_DIR}/intercambio.o ${OBJS_DIR}/main.o ${OBJS_DIR}/Ejecutar.o ${OBJS_DIR}/global.o ${OBJS_DIR}/zockets.o ${OBJS_DIR}/utils.o ${OBJS_DIR}/zcurlib.o ${OBJS_DIR}/Evaluar.o ${OBJS_DIR}/new_memoria.o ${OBJS_DIR}/FuncsManager.o ${OBJS_DIR}/DataValue.o ${OBJS_DIR}/case_map.o ${OBJS_DIR}/zcurlib_lnx.o ${OBJS_DIR}/zcurlib_win.o ${OBJS_DIR}/LangSettings.o ${OBJS_DIR}/ErrorHandler.o ${OBJS_DIR}/FuncsPredefs.o ${OBJS_DIR}/ProgramaDump.o ${OBJS_DIR}/Keywords.o ${OBJS_DIR}/strFuncs.o 
+
+${OBJS_DIR}/SynCheck.o: SynCheck.cpp SynCheck.hpp Instruccion.hpp debug.h DataValue.h Code.h RunTime.hpp ErrorHandler.hpp Programa.hpp FuncsManager.hpp new_memoria.h new_memoria_inter.h global.h LangSettings.h Keywords.hpp ../wxPSeInt/string_conversions.h utils.h Evaluar.hpp intercambio.h zockets.h case_map.h strFuncs.hpp
+	${GPP} ${CXXFLAGS} -c SynCheck.cpp -o $@
+
+${OBJS_DIR}/intercambio.o: intercambio.cpp intercambio.h Code.h debug.h RunTime.hpp ErrorHandler.hpp Programa.hpp Instruccion.hpp DataValue.h FuncsManager.hpp new_memoria.h new_memoria_inter.h zockets.h common.h Evaluar.hpp utils.h global.h LangSettings.h Keywords.hpp ../wxPSeInt/string_conversions.h SynCheck.hpp
+	${GPP} ${CXXFLAGS} -c intercambio.cpp -o $@
+
+${OBJS_DIR}/main.o: main.cpp version.h version_common.h zcurlib.h common.h intercambio.h Code.h debug.h RunTime.hpp ErrorHandler.hpp Programa.hpp Instruccion.hpp DataValue.h FuncsManager.hpp new_memoria.h new_memoria_inter.h zockets.h global.h LangSettings.h Keywords.hpp ../wxPSeInt/string_conversions.h utils.h Evaluar.hpp SynCheck.hpp Ejecutar.hpp case_map.h ProgramaDump.hpp
+	${GPP} ${CXXFLAGS} -c main.cpp -o $@
+
+${OBJS_DIR}/Ejecutar.o: Ejecutar.cpp Ejecutar.hpp RunTime.hpp ErrorHandler.hpp Code.h Programa.hpp Instruccion.hpp debug.h DataValue.h FuncsManager.hpp new_memoria.h new_memoria_inter.h global.h LangSettings.h Keywords.hpp ../wxPSeInt/string_conversions.h intercambio.h zockets.h utils.h zcurlib.h Evaluar.hpp strFuncs.hpp
+	${GPP} ${CXXFLAGS} -c Ejecutar.cpp -o $@
+
+${OBJS_DIR}/global.o: global.cpp global.h LangSettings.h Keywords.hpp debug.h ../wxPSeInt/string_conversions.h
+	${GPP} ${CXXFLAGS} -c global.cpp -o $@
+
+${OBJS_DIR}/zockets.o: zockets.cpp zockets.h
+	${GPP} ${CXXFLAGS} -c zockets.cpp -o $@
+
+${OBJS_DIR}/utils.o: utils.cpp global.h LangSettings.h Keywords.hpp debug.h ../wxPSeInt/string_conversions.h common.h Evaluar.hpp new_memoria.h new_memoria_inter.h DataValue.h intercambio.h Code.h RunTime.hpp ErrorHandler.hpp Programa.hpp Instruccion.hpp FuncsManager.hpp zockets.h utils.h zcurlib.h strFuncs.hpp
+	${GPP} ${CXXFLAGS} -c utils.cpp -o $@
+
+${OBJS_DIR}/zcurlib.o: zcurlib.cpp global.h LangSettings.h Keywords.hpp debug.h ../wxPSeInt/string_conversions.h
+	${GPP} ${CXXFLAGS} -c zcurlib.cpp -o $@
+
+${OBJS_DIR}/Evaluar.o: Evaluar.cpp Evaluar.hpp new_memoria.h new_memoria_inter.h DataValue.h debug.h RunTime.hpp ErrorHandler.hpp Code.h Programa.hpp Instruccion.hpp FuncsManager.hpp global.h LangSettings.h Keywords.hpp ../wxPSeInt/string_conversions.h intercambio.h zockets.h utils.h Ejecutar.hpp SynCheck.hpp
+	${GPP} ${CXXFLAGS} -c Evaluar.cpp -o $@
+
+${OBJS_DIR}/new_memoria.o: new_memoria.cpp new_memoria.h new_memoria_inter.h DataValue.h debug.h FuncsManager.hpp
+	${GPP} ${CXXFLAGS} -c new_memoria.cpp -o $@
+
+${OBJS_DIR}/FuncsManager.o: FuncsManager.cpp FuncsManager.hpp new_memoria.h new_memoria_inter.h DataValue.h debug.h ErrorHandler.hpp Code.h utils.h Programa.hpp Instruccion.hpp global.h LangSettings.h Keywords.hpp ../wxPSeInt/string_conversions.h intercambio.h RunTime.hpp zockets.h
+	${GPP} ${CXXFLAGS} -c FuncsManager.cpp -o $@
+
+${OBJS_DIR}/DataValue.o: DataValue.cpp DataValue.h debug.h utils.h new_memoria.h new_memoria_inter.h Programa.hpp Instruccion.hpp Code.h global.h LangSettings.h Keywords.hpp ../wxPSeInt/string_conversions.h
+	${GPP} ${CXXFLAGS} -c DataValue.cpp -o $@
+
+${OBJS_DIR}/case_map.o: case_map.cpp case_map.h utils.h new_memoria.h new_memoria_inter.h DataValue.h debug.h Programa.hpp Instruccion.hpp Code.h global.h LangSettings.h Keywords.hpp ../wxPSeInt/string_conversions.h FuncsManager.hpp RunTime.hpp ErrorHandler.hpp strFuncs.hpp
+	${GPP} ${CXXFLAGS} -c case_map.cpp -o $@
+
+${OBJS_DIR}/zcurlib_lnx.o: zcurlib_lnx.cpp zcurlib.h
+	${GPP} ${CXXFLAGS} -c zcurlib_lnx.cpp -o $@
+
+${OBJS_DIR}/zcurlib_win.o: zcurlib_win.cpp zcurlib.h
+	${GPP} ${CXXFLAGS} -c zcurlib_win.cpp -o $@
+
+${OBJS_DIR}/LangSettings.o: LangSettings.cpp LangSettings.h Keywords.hpp debug.h ../wxPSeInt/string_conversions.h ../wxPSeInt/Logger.h ../wxPSeInt/version.h version_common.h
+	${GPP} ${CXXFLAGS} -c LangSettings.cpp -o $@
+
+${OBJS_DIR}/ErrorHandler.o: ErrorHandler.cpp ErrorHandler.hpp Code.h utils.h new_memoria.h new_memoria_inter.h DataValue.h debug.h Programa.hpp Instruccion.hpp global.h LangSettings.h Keywords.hpp ../wxPSeInt/string_conversions.h intercambio.h RunTime.hpp FuncsManager.hpp zockets.h
+	${GPP} ${CXXFLAGS} -c ErrorHandler.cpp -o $@
+
+${OBJS_DIR}/FuncsPredefs.o: FuncsPredefs.cpp FuncsManager.hpp new_memoria.h new_memoria_inter.h DataValue.h debug.h ErrorHandler.hpp Code.h LangSettings.h Keywords.hpp ../wxPSeInt/string_conversions.h global.h
+	${GPP} ${CXXFLAGS} -c FuncsPredefs.cpp -o $@
+
+${OBJS_DIR}/ProgramaDump.o: ProgramaDump.cpp ProgramaDump.hpp Programa.hpp Instruccion.hpp debug.h DataValue.h Code.h case_map.h
+	${GPP} ${CXXFLAGS} -c ProgramaDump.cpp -o $@
+
+${OBJS_DIR}/Keywords.o: Keywords.cpp Keywords.hpp debug.h utils.h new_memoria.h new_memoria_inter.h DataValue.h Programa.hpp Instruccion.hpp Code.h global.h LangSettings.h ../wxPSeInt/string_conversions.h strFuncs.hpp
+	${GPP} ${CXXFLAGS} -c Keywords.cpp -o $@
+
+${OBJS_DIR}/strFuncs.o: strFuncs.cpp strFuncs.hpp debug.h
+	${GPP} ${CXXFLAGS} -c strFuncs.cpp -o $@
+

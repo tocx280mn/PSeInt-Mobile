@@ -1,0 +1,30 @@
+OBJS=${OBJS_DIR}/libhoewrap.a 
+LIBS_OBJS= ${OBJS_DIR}/hoewrap.o ${OBJS_DIR}/html.o ${OBJS_DIR}/document.o ${OBJS_DIR}/buffer.o ${OBJS_DIR}/escape.o ${OBJS_DIR}/stack.o ${OBJS_DIR}/autolink.o ${OBJS_DIR}/html_blocks.o
+
+${OBJS_DIR}/test.o: test.cpp hoewrap.h
+	${GPP} ${CXXFLAGS} -c test.cpp -o $@
+
+${OBJS_DIR}/hoewrap.o: hoewrap.cpp hoedown/document.h hoedown/buffer.h hoedown/autolink.h hoedown/html.h hoewrap.h
+	${GPP} ${CXXFLAGS} -fPIC -c hoewrap.cpp -o $@
+
+${OBJS_DIR}/html.o: hoedown/html.c hoedown/html.h hoedown/document.h hoedown/buffer.h hoedown/autolink.h hoedown/escape.h
+	${GCC} ${CFLAGS} -fPIC -c hoedown/html.c -o $@
+
+${OBJS_DIR}/document.o: hoedown/document.c hoedown/document.h hoedown/buffer.h hoedown/autolink.h hoedown/stack.h
+	${GCC} ${CFLAGS} -fPIC -c hoedown/document.c -o $@
+
+${OBJS_DIR}/buffer.o: hoedown/buffer.c hoedown/buffer.h
+	${GCC} ${CFLAGS} -fPIC -c hoedown/buffer.c -o $@
+
+${OBJS_DIR}/escape.o: hoedown/escape.c hoedown/escape.h hoedown/buffer.h
+	${GCC} ${CFLAGS} -fPIC -c hoedown/escape.c -o $@
+
+${OBJS_DIR}/stack.o: hoedown/stack.c hoedown/stack.h hoedown/buffer.h
+	${GCC} ${CFLAGS} -fPIC -c hoedown/stack.c -o $@
+
+${OBJS_DIR}/autolink.o: hoedown/autolink.c hoedown/autolink.h hoedown/buffer.h
+	${GCC} ${CFLAGS} -fPIC -c hoedown/autolink.c -o $@
+
+${OBJS_DIR}/html_blocks.o: hoedown/html_blocks.c
+	${GCC} ${CFLAGS} -fPIC -c hoedown/html_blocks.c -o $@
+

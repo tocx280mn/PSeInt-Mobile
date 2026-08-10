@@ -1,0 +1,15 @@
+<HTML>
+	<HEAD>
+		<TITLE>PSeudo Intérprete</TITLE>
+	</HEAD>
+	<BODY>
+	<B>Prueba de escritorio</B>
+	<BR><BR>
+	&nbsp;&nbsp;&nbsp; Realizar una prueba de escritorio de un programa consiste en realizar un seguimiento detallado de los valores que van tomando sus variables en cada paso. La forma más común de llevarla a la práctica consiste una tabla donde cada columna está asociada a una variable, y en ella se muestran los valores que la misma va tomando en cada paso. PSeInt puede construir esta tabla automáticamente. Para ello el usuario debe especificar una lista de Variables o Expresiones a ingresar como columnas en la tabla, y ejecutar el algoritmo en modo Paso a Paso.<BR>
+	<BR>
+	&nbsp;&nbsp;&nbsp; Para acceder a la tabla de la prueba de escritorio, debe seleccionar la opción "Prueba de Escritorio" del <A href="debug.html">panel de ejecución paso a paso</A>. Esta opción desplegará la tabla en la parte inferior de la ventana, conteniendo dos columnas iniciales: Proceso/SubProceso, y Line(inst). La primer columna muestra el nombre del proceso o subproceso actual (por actual entiéndase el que se estaba ejecutando en el momento en que se generó una fila de la tabla). La segunda columna muestra qué linea se estaba ejecutando, y entre paréntesis qué numero de instrucción dentro de esa línea (ya que en una línea puede haber más de una instrucción). Para modificar la variable o expresión de una columna puede hacer doble click sobre el título de la misma. También puede reacomodar las columnas arrastrándolas desde sus respectivos títulos, o eliminar una mediante click derecho también sobre el título.<BR>
+	<BR>
+	&nbsp;&nbsp;&nbsp; Una vez iniciada la ejecución paso a paso, los botones desaparecen y las columnas ya no pueden modificarse hasta que la ejecución no finalice. Por cada instrucción que el intérprete ejecute, añadirá al final de la tabla una nueva fila en donde se mostrarán los valores de las las expresiones seleccionadas.<BR>
+	<BR>
+	<BR><BR>
+</BODY></HTML>

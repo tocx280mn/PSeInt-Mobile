@@ -1,0 +1,22 @@
+<HTML>
+	<HEAD>
+		<TITLE>PSeudo Intérprete</TITLE>
+	</HEAD>
+	<BODY>
+<B>Condicional Si-Entonces</B>
+<BR><BR>
+<CENTER><img src="ps_si.png"></TD></CENTER><BR>
+&nbsp;&nbsp;&nbsp;La secuencia de instrucciones ejecutadas por la instrucción Si-Entonces-SiNo depende del valor de una condición lógica.<BR><BR>
+<code>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Si &lt;condición&gt; Entonces<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;instrucciones&gt;  <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SiNo <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;instrucciones&gt;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FinSi
+</code><BR><BR>
+&nbsp;&nbsp;&nbsp;Al ejecutarse esta instrucción, se evalúa la condición y se ejecutan las instrucciones que correspondan: las instrucciones que le siguen al <i>Entonces</i> si la condición es verdadera, o las instrucciones que le siguen al <i>SiNo</i> si la condición es falsa.  La condición debe ser una  expresión lógica, que al ser evaluada retorna <i>Verdadero</i> o <i>Falso</i>. <BR>
+&nbsp;&nbsp;&nbsp;La cláusula <i>Entonces</i> debe aparecer siempre, pero la clausula <i>SiNo</i> puede no estar. En ese caso, si la condición es falsa no se ejecuta ninguna instrucción y la ejecución del programa continúa con la instrucción siguiente.<BR>
+<BR>
+&nbsp;&nbsp;&nbsp;El ejemplo <A href="example:Triangulo.psc">Triángulo</A> lee las medidas de los tres lados de un triángulo y utiliza esta estructura para determinar cual es el mayor de los tres, y verificar luego si se trata de un triángulo rectángulo o no.<BR>
+<BR>
+</BODY></HTML>

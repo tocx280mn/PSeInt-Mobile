@@ -1,0 +1,59 @@
+<HTML>
+	<HEAD>
+		<TITLE>PSeudo Intérprete</TITLE>
+	</HEAD>
+	<BODY>
+	<B>Configuración</B><BR><BR>
+	
+		Aspecto:<UL>
+			
+			<LI><B>Fuente</B>: Puede configurar las tipografías utilizadas para el pseudocódigo y para la terminal de ejecución mediante la opción <I>Seleccionar fuentes...</I> del submenú <I>Presentación</I> del menú <I>Configurar</I>. Puede además variar rápida y temporalmente el tamaño de la fuente (hacer zoom) en una sola pestaña de pseudocódigo o terminal de ejecución utilizando el ratón, manteniendo presionada la tecla <I>Control</I> y girando la rueda del mismo.</LI>
+			
+			<LI><B>Colores en la Interpretación</B>: Si activa la opción <I>Utilizar colores al interpretar</I> del menú <I>Configurar</I>, al ejecutar el algoritmo, el intérprete utilizará diferentes colores para cada tipo de evento. Los errores se presentarán en rojo, los mensajes de salida que escriba el algoritmo se mostrarán en verde, los datos de entrada que ingrese el usuario se mostrarán en amarillo y toda la información adicional que se presente en la ventana se mostrará en azul.</LI>
+			
+		</UL><BR><BR>
+		
+		Paneles acoplables:<UL>
+			
+<!-- 			<LI><B>Barra de Herramientas</B>: Puede mostrar u ocultar la barra de herramientas (la barra que se ubica justo debajo de la barra de menúes y contiene iconos de accesos rápidos a las acciones más utilizadas) mediante el ítem <I>Mostrar Barra de Herramientas</I> del menú <I>Configuracion</I>.</LI> -->
+			
+			<LI><B>Panel de Variables</B>: muestra las variables identificadas en un algoritmo, organizadas por proceso y subprocesos. El ícono representa el tipo de dato. Notar que esta información se extrae antes de ejecutar el algoritmo, por lo que algunos tipos de datos pueden no estar completamente determinados, y algunos arreglos pueden no tener dimensiones bien definidas.</LI>
+			  
+			<LI><B>Panel de Operadores y Funciones</B>: presenta un catálogo con las funciones y constantes predefinidas en PSeInt y la lista de posibles operadores, organizado por categorías. Al hacer click sobre uno de ellos se inserta en el pseudocódigo en la posición actual del cursor de texto, reemplazando al texto seleccionado en caso de haberlo.</LI>
+			
+			<LI><B>Panel de Comandos</B>: permite introducir acciones o estructuras de control en su algoritmo mediante un click. Se ubica por defecto en la parte izquierda de la ventana y al seleccionar una de sus primitivas introduce en el código del proceso actual la plantilla de la misma, marcando con recuadros las partes de la misma que debe completar (expresiones, acciones, valores, etc). Puede mostrar u ocultar este panel mediante el ítem <I>Mostrar Panel de Comandos</I> del menú <I>Configuración</I>.</LI>
+			
+			<LI><B>Panel de Ejecución Paso a Paso</B>: El panel de <A href="debug.html">ejecución paso a paso</A> le permite controlar de forma más detallada la ejecución del algoritmo, o configurar la prueba de escritorio del mismo. Puede mostrar u ocultar este panel mediante el ítem <I>Mostrar Panel de Ejecución Paso a Paso</I> del menú <I>Configuración</I>.</LI>
+			
+			<LI><B>Panel de Ayuda Rápida</B>: este panel rápida le ayudará a completar las plantillas del panel de comandos, o le brindará detalles y sugerencias para corregir los errores que el intérprete encuentre en su algoritmo. Se despliega automáticamente en la parte inferior de la ventana cada vez que introduzca un comando mediante el <I>Panel de Comandos</I> o cada vez que se hace click sobre un mensaje de error.</LI>
+			
+			
+		</UL><BR><BR>
+		
+		Asistencias (para la escritura del pseudocódigo):<UL>
+			
+			<LI><B>Autocompletado</B>: El autocompletado muestra sugerencias de palabras claves mientras escribe y permite seleccionarlas para completarlas sin tener que tipearlas por completo. Para que el menú se muestre se deben haber ingresado al menos tres letras de la palabra. Puede activar o desactivar el autocompletado mediante el ítem <I>Utilizar Autocompletado</I> del menú <I>Configuración</I>.</LI>
+
+			<LI><B>Cierre Automático de Estructuras de Control</B>: Cuando esta opción está activada, al presionar enter en el editor de pseudocódigo en una línea donde se inicia una estructura de control (ejemplo: "Si ... entonces", "Para ... hacer", "Repetir..."), el editor analiza la siguiente línea y a menos que presente mayor indentado, agrega la palabra clave que cierra la estructura (ejemplos: "FinPara", "FinSi" "Hasta Que..."). Puede activar o desactivar esta característica mediante el ítem <I>Cerrar Estructuras Repetitivas/Condicionales</I> del menú <I>Configuración</I>.</LI>
+			
+			<LI><B>Resaltado de Bloques Lógicos</B>: Cuando esta opción está activada, colocar el cursor de edición de texto en la primer o última linea de una estructura de control en el pseudocódigo, todas las lineas correspondientes a la estructuras se resaltan mediante un fondo amarillo, para indicar de forma visual el alcance de dicha estructura.</LI>
+			
+			<LI><B>Ayudas emergentes</B>: Estas ayudas le indican qué debe escribir luego de cada palabra clave. Se muestran como globos emergentes sobre el código e indican el tipo de acción, expresión, etc. que debe introducir a continuación. Puede activar o desactivar estas ayudas mediante el ítem <I>Utilizar Ayudas Emergentes</I> del menú <I>Configuración</I>.</LI>
+									
+			<LI><B>Indentado Inteligente</B>: El indentado inteligente agrega o quita tabulaciones a las lineas para indentar correctamente el código según su estructura y anidamiento (por ejemplo, luego de una linea que abre un bucle PARA, la siguiente tendrá un indentado mayor). Estas acciones se realizan en conjunto con la selección de palabras claves en el menú de autocompletado. Puede activar o desactivar estas acciones mediante el ítem <I>Indentado Inteligente</I> del menú <I>Configuración</I>.</LI>
+
+			<LI><B>Comprobación de Sintaxis en Tiempo Real</B>: Cuando esta opción se encuentra habilitada, PSeInt verifica la sintaxis del pseudocódigo automáticamente unos segundos después de que el usuario deja de escribir, sin necesidad de intentar ejecutar el algoritmo. Cuando se encuentran errores, se marcan con un subrayado ondulado en color rojo, y si se coloca el cursor de texto sobre la instrucción se despliega la descripción abreviada del mismo. De esta forma, el alumno puede ir viendo la validéz de su pseudocódigo desde el punto de vista sintáctico en tiempo real mientras lo desarrolla. Puede activar o desactivar estas ayuda el ítem <I>Comprobar Sintaxis Mientras Escribe</I> del menú <I>Configuración</I>.</LI>
+
+		</UL><BR><BR>
+		
+		Lenguaje:<UL>
+			
+			<LI>PSeInt permite configurar algunos aspectos del pseudolenguaje a utilizar para ser más estricto o permisivo, o para ajustarse mejor a las necesidades de un docente. Para ello dispone de <B>perfiles</B> de configuración. Cada docente puede enviar el perfil de configuración que desee utilizar junto con los datos de su materia e institución para que el mismo aparezca en la lista (los detalles de cómo y a donde enviar esta información se encuentran en el sitio oficial del programa http://pseint.sourceforge.net). De esta forma, los alumnos pueden seleccionar un perfil y configurar así rápidamente todas las opciones de acuerdo a sus necesidades.</LI>
+			<LI>Esta configuración se realiza la primera vez que se ejecuta PSeInt, pero puede modificarse mediante el ítem "<B>Opciones del Lenguaje</B>" del menú Configurar. Si ningún perfil resulta adecuado o se quiere experimentar con las diferentes opciones, el cuadro de selección presenta un botón "Personalizar" que permite especificar una por una las características configurables del lenguaje.</LI>
+			<LI><A href="perfiles.html">Leer más...</A></UL> 
+
+		</UL><BR><BR>
+
+
+	<BR><BR>
+</BODY></HTML>

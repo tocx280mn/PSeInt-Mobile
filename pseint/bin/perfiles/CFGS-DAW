@@ -1,0 +1,14 @@
+desc=Perfil para los Ciclos Formativos de Grados Superior (especialidades Desarrollo de Aplicaciones Web Desarrollo de Aplicaciones Multiplataforma) de la Consejería de Educación y Cultura del Gobierno de Extremadura (enviado por el Prof. Nacho Segura).
+allow_dinamyc_dimensions=0
+use_nassi_schneiderman=1
+force_define_vars=0
+force_init_vars=1
+allow_concatenation=1
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=1
+allow_word_operators=1
+overload_equal=1
+coloquial_conditions=0
+lazy_syntax=0
+base_zero_arrays=1

@@ -1,0 +1,14 @@
+desc=Perfil para la asignatura "Taller de Desarrollo I" del curso "Fundamentos de Programación" de la carrera "Computación e Informática" en el "Intituto Superior Tecnológico Privado CESCA", Sede principal "Lima - Perú", (enviado por el docente Jim Kelly Davis Rojas Chávarri).
+allow_dinamyc_dimensions=1
+use_nassi_schneiderman=0
+force_define_vars=1
+force_init_vars=1
+allow_concatenation=1
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=0
+allow_word_operators=1
+overload_equal=1
+coloquial_conditions=1
+lazy_syntax=1
+base_zero_arrays=1

@@ -1,0 +1,100 @@
+<HTML>
+<HEAD>
+<TITLE>PSeudo Intérprete</TITLE>
+</HEAD>
+<BODY>
+<B> Personalización del Lenguaje </B>
+<BR><BR>
+Hay ciertas características del pseudocódigo que pueden personalizarse para adaptarse a las preferencias de cada docente. Por defecto, PSeInt utiliza la configuración más flexible y natural posible, pero ofrece una lista de configuraciones predefinidas denominadas "perfiles". Se puede acceder a la lista de perfiles desde el ítem "Opciones del Lenguaje..." del menú "Configurar".<BR>
+<BR>Si ninguno de los perfiles resulta adecuado se puede utilizar el botón "Personalizar" ubicado debajo de la lista de perfiles para definir una por una las siguientes posibles personalizaciones:<BR>
+<BR><UL>
+
+
+<LI><B>No permitir utilizar variables o posiciones de arreglos sin inicializar</B>: Si esta opción está deshabilitada se puede utilizar variables sin incializar (que nunca fueron leídas o asignadas en expresiones o para mostrar en pantalla. En este caso asumen el valor por defecto 0, "", o FALSO según el tipo que corresponda. Si esta opción está seleccionada escribir o evaluar una expresión que involucra una variable sin inicializar genera un error en tiempo de ejecución.</LI><BR>
+<LI><B>Obligar a definir los tipos de variables</B>: Si esta opción está deshabilitada no se puede utilizar una variable sin previamente definir su tipo. Para esto se debe utilizar la palabra clave DEFINIR. Ej: "DEFINIR X COMO REAL". Los tipos posibles son ENTERO, NUMERICO/REAL, LOGICO, CARACTER/TEXTO.</LI><BR>
+<LI><B>Controlar el uso de ; al final de sentencias secuenciales</B>: Si esta opción está activada obliga a colocar punto y coma (;) al final de las instrucciones secuenciales, como se hace en lenguajes como C++ o Pascal (útil para acostumbrarse antes de dar el salto desde el pseudocódigo a un lenguaje real). si está desactivada el uso del punto y coma es opcional.</LI><BR>
+<LI><B>Permitir concatenar variables de texto con el operador +</B>: Si esta opción esta activada se puede concatenar el contenido de dos variables de tipo carácter con el operador +. Por ejemplo: NombreCompleto &amp;- Nombre+" "+Apellido;</LI><BR>
+<LI><B>Habilitar funciones para el manejo de cadenas</B>: Esta opción habilita el uso de las funciones Longitud, Subcadena, Mayúsculas, Minúsculas y Concatenar, que operan sobre cadenas de caracteres. Vea <A href="funciones.html">funciones</A> para una mejor descripción de las mismas.</LI><BR>
+<LI><B>Permitir las palabras Y, O, NO y MOD para los operadores &amp;, |, ~ y %</B>: Con esta opción habilitada PSeInt acepta las palabras clave Y, O, NO, y MOD como sinónimos de los operadores &amp;, |, ~ y % respectivamente. Notar que en este caso estas palabras serán palabras reservadas y no se podrán utilizar como nombres de variables.</LI><BR>
+<LI><B>Utilizar índices en arreglos y cadenas en base 0</B>: Si esta opción esta activada, el primer elemento de un arreglo de N elementos será el 0 y el último el N-1, mientras que en caso contrario el primero será el 1 y el último el N</LI><BR>
+<LI><B>Permitir utilizar variables para dimensionar arreglos</B>: Si esta opción está seleccionada se puede utilizar una variable o una expresión que involucre variables para dimensionar un arreglo (por ejemplo, se puede pedir al usuario del programa el tamaño leyendo un numero y utilizarlo luego para crear el arreglo). Este suele ser el caso de los lenguajes interpretados, mientras que los lenguajes compilados suelen exigir que el tamaño de los arreglos estáticos sea una constante (por ejemplo, C y C++).</LI><BR>
+<LI><B>Permitir asignar con el signo igual (=)</B>: Esta opción habilita la asignación con el signo igual (Ej: x=0;). En muchos casos esta sintaxis de asignación no se permite, ya que en muchos lenguajes no se utiliza el mismo operador para asignar y comparar, como sucede al activar esta opción. En cualquier caso, las otras dos sintaxis de asignación (con &lt;- y con :=) siguen siendo válidas.</LI><BR>
+<LI><B>Permitir definir funciones/subprocesos</B>: Esta opción habilita el uso de la palabras claves SubProceso y Función (ambas completamente equivalentes) para permitir definir nuevas funciones en pseudocódigo. Vea <A href="subprocesos.html">subprocesos</A> para más detalles.</LI><BR>
+<LI><B>Utilizar sintaxis flexible</B>: Esta opción habilita variaciones opcionales en la sintaxis: omitir la palabra HACER en un bucle MIENTRAS o PARA, utilizar la palabra DESDE para indicar el valor de inicio de un ciclo PARA, separar la expresiones/variables en una lectura/escritura con espacios en lugar de comas, agregar la palabra OPCION, CASO o SI ES antes de un caso en un SEGUN, separar los valores para un mismo caso en un según con la palabra O, etc. Muchas de las variaciones de la sintaxis resultan en construcciones más naturales en un verdadero pseudocódigo, pero no son posibles o son incompletas en un lenguaje de programación real. Ninguna de estas variaciones cambia el significado o comportamiento de un algoritmo, solo sirven para simplificar su escritura.</LI><BR>
+<LI><B>Permitir condiciones en lenguaje coloquial</B>: Esta opción permite expresar las condiciones en un lenguaje más coloquial con construcciones como "X ES PAR", "X NO ES MULTIPLO DE 5", "X ES IGUAL A Y", "X ES ENTERO", etc. Esta opción activa además el uso de palabras clave para reemplazar operadores.</LI><BR>
+<LI><B>Limitar la estructura Según a variables de control numéricas</B>: Muchos lenguajes solo permiten utilizar números enteros para las expresiones de control de la estructura de selección múltiple (\"Según\" en PSeInt). Si habilita esta opción, PSeInt aplicará esta restricción. En caso contrario, podrá utilizar también variables de tipo caracter.</LI><BR>
+<LI><B>Permitir omitir el paso -1 en ciclos Para</B>: Con esta opción activa, si no se especifica el valor del \"paso\" en una estructura de tipo \"Para\", se utiliza +1 o -1 según corresponda. Se determina comparando los valores iniciales y finales, si el primero es mayor al segundo +1, o -1 en caso contrario. Si se desactiva esta opción, se utilizará siempre +1 como paso por defecto.</LI><BR>
+<LI><B>Usar diagramas de Nassi-Schneiderman</B>: Si esta opción está deshabilitada el editor de diagramas flujo graficará este tipo de diagramas en lugar de los diagramas de flujo clásicos utilizados originalmente por PSeInt. Esta opción no modifica el lenguaje, por lo que también se puede activar/desactivar directamente desde el menú <I>Configurar</I> mediante el ítem <I>Usar diagramas de Nassi-Schneiderman</I>, de forma que el usuario pueda alternar fácilmente entre uno y otro tipo de diagrama si lo desea.</LI><BR>
+<LI><B>Usar formas alternativas para Leer y Escribir en el diagrama</B>: Cuando se utiliza el diagrama de flujo clásico (es decir, con la opción <I>Usar diagramas de Nassi-Schneiderman</I> desactivada), esta opción cambia las formas geométricas que se utilizan para representar las acciones de entrada y salida por una versión alternativa.</LI><BR>
+<LI><B>Permitir utilizar acentos en nombres de variables</B>: Permite incluir acentos, diéresis y la letra Ñ en los identificadores utilizados para nombrar variables y funciones. </LI><BR>
+<LI><B>Preferir las palabras claves "Algoritmo" y "FinAlgoritmo"</B>: "ALGORITMO" y "PROCESO" son sinónimos en PSeInt. Con esta opción se puede indicar cual de estas palabras clave equivalentes debe utilizar PSeInt al generar código. Por ejemplo, al crear un nuevo algoritmo en blanco para definir al proceso/algoritmo "sin_titulo", o al generar el pseudocódigo a partir del diagrama de flujo. A menos que la opción <I>Preferir las palabras claves "Función" y "FinFunción"</I> esté seleccionada, esta desición también se aplica para elegir entre "SUBPROCESO" y "SUBALGORITMO".</LI><BR>
+<LI><B>Preferir las palabras claves "Función" y "FinFunción""</B>: "FUNCIÓN", "SUBALGORITMO" y "SUBPROCESO" son sinónimos en PSeInt. Con esta opción se puede indicar a PSeInt que debe utilizar "FUNCIÓN" al generar código. Por ejemplo, al crear una plantilla de subalgoritmo con el panel de comandos, o al generar el pseudocódigo a partir del diagrama de flujo. Si no está habilitada, la elección entre las dos alternativas restantes depende de la configuración <I>Preferir las palabras claves "Función" y "FinFunción"</I></LI><BR>
+
+<LI><B>Permitir la variación "Repetir ... Mientras Que..."</B>: Habilita el uso de "Mientras que &lt;condición&gt;" en lugar de "Hasta que &lt;condición&gt;" para cerrar una estructura Repetir. Esta construcción alternativa itera por verdadero en lugar de iterar por falso.</LI><BR>
+<LI><B>Preferir "Repetir ... Mientras Que..."</B>: Con esta opción activada, al seleccionar la estructura de control "Repetir" desde el panel de comandos (tanto del editor de pseudocódigo como del editor de diagramas de flujo) se insertará la versión "Repetir ... Mientras que &lt;condición&gt;" (que itera por verdadero); mientras que si está desactivada se inserta la versión "Repetir ... Hasta que &lt;condición&gt;" (que itera por falso). Para que esta opción tenga sentido, debe habilitarse antes "Permitir la variación Repetir ... Mientras Que...".</LI>
+
+</ul><BR><BR>
+		A continuación incluyo un pseudocódigo de ejemplo escrito Para los perfiles Estricto y Flexible, ilustrando algunas diferencias entre configuraciones:<BR><BR>
+<CENTER><TABLE>
+<TR><TD><CODE>
+Proceso <B>Estricto</B><BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;<B>Definir VAL_MAYOR,ARREGLO,CANT,I Como Enteros<B>;</B></B><BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;Dimension ARREGLO[<B>100</B>]<B>;</B><BR>
+&nbsp;&nbsp;&nbsp;Escribir "Ingrese la cantidad de números:"<B>;</B><BR>
+&nbsp;&nbsp;&nbsp;Leer CANT<B>;</B><BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;Para <B>I&lt;-01 Hasta CANT-1 Hacer</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Escribir "Ingrese un numero:"<B>;</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Leer <B>ARREGLO[I];</B><BR>
+&nbsp;&nbsp;&nbsp;FinPara<BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;VAL_MAYOR&lt;-0<B>;</B><BR>
+&nbsp;&nbsp;&nbsp;Para <B>I&lt;-0 Hasta CANT-1 Hacer</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Si <B>ARREGLO[I]&gt;VAL_MAYOR Entonces</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VAL_MAYOR&lt;-<B>ARREGLO[i];</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FinSi<BR>
+&nbsp;&nbsp;&nbsp;FinPara<BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;Si <B>VAL_MAYOR % 2 = 0 Entonces</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Escribir "El mayor es "<B>,</B>VAL_MAYOR<B>,</B>" y es par"<B>;</B><BR>
+&nbsp;&nbsp;&nbsp;SiNo<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Escribir "El mayor es "<B>,</B>VAL_MAYOR<B>,</B>" y es impar"<B>;</B><BR>
+&nbsp;&nbsp;&nbsp;FinSi<BR>
+&nbsp;&nbsp;&nbsp;<BR>
+FinProceso<BR>
+</CODE></TD><TD>&nbsp;&nbsp;</TD><TD><CODE>
+Algoritmo <B>Flexible</B><BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;Escribir "Ingrese la cantidad de números:"<BR>
+&nbsp;&nbsp;&nbsp;Leer CANT<BR>
+&nbsp;&nbsp;&nbsp;Dimension ARREGLO[<B>CANT</B>]<BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;Para <B>Cada Elemento de ARREGLO</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Escribir "Ingrese un numero:"<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Leer <B>ELEMENTO</B><BR>
+&nbsp;&nbsp;&nbsp;Fin Para<BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;VAL_MAYOR&lt;-0<BR>
+&nbsp;&nbsp;&nbsp;Para <B>Cada ELEMENTO de ARREGLO</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Si <B>ELEMENTO Es Mayor Que VAL_MAYOR</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VAL_MAYOR&lt;-<B>ELEMENTO</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fin Si<BR>
+&nbsp;&nbsp;&nbsp;Fin Para<BR>
+&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp;&nbsp;Si <B>VAL_MAYOR Es Par</B><BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Escribir "El mayor es " VAL_MAYOR " y es par"<BR>
+&nbsp;&nbsp;&nbsp;SiNo <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Escribir "El mayor es " VAL_MAYOR " y es impar"<BR>
+&nbsp;&nbsp;&nbsp;Fin Si<BR>
+&nbsp;&nbsp;&nbsp;<BR>
+FinAlgoritmo<BR>
+</CODE></TD></TR>
+</TABLE></CENTER>
+<BR><BR>
+Si usted es docente y el perfil para su institución no se encuentra en la lista de perfiles precargados de PSeInt, puede encontrar <A href="doc_perfiles.html">aquí</A> las instrucciones para generar y enviar su propio perfil.</A>
+<BR><BR>
+</BODY></HTML>

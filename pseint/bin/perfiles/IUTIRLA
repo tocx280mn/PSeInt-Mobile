@@ -1,0 +1,11 @@
+desc=Perfil para la carrera Informatica del Instituto Universitario de Tecnología Industrial "Rodolfo Loero Arismendi" (IUTIRLA) sede Litoral Central, La Guaira (enviado por Denny Nava).
+allow_dinamyc_dimensions=1
+allow_concatenation=1
+force_init_vars=1
+force_semicolon=1
+allow_word_operators=1
+lazy_syntax=0
+base_zero_arrays=0
+overload_equal=1
+coloquial_conditions=0
+force_define_vars=1

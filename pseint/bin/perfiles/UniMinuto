@@ -1,0 +1,15 @@
+desc=Perfil para las cátedras "Lógica de Programación I" y "Lógica de Programación II" de las carreras "Tecnología en Gestión de Redes y Comunicaciones" y "Tecnología en Informática" de la Corporación Universitaria Minuto de Dios, sede municipio de Bello del departamento de Antioquia-Colombia (enviado por José Alirio Barragán Sanchez).
+allow_dinamyc_dimensions=1
+use_alternative_io_shapes=0
+use_nassi_schneiderman=1
+force_define_vars=1
+force_init_vars=1
+allow_concatenation=0
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=1
+allow_word_operators=1
+overload_equal=0
+coloquial_conditions=0
+lazy_syntax=0
+base_zero_arrays=1

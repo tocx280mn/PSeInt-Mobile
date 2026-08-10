@@ -1,0 +1,50 @@
+OBJS=${OBJS_DIR}/Application.o ${OBJS_DIR}/mxRenderer.o ${OBJS_DIR}/DClasico.o ${OBJS_DIR}/DNassiSchne.o ${OBJS_DIR}/Entity.o ${OBJS_DIR}/Global.o ${OBJS_DIR}/Load.o ${OBJS_DIR}/LangSettings.o ${OBJS_DIR}/mxConfig.o ${OBJS_DIR}/EntityLinking.o ${OBJS_DIR}/osdep.o ${OBJS_DIR}/string_conversions.o ${OBJS_DIR}/DataValue.o ${OBJS_DIR}/ProgramaDump.o ${OBJS_DIR}/Keywords.o ${OBJS_DIR}/strFuncs.o 
+
+${OBJS_DIR}/Application.o: Application.cpp ../psdraw3/Load.h ../psdraw3/Global.h ../psdraw3/Entity.h ../psdraw3/EntityLinking.h ../psdraw3/Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h ../wxPSeInt/osdep.h Version.h ../pseint/version_common.h mxConfig.h ../psdraw3/EntityEditor.h ../psdraw3/Scene.h mxRenderer.h
+	${GPP} ${CXXFLAGS} -c Application.cpp -o $@
+
+${OBJS_DIR}/mxRenderer.o: mxRenderer.cpp mxRenderer.h ../wxPSeInt/string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxRenderer.cpp -o $@
+
+${OBJS_DIR}/DClasico.o: ../psdraw3/DClasico.cpp ../psdraw3/Entity.h ../psdraw3/EntityLinking.h ../psdraw3/Vector.h ../psdraw3/Global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h ../psdraw3/Renderer.h mxRenderer.h ../psdraw3/glRenderer.h
+	${GPP} ${CXXFLAGS} -c ../psdraw3/DClasico.cpp -o $@
+
+${OBJS_DIR}/DNassiSchne.o: ../psdraw3/DNassiSchne.cpp ../psdraw3/Entity.h ../psdraw3/EntityLinking.h ../psdraw3/Vector.h ../psdraw3/Global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h ../psdraw3/Text.h ../psdraw3/Renderer.h mxRenderer.h ../psdraw3/glRenderer.h
+	${GPP} ${CXXFLAGS} -c ../psdraw3/DNassiSchne.cpp -o $@
+
+${OBJS_DIR}/Entity.o: ../psdraw3/Entity.cpp ../psdraw3/Entity.h ../psdraw3/EntityLinking.h ../psdraw3/Vector.h ../psdraw3/Global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h ../psdraw3/Events.h ../psdraw3/Text.h ../psdraw3/Renderer.h mxRenderer.h ../psdraw3/glRenderer.h ../psdraw3/ShapesBar.h ../psdraw3/Textures.h ../psdraw3/GLstuff.h ../psdraw3/gl_lite.h ../pseint/strFuncs.hpp
+	${GPP} ${CXXFLAGS} -c ../psdraw3/Entity.cpp -o $@
+
+${OBJS_DIR}/Global.o: ../psdraw3/Global.cpp ../psdraw3/Global.h ../psdraw3/Entity.h ../psdraw3/EntityLinking.h ../psdraw3/Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h ../psdraw3/Trash.h ../psdraw3/Textures.h ../psdraw3/GLstuff.h ../psdraw3/gl_lite.h ../psdraw3/ShapesBar.h ../psdraw3/ToolBar.h ../psdraw3/StatusBar.h ../psdraw3/ProcessSelector.h ../psdraw3/Scene.h ../psdraw3/EntityEditor.h
+	${GPP} ${CXXFLAGS} -c ../psdraw3/Global.cpp -o $@
+
+${OBJS_DIR}/Load.o: ../psdraw3/Load.cpp ../psdraw3/Load.h ../psdraw3/Global.h ../psdraw3/Entity.h ../psdraw3/EntityLinking.h ../psdraw3/Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h ../psdraw3/Events.h ../psdraw3/ProcessSelector.h ../psdraw3/Scene.h ../wxPSeInt/CommonParsingFunctions.h ../pseint/Programa.hpp ../pseint/Instruccion.hpp ../pseint/DataValue.h ../pseint/Code.h ../pseint/ProgramaDump.hpp
+	${GPP} ${CXXFLAGS} -c ../psdraw3/Load.cpp -o $@
+
+${OBJS_DIR}/LangSettings.o: ../pseint/LangSettings.cpp ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h ../wxPSeInt/Logger.h ../wxPSeInt/version.h ../pseint/version_common.h
+	${GPP} ${CXXFLAGS} -c ../pseint/LangSettings.cpp -o $@
+
+${OBJS_DIR}/mxConfig.o: mxConfig.cpp mxConfig.h ../psdraw3/Global.h ../psdraw3/Entity.h ../psdraw3/EntityLinking.h ../psdraw3/Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h ../psdraw3/Load.h
+	${GPP} ${CXXFLAGS} -c mxConfig.cpp -o $@
+
+${OBJS_DIR}/EntityLinking.o: ../psdraw3/EntityLinking.cpp ../psdraw3/EntityLinking.h ../psdraw3/Vector.h ../psdraw3/Events.h ../psdraw3/Entity.h
+	${GPP} ${CXXFLAGS} -c ../psdraw3/EntityLinking.cpp -o $@
+
+${OBJS_DIR}/osdep.o: ../wxPSeInt/osdep.cpp ../wxPSeInt/osdep.h
+	${GPP} ${CXXFLAGS} -c ../wxPSeInt/osdep.cpp -o $@
+
+${OBJS_DIR}/string_conversions.o: ../wxPSeInt/string_conversions.cpp
+	${GPP} ${CXXFLAGS} -c ../wxPSeInt/string_conversions.cpp -o $@
+
+${OBJS_DIR}/DataValue.o: ../pseint/DataValue.cpp ../pseint/DataValue.h ../pseint/debug.h ../pseint/utils.h ../pseint/new_memoria.h ../pseint/new_memoria_inter.h ../pseint/Programa.hpp ../pseint/Instruccion.hpp ../pseint/Code.h ../pseint/global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../wxPSeInt/string_conversions.h
+	${GPP} ${CXXFLAGS} -c ../pseint/DataValue.cpp -o $@
+
+${OBJS_DIR}/ProgramaDump.o: ../pseint/ProgramaDump.cpp ../pseint/ProgramaDump.hpp ../pseint/Programa.hpp ../pseint/Instruccion.hpp ../pseint/debug.h ../pseint/DataValue.h ../pseint/Code.h ../pseint/case_map.h
+	${GPP} ${CXXFLAGS} -c ../pseint/ProgramaDump.cpp -o $@
+
+${OBJS_DIR}/Keywords.o: ../pseint/Keywords.cpp ../pseint/Keywords.hpp ../pseint/debug.h ../pseint/utils.h ../pseint/new_memoria.h ../pseint/new_memoria_inter.h ../pseint/DataValue.h ../pseint/Programa.hpp ../pseint/Instruccion.hpp ../pseint/Code.h ../pseint/global.h ../pseint/LangSettings.h ../wxPSeInt/string_conversions.h ../pseint/strFuncs.hpp
+	${GPP} ${CXXFLAGS} -c ../pseint/Keywords.cpp -o $@
+
+${OBJS_DIR}/strFuncs.o: ../pseint/strFuncs.cpp ../pseint/strFuncs.hpp ../pseint/debug.h
+	${GPP} ${CXXFLAGS} -c ../pseint/strFuncs.cpp -o $@
+

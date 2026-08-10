@@ -1,0 +1,11 @@
+desc=Perfil para la asignatura de "Programación Orientada a Objetos" utilizado en la Universidad de Oriente, Extensión Anaco, Anzoátegui, Venezuela (elaborado por el MSc. Fausto Iocchi).
+force_init_vars=1
+force_semicolon=1
+allow_concatenation=1
+allow_word_operators=1
+base_zero_arrays=1
+allow_dinamyc_dimensions=1
+lazy_syntax=0
+overload_equal=1
+coloquial_conditions=0
+force_define_vars=1

@@ -1,0 +1,14 @@
+desc=Perfil para ser usado en "Administración y Desarrollo de Sistemas de Información" del Servicio Nacional de Aprendizaje - SENA - Colombia, - CEET (enviado por el instructor Hernando Enrique Moreno Moreno).
+allow_dinamyc_dimensions=1
+use_nassi_schneiderman=0
+force_define_vars=1
+force_init_vars=1
+allow_concatenation=1
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=1
+allow_word_operators=1
+overload_equal=1
+coloquial_conditions=1
+lazy_syntax=0
+base_zero_arrays=1

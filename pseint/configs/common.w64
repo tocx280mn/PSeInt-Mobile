@@ -1,0 +1,25 @@
+WINDOWS=1
+TEMP=temp/${ARCH}_release
+BIN=bin
+EXT=.exe
+
+MINGW_DIR=c:/MinGW64
+WX_DIR=${MINGW_DIR}/wx3
+OPENGL_DIR=${MINGW_DIR}/OpenGL
+MISC_DIR=${MINGW_DIR}/OpenGL
+
+GCC=${PREFIX}${MINGW_DIR}/bin/gcc.exe
+GPP=${PREFIX}${MINGW_DIR}/bin/g++.exe
+AR=${PREFIX}${MINGW_DIR}/bin/ar.exe
+WINDRES=${PREFIX}${MINGW_DIR}/bin/windres.exe
+
+CFLAGS=-O3 -DNDEBUG
+CXXFLAGS=-O3 -DNDEBUG -std=c++17 -DWIN64
+LDFLAGS=-s
+
+WX_CXXFLAGS=-I${MINGW_DIR}/wx3/include -DWX3 -DUNICODE -D_UNICODE
+WX_LDFLAGS=-L${MINGW_DIR}/wx3/lib/dynamic -lwxmsw32u_adv -lwxmsw32u_stc -lwxmsw32u_aui -lwxmsw32u_html -lwxbase32u_net -lwxmsw32u_core -lwxbase32u -lwxscintilla -lwxtiff -lwxjpeg -lwxpng -lwxzlib
+WX_LDFLAGS+=-lkernel32 -luser32 -lgdi32 -lcomdlg32 -lwinspool -lwinmm -lshell32 -lshlwapi -lcomctl32 -lole32 -loleaut32 -luuid -lrpcrt4 -ladvapi32 -lversion -lwsock32 -lwininet -mwindows
+
+GL_CXXFLAGS=-I ${MINGW_DIR}\\OpenGL\\include
+GL_LDFLAGS=-lwxmsw32u_gl -L${MINGW_DIR}\\OpenGL\\lib -lopengl32 -lglu32

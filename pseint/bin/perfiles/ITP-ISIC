@@ -1,0 +1,13 @@
+desc=Perfil para la materia "Fundamentos de Programación" de la "Ingeniería en Sistemas Computacionales" del "Instituto Tecnológico de Pinotepa" (enviado por la Ing. Carolina Gonzalez Bornios).
+force_init_vars=1
+force_define_vars=1
+force_semicolon=1
+allow_concatenation=1
+allow_word_operators=0
+allow_dinamyc_dimensions=1
+base_zero_arrays=0
+lazy_syntax=1
+coloquial_conditions=1
+overload_equal=0
+
+

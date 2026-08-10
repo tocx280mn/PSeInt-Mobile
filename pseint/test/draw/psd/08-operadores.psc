@@ -1,0 +1,130 @@
+49
+2 1 1 
+* Este ejemplo es para ver cómo trabajan los operadores.
+2 2 1 
+* Si hay operadores que no están en el lenguaje, o que no aplican
+2 3 1 
+para todos los tipos, indicarlo y utilizar si es posible alguna
+2 4 1 
+función estándar que lo reemplace (por ejemplo, pow en c++ en lugar
+2 5 1 
+de ^).
+2 6 1 
+* Si se utilizan bibliotecas, aclarar como se incluyen las bibliotecas
+2 7 1 
+en ese lenguaje (#include, import, etc).
+2 8 1 
+* Al final se repiten los operadores, pero aplicados a cadenas de 
+2 9 1 
+caracteres, ya que en algunos lenguajes las comparaciones se realizan
+2 10 1 
+de forma especial, y ademas el + tambien tiene un significado 
+2 11 1 
+especial (concatenar). 
+3 13 1 PROCESO SIN_TITULO
+1 48
+
+sin_titulo
+
+6 14 1 A<-11;
+a
+11
+6 14 2 B<-2;
+b
+2
+6 15 1 C<-VERDADERO;
+c
+Verdadero
+6 16 1 D<-FALSO;
+d
+falso
+6 17 1 E<-'Hola';
+e
+'Hola'
+6 17 2 F<-'Mundo';
+f
+'Mundo'
+2 18 1 
+algebraicos
+7 19 1 ESCRIBIR A+B;
+1 1
+a+b
+7 20 1 ESCRIBIR A*B;
+1 1
+a*b
+7 21 1 ESCRIBIR A/B;
+1 1
+a/b
+7 22 1 ESCRIBIR A-B;
+1 1
+a-b
+7 23 1 ESCRIBIR A^B;
+1 1
+a^b
+2 23 2 
+potencia
+7 24 1 ESCRIBIR A%B;
+1 1
+a%b
+2 24 2 
+resto de la división entera
+2 25 1 
+relacionales (comparaciones)
+7 26 1 ESCRIBIR A=B;
+1 1
+a=b
+7 27 1 ESCRIBIR A<>B;
+1 1
+a<>b
+2 27 2 
+distinto
+7 28 1 ESCRIBIR A<B;
+1 1
+a<b
+7 29 1 ESCRIBIR A>B;
+1 1
+a>b
+7 30 1 ESCRIBIR A<=B;
+1 1
+a<=b
+7 31 1 ESCRIBIR A>=B;
+1 1
+a>=b
+2 32 1 
+logicos
+7 33 1 ESCRIBIR C & D;
+1 1
+c&d
+7 34 1 ESCRIBIR C | D;
+1 1
+c|d
+7 35 1 ESCRIBIR ~ (C & D);
+1 1
+~(c&d)
+2 36 1 
+para cadenas
+7 37 1 ESCRIBIR E+' '+F;
+1 1
+e+' '+f
+2 37 2 
+el + para cadenas las concatena
+7 38 1 ESCRIBIR E=F;
+1 1
+e=f
+7 39 1 ESCRIBIR E<>F;
+1 1
+e<>f
+7 40 1 ESCRIBIR E<F;
+1 1
+e<f
+7 41 1 ESCRIBIR E>F;
+1 1
+e>f
+7 42 1 ESCRIBIR E<=F;
+1 1
+e<=f
+7 43 1 ESCRIBIR E>=F;
+1 1
+e>=f
+4 44 1 FINPROCESO
+1 sin_titulo

@@ -1,0 +1,21 @@
+ARCH=lnx
+TEMP=temp/lnx_release
+BIN=bin/bin
+EXT=
+
+RM=rm -f
+MKDIR=mkdir -p
+
+GCC=gcc
+GPP=g++
+AR=ar
+
+CFLAGS=-O3 -DNDEBUG 
+CXXFLAGS=-O3 -DNDEBUG -std=c++17
+LDFLAGS=-s 
+
+WX_CXXFLAGS=`wx-config --cppflags --unicode=yes --version=3.2` -DWX3
+WX_LDFLAGS=`wx-config --unicode=yes --version=3.2 --libs std,stc,aui` -lX11
+
+GL_CXXFLAGS=`wx-config --gl_libs --cppflags --unicode=yes --version=3.2`
+GL_LDFLAGS=-lGL -lGLU -ldl `wx-config --unicode=yes --version=3.2 --libs gl`

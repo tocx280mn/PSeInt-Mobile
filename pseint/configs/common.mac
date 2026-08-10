@@ -1,0 +1,22 @@
+# este config no es para usar directamente, sino que se incluye a traves los demas configs para macOS
+
+TEMP=temp/${ARCH}_release
+BIN=bin
+EXT=
+MACOS=1
+
+RM=rm -f
+MKDIR=mkdir -p
+
+GCC=${MAC_PREFIX}-clang
+GPP=${MAC_PREFIX}-clang++
+AR=${MAC_PREFIX}-ar
+
+CXXFLAGS=-O3 -DNDEBUG -Wno-invalid-source-encoding -Wno-inconsistent-missing-override -std=c++17
+LDFLASG=-Wl,-headerpad_max_install_names
+
+WX_CXXFLAGS=`wx-config --cppflags` -DWX3
+WX_LDFLAGS=`wx-config --libs std,stc,aui`
+
+GL_LDFLAGS=`wx-config --libs gl` -framework OpenGL
+# el -headerpad_max_install_names en LIBS hace que deje mas espacio para los paths que tiene que reemplazar fix_dylibs.sh con install_names_tool, si no puede que no alcance

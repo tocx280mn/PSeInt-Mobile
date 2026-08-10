@@ -1,0 +1,14 @@
+OBJS=${OBJS_DIR}/Application.o ${OBJS_DIR}/mxFrame.o ${OBJS_DIR}/mxConsole.o ${OBJS_DIR}/osdep.o 
+
+${OBJS_DIR}/Application.o: Application.cpp ../wxPSeInt/osdep.h Application.h mxFrame.h version.h ../pseint/version_common.h
+	${GPP} ${CXXFLAGS} -c Application.cpp -o $@
+
+${OBJS_DIR}/mxFrame.o: mxFrame.cpp mxFrame.h mxConsole.h ../wxPSeInt/string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxFrame.cpp -o $@
+
+${OBJS_DIR}/mxConsole.o: mxConsole.cpp mxFrame.h mxConsole.h ../wxPSeInt/string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxConsole.cpp -o $@
+
+${OBJS_DIR}/osdep.o: ../wxPSeInt/osdep.cpp ../wxPSeInt/osdep.h
+	${GPP} ${CXXFLAGS} -c ../wxPSeInt/osdep.cpp -o $@
+

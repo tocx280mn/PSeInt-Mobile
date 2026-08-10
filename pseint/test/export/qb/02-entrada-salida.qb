@@ -1,0 +1,18 @@
+DIM a AS LONG
+DIM b AS DOUBLE
+DIM c AS STRING
+DIM d AS INTEGER
+INPUT a
+INPUT b
+LINE INPUT c
+INPUT d
+PRINT a
+PRINT b
+PRINT c
+PRINT d
+INPUT a
+INPUT b
+LINE INPUT c
+INPUT d
+PRINT a;b;c;d
+PRINT "Esta linea no lleva enter al final";

@@ -1,0 +1,67 @@
+<HTML>
+	<HEAD>
+		<TITLE>PSeudo Intérprete</TITLE>
+	</HEAD>
+	<BODY>
+
+<B>Operadores</B>
+<BR><BR>
+&nbsp;&nbsp;&nbsp;Este pseudolenguaje dispone de un conjunto básico de operadores que pueden ser utilizados para la construcción de expresiones más o menos complejas.<BR><BR>
+Las siguientes tablas exhiben la totalidad de los operadores de este lenguaje reducido:<BR><BR>
+<table border=0> <TD>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD><TD>
+<table border=1>
+<tr >
+<td><i><center>Operador</center></i> </td><td><center><i>Significado</i></center></td><td><center><i>Ejemplo</i></center></td></tr>
+<tr >
+<td><i>Relacionales</i></td><td> </td><td>
+</td></tr>
+<tr >
+<td><center>&gt;</center></td><td>&nbsp; Mayor que </td><td>&nbsp; 3&gt;2
+</td></tr>
+<tr >
+<td><center>&lt;</center></td><td>&nbsp; Menor que </td><td>&nbsp; 'ABC'&lt;'abc'
+</td></tr>
+<tr >
+<td><center>=</center></td><td>&nbsp; Igual que </td><td>&nbsp; 4=3
+</td></tr>
+<tr >
+<td><center>&lt;=</center></td><td>&nbsp; Menor o igual que </td><td>&nbsp; 'a'&lt;='b'
+</td></tr>
+<tr >
+<td><center>&gt;=</center></td><td>&nbsp; Mayor o igual que </td><td>&nbsp; 4&gt;=5
+</td></tr>
+<tr >
+<td><center>&lt;&gt;</center></td><td>&nbsp; Distinto que </td><td>&nbsp; 'a'&lt;&gt;'b'
+</td></tr>
+<tr >
+<td><i>Lógicos</i> </td><td></td><td>
+</td></tr>
+<tr >
+<td><center>&amp; ó Y</center></td><td>&nbsp; Conjunción (y). </td><td>&nbsp; (7&gt;4) &amp; (2=1) //falso
+</td></tr>
+<tr >
+<td><center>| ó O</center></td><td>&nbsp; Disyunción (o). </td><td>&nbsp; (1=1 | 2=1) //verdadero
+</td></tr>
+<tr >
+<td><center>~ ó NO</center></td><td>&nbsp; Negación (no). </td><td>&nbsp; ~(2&lt;5) //falso
+</td></tr>
+<tr >
+<td><i>Algebraicos</i> </td><td></td><td>
+</td></tr>
+<tr >
+<td><center>+</center></td><td>&nbsp; Suma </td><td>&nbsp; total &lt;- cant1 + cant2 </td></tr>
+<tr >
+<td><center>-</center></td><td>&nbsp; Resta </td><td>&nbsp; stock &lt;- disp - venta </td></tr>
+<tr >
+<td><center>*</center></td><td>&nbsp; Multiplicación </td><td>&nbsp; area &lt;- base * altura</td></tr>
+<tr >
+<td><center>/</center></td><td>&nbsp; División </td><td>&nbsp; porc &lt;- 100 * parte / total &nbsp;</td></tr>
+<tr >
+<td><center>^</center></td><td>&nbsp; Potenciación </td><td>&nbsp; sup &lt;- 3.41 * radio ^ 2 </td></tr>
+<tr >
+<td><center>% ó MOD</center></td><td>&nbsp; Módulo (resto de la división entera) &nbsp;</td><td>&nbsp; resto &lt;- num MOD div</td></tr>
+</table> </TD></TABLE><BR>
+&nbsp;&nbsp;&nbsp;La jerarquía de los operadores matemáticos es igual a la del álgebra, aunque puede alterarse mediante el uso de paréntesis. Para el caso de los operadores &amp; y |, la evaluación se realiza en cortocircuito. Esto significa que si dos expresiones están unidas por el operador &and; y la primera se evalúa como Falso, o están unidas por el operador | y la primera se evalúa como Verdadero, la segunda no se evalúa ya que no altera el resultado.<BR><BR>
+
+	</BODY>
+</HTML>

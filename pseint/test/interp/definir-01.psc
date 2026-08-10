@@ -1,0 +1,30 @@
+Proceso prueba
+  definir a como entero;
+  definir b como real;
+  definir c como numero;
+  definir d como numeros;
+  definir e como número;
+  definir f como números;
+  definir g como numerico;
+  definir h como numericos;
+  definir i como numerica;
+  definir j como numericas;
+  definir k como numérico;
+  definir l como numéricos;
+  definir m como numérica;
+  definir n como numéricas;
+  a<-"lala";
+  b<-"lala";
+  c<-"lala";
+  d<-"lala";
+  e<-"lala";
+  f<-"lala";
+  g<-"lala";
+  h<-"lala";
+  i<-"lala";
+  j<-"lala";
+  k<-"lala";
+  l<-"lala";
+  m<-"lala";
+  n<-"lala";
+FinProceso

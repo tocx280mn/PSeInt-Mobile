@@ -1,0 +1,143 @@
+OBJS=${OBJS_DIR}/DebugManager.o ${OBJS_DIR}/mxMainWindow.o ${OBJS_DIR}/mxUtils.o ${OBJS_DIR}/ConfigManager.o ${OBJS_DIR}/mxSource.o ${OBJS_DIR}/mxProcess.o ${OBJS_DIR}/HelpManager.o ${OBJS_DIR}/mxBitmapButton.o ${OBJS_DIR}/mxFindDialog.o ${OBJS_DIR}/mxAboutWindow.o ${OBJS_DIR}/mxHelpWindow.o ${OBJS_DIR}/mxDropTarget.o ${OBJS_DIR}/LangSettings.o ${OBJS_DIR}/mxDesktopTestGrid.o ${OBJS_DIR}/mxDesktopTestPanel.o ${OBJS_DIR}/mxEvaluateDialog.o ${OBJS_DIR}/mxUpdatesChecker.o ${OBJS_DIR}/mxConfig.o ${OBJS_DIR}/mxProfile.o ${OBJS_DIR}/mxArt.o ${OBJS_DIR}/mxPrintOut.o ${OBJS_DIR}/mxInputDialog.o ${OBJS_DIR}/RTSyntaxManager.o ${OBJS_DIR}/mxIconInstaller.o ${OBJS_DIR}/mxVarWindow.o ${OBJS_DIR}/mxDebugWindow.o ${OBJS_DIR}/mxSubtitles.o ${OBJS_DIR}/mxStatusBar.o ${OBJS_DIR}/CommunicationsManager.o ${OBJS_DIR}/HtmlExporter.o ${OBJS_DIR}/mxOpersWindow.o ${OBJS_DIR}/Logger.o ${OBJS_DIR}/mxPanelHelper.o ${OBJS_DIR}/mxExportPreview.o ${OBJS_DIR}/Package.o ${OBJS_DIR}/mxTestPanel.o ${OBJS_DIR}/Application.o ${OBJS_DIR}/mxHtmlWindow.o ${OBJS_DIR}/error_recovery.o ${OBJS_DIR}/mxFontsConfig.o ${OBJS_DIR}/mxWelcome.o ${OBJS_DIR}/osdep.o ${OBJS_DIR}/string_conversions.o ${OBJS_DIR}/mxSplashScreen.o ${OBJS_DIR}/mxBacktrace.o ${OBJS_DIR}/Keywords.o ${OBJS_DIR}/strFuncs.o 
+
+${OBJS_DIR}/DebugManager.o: DebugManager.cpp DebugManager.h mxSource.h RTSyntaxManager.h mxMainWindow.h mxProcess.h mxDesktopTestGrid.h mxEvaluateDialog.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxDebugWindow.h mxSubtitles.h Logger.h mxBacktrace.h
+	${GPP} ${CXXFLAGS} -c DebugManager.cpp -o $@
+
+${OBJS_DIR}/mxMainWindow.o: mxMainWindow.cpp mxUtils.h mxMainWindow.h mxSource.h RTSyntaxManager.h ids.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxProcess.h version.h ../pseint/version_common.h HelpManager.h mxFindDialog.h mxAboutWindow.h mxHelpWindow.h mxDropTarget.h DebugManager.h mxDesktopTestPanel.h mxEvaluateDialog.h mxUpdatesChecker.h mxConfig.h mxProfile.h mxPrintOut.h mxInputDialog.h mxVarWindow.h ../pseint/new_memoria_inter.h mxDebugWindow.h mxSubtitles.h mxStatusBar.h CommunicationsManager.h HtmlExporter.h mxOpersWindow.h mxPanelHelper.h Logger.h mxExportPreview.h mxIconInstaller.h mxTestPanel.h ../pseval/Package.h mxHtmlWindow.h error_recovery.h mxFontsConfig.h mxBacktrace.h
+	${GPP} ${CXXFLAGS} -c mxMainWindow.cpp -o $@
+
+${OBJS_DIR}/mxUtils.o: mxUtils.cpp mxUtils.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h ids.h mxBitmapButton.h
+	${GPP} ${CXXFLAGS} -c mxUtils.cpp -o $@
+
+${OBJS_DIR}/ConfigManager.o: ConfigManager.cpp ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxUtils.h version.h ../pseint/version_common.h Logger.h error_recovery.h osdep.h
+	${GPP} ${CXXFLAGS} -c ConfigManager.cpp -o $@
+
+${OBJS_DIR}/mxSource.o: mxSource.cpp HelpManager.h mxUtils.h Logger.h string_conversions.h mxVarWindow.h ../pseint/new_memoria_inter.h mxDesktopTestGrid.h error_recovery.h mxSource.h RTSyntaxManager.h mxStatusBar.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ids.h mxProcess.h mxDropTarget.h DebugManager.h mxMainWindow.h CommonParsingFunctions.h
+	${GPP} ${CXXFLAGS} -c mxSource.cpp -o $@
+
+${OBJS_DIR}/mxProcess.o: mxProcess.cpp mxProcess.h mxSource.h RTSyntaxManager.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxUtils.h mxMainWindow.h mxStatusBar.h DebugManager.h mxInputDialog.h mxDebugWindow.h CommunicationsManager.h Logger.h
+	${GPP} ${CXXFLAGS} -c mxProcess.cpp -o $@
+
+${OBJS_DIR}/HelpManager.o: HelpManager.cpp HelpManager.h mxUtils.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c HelpManager.cpp -o $@
+
+${OBJS_DIR}/mxBitmapButton.o: mxBitmapButton.cpp mxBitmapButton.h mxUtils.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxBitmapButton.cpp -o $@
+
+${OBJS_DIR}/mxFindDialog.o: mxFindDialog.cpp mxFindDialog.h mxUtils.h mxSource.h RTSyntaxManager.h mxMainWindow.h ids.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxArt.h
+	${GPP} ${CXXFLAGS} -c mxFindDialog.cpp -o $@
+
+${OBJS_DIR}/mxAboutWindow.o: mxAboutWindow.cpp mxAboutWindow.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxUtils.h version.h ../pseint/version_common.h mxHelpWindow.h mxMainWindow.h mxSource.h RTSyntaxManager.h
+	${GPP} ${CXXFLAGS} -c mxAboutWindow.cpp -o $@
+
+${OBJS_DIR}/mxHelpWindow.o: mxHelpWindow.cpp mxHelpWindow.h mxUtils.h ids.h mxMainWindow.h mxSource.h RTSyntaxManager.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxHelpWindow.cpp -o $@
+
+${OBJS_DIR}/mxDropTarget.o: mxDropTarget.cpp mxDropTarget.h mxUtils.h mxMainWindow.h mxSource.h RTSyntaxManager.h
+	${GPP} ${CXXFLAGS} -c mxDropTarget.cpp -o $@
+
+${OBJS_DIR}/LangSettings.o: ../pseint/LangSettings.cpp ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h Logger.h version.h ../pseint/version_common.h
+	${GPP} ${CXXFLAGS} -c ../pseint/LangSettings.cpp -o $@
+
+${OBJS_DIR}/mxDesktopTestGrid.o: mxDesktopTestGrid.cpp mxDesktopTestGrid.h ids.h mxMainWindow.h mxSource.h RTSyntaxManager.h DebugManager.h
+	${GPP} ${CXXFLAGS} -c mxDesktopTestGrid.cpp -o $@
+
+${OBJS_DIR}/mxDesktopTestPanel.o: mxDesktopTestPanel.cpp mxDesktopTestPanel.h ids.h mxMainWindow.h mxSource.h RTSyntaxManager.h mxDesktopTestGrid.h mxHelpWindow.h mxUtils.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxDesktopTestPanel.cpp -o $@
+
+${OBJS_DIR}/mxEvaluateDialog.o: mxEvaluateDialog.cpp mxEvaluateDialog.h DebugManager.h
+	${GPP} ${CXXFLAGS} -c mxEvaluateDialog.cpp -o $@
+
+${OBJS_DIR}/mxUpdatesChecker.o: mxUpdatesChecker.cpp mxUpdatesChecker.h ids.h mxMainWindow.h mxSource.h RTSyntaxManager.h mxUtils.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxHelpWindow.h mxArt.h mxStatusBar.h version.h ../pseint/version_common.h Logger.h
+	${GPP} ${CXXFLAGS} -c mxUpdatesChecker.cpp -o $@
+
+${OBJS_DIR}/mxConfig.o: mxConfig.cpp mxConfig.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxUtils.h mxArt.h
+	${GPP} ${CXXFLAGS} -c mxConfig.cpp -o $@
+
+${OBJS_DIR}/mxProfile.o: mxProfile.cpp mxProfile.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxUtils.h mxConfig.h mxArt.h mxMainWindow.h mxSource.h RTSyntaxManager.h Logger.h
+	${GPP} ${CXXFLAGS} -c mxProfile.cpp -o $@
+
+${OBJS_DIR}/mxArt.o: mxArt.cpp mxArt.h mxUtils.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxArt.cpp -o $@
+
+${OBJS_DIR}/mxPrintOut.o: mxPrintOut.cpp mxPrintOut.h mxSource.h RTSyntaxManager.h mxMainWindow.h string_conversions.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h
+	${GPP} ${CXXFLAGS} -c mxPrintOut.cpp -o $@
+
+${OBJS_DIR}/mxInputDialog.o: mxInputDialog.cpp mxInputDialog.h mxArt.h
+	${GPP} ${CXXFLAGS} -c mxInputDialog.cpp -o $@
+
+${OBJS_DIR}/RTSyntaxManager.o: RTSyntaxManager.cpp RTSyntaxManager.h mxProcess.h mxSource.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxMainWindow.h mxVarWindow.h ../pseint/new_memoria_inter.h ids.h Logger.h
+	${GPP} ${CXXFLAGS} -c RTSyntaxManager.cpp -o $@
+
+${OBJS_DIR}/mxIconInstaller.o: mxIconInstaller.cpp mxIconInstaller.h mxUtils.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxArt.h Logger.h
+	${GPP} ${CXXFLAGS} -c mxIconInstaller.cpp -o $@
+
+${OBJS_DIR}/mxVarWindow.o: mxVarWindow.cpp mxVarWindow.h ../pseint/new_memoria_inter.h mxMainWindow.h mxSource.h RTSyntaxManager.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h ids.h mxUtils.h DebugManager.h mxDebugWindow.h mxDesktopTestGrid.h
+	${GPP} ${CXXFLAGS} -c mxVarWindow.cpp -o $@
+
+${OBJS_DIR}/mxDebugWindow.o: mxDebugWindow.cpp mxDebugWindow.h mxStatusBar.h ids.h DebugManager.h mxMainWindow.h mxSource.h RTSyntaxManager.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxProcess.h mxHelpWindow.h mxUtils.h mxDesktopTestPanel.h mxEvaluateDialog.h mxSubtitles.h mxBitmapButton.h
+	${GPP} ${CXXFLAGS} -c mxDebugWindow.cpp -o $@
+
+${OBJS_DIR}/mxSubtitles.o: mxSubtitles.cpp mxSubtitles.h mxArt.h DebugManager.h mxDebugWindow.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxSubtitles.cpp -o $@
+
+${OBJS_DIR}/mxStatusBar.o: mxStatusBar.cpp mxStatusBar.h mxMainWindow.h mxSource.h RTSyntaxManager.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxStatusBar.cpp -o $@
+
+${OBJS_DIR}/CommunicationsManager.o: CommunicationsManager.cpp CommunicationsManager.h mxMainWindow.h mxSource.h RTSyntaxManager.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxHelpWindow.h mxUtils.h DebugManager.h mxStatusBar.h mxDebugWindow.h Logger.h
+	${GPP} ${CXXFLAGS} -c CommunicationsManager.cpp -o $@
+
+${OBJS_DIR}/HtmlExporter.o: HtmlExporter.cpp HtmlExporter.h mxSource.h RTSyntaxManager.h mxMainWindow.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c HtmlExporter.cpp -o $@
+
+${OBJS_DIR}/mxOpersWindow.o: mxOpersWindow.cpp mxOpersWindow.h ids.h mxMainWindow.h mxSource.h RTSyntaxManager.h mxUtils.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxOpersWindow.cpp -o $@
+
+${OBJS_DIR}/Logger.o: Logger.cpp Logger.h version.h ../pseint/version_common.h mxUtils.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c Logger.cpp -o $@
+
+${OBJS_DIR}/mxPanelHelper.o: mxPanelHelper.cpp mxPanelHelper.h mxMainWindow.h mxSource.h RTSyntaxManager.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c mxPanelHelper.cpp -o $@
+
+${OBJS_DIR}/mxExportPreview.o: mxExportPreview.cpp mxExportPreview.h ids.h mxUtils.h mxMainWindow.h mxSource.h RTSyntaxManager.h string_conversions.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h mxProcess.h Logger.h
+	${GPP} ${CXXFLAGS} -c mxExportPreview.cpp -o $@
+
+${OBJS_DIR}/Package.o: ../pseval/Package.cpp ../pseval/version.h ../pseint/version_common.h ../pseval/Package.h string_conversions.h ../hoewrap/hoewrap.h
+	${GPP} ${CXXFLAGS} -c ../pseval/Package.cpp -o $@
+
+${OBJS_DIR}/mxTestPanel.o: mxTestPanel.cpp mxTestPanel.h ../pseval/Package.h string_conversions.h ids.h mxSource.h RTSyntaxManager.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h mxProcess.h Logger.h mxMainWindow.h version.h ../pseint/version_common.h mxArt.h
+	${GPP} ${CXXFLAGS} -c mxTestPanel.cpp -o $@
+
+${OBJS_DIR}/Application.o: Application.cpp Logger.h string_conversions.h Application.h mxMainWindow.h mxSource.h RTSyntaxManager.h version.h ../pseint/version_common.h mxUtils.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h HelpManager.h DebugManager.h mxProfile.h mxArt.h mxUpdatesChecker.h mxIconInstaller.h CommunicationsManager.h error_recovery.h mxWelcome.h mxStatusBar.h osdep.h mxSplashScreen.h
+	${GPP} ${CXXFLAGS} -c Application.cpp -o $@
+
+${OBJS_DIR}/mxHtmlWindow.o: mxHtmlWindow.cpp mxHtmlWindow.h
+	${GPP} ${CXXFLAGS} -c mxHtmlWindow.cpp -o $@
+
+${OBJS_DIR}/error_recovery.o: error_recovery.cpp error_recovery.h mxSource.h RTSyntaxManager.h mxMainWindow.h Logger.h string_conversions.h
+	${GPP} ${CXXFLAGS} -c error_recovery.cpp -o $@
+
+${OBJS_DIR}/mxFontsConfig.o: mxFontsConfig.cpp mxFontsConfig.h mxMainWindow.h mxSource.h RTSyntaxManager.h string_conversions.h mxArt.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h
+	${GPP} ${CXXFLAGS} -c mxFontsConfig.cpp -o $@
+
+${OBJS_DIR}/mxWelcome.o: mxWelcome.cpp mxWelcome.h string_conversions.h ids.h mxProfile.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h mxConfig.h
+	${GPP} ${CXXFLAGS} -c mxWelcome.cpp -o $@
+
+${OBJS_DIR}/osdep.o: osdep.cpp osdep.h
+	${GPP} ${CXXFLAGS} -c osdep.cpp -o $@
+
+${OBJS_DIR}/string_conversions.o: string_conversions.cpp
+	${GPP} ${CXXFLAGS} -c string_conversions.cpp -o $@
+
+${OBJS_DIR}/mxSplashScreen.o: mxSplashScreen.cpp mxSplashScreen.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxUtils.h
+	${GPP} ${CXXFLAGS} -c mxSplashScreen.cpp -o $@
+
+${OBJS_DIR}/mxBacktrace.o: mxBacktrace.cpp mxBacktrace.h ConfigManager.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h string_conversions.h mxUtils.h
+	${GPP} ${CXXFLAGS} -c mxBacktrace.cpp -o $@
+
+${OBJS_DIR}/Keywords.o: ../pseint/Keywords.cpp ../pseint/Keywords.hpp ../pseint/debug.h ../pseint/utils.h ../pseint/new_memoria.h ../pseint/new_memoria_inter.h ../pseint/DataValue.h ../pseint/Programa.hpp ../pseint/Instruccion.hpp ../pseint/Code.h ../pseint/global.h ../pseint/LangSettings.h string_conversions.h ../pseint/strFuncs.hpp
+	${GPP} ${CXXFLAGS} -c ../pseint/Keywords.cpp -o $@
+
+${OBJS_DIR}/strFuncs.o: ../pseint/strFuncs.cpp ../pseint/strFuncs.hpp ../pseint/debug.h
+	${GPP} ${CXXFLAGS} -c ../pseint/strFuncs.cpp -o $@
+

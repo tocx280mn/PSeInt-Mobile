@@ -1,0 +1,12 @@
+desc=Perfil para utilizar en la materia "Programacion Orientada al Hardware" en la carrera "Tecnicatura superior en reparacion y mantenimiento de Sistemas Informaticos" del Instituto Macedo Martinez en Formosa, Argentina (enviado por el Lic. Jorge B. Gizirian).
+force_init_vars=1
+force_define_vars=0
+force_semicolon=0
+allow_concatenation=0
+allow_word_operators=1
+base_zero_arrays=0
+allow_dinamyc_dimensions=0
+lazy_syntax=1
+overload_equal=1
+coloquial_conditions=1
+

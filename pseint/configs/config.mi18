@@ -1,0 +1,5 @@
+ARCH=mi18
+MAC_PREFIX=x86_64-apple-darwin18
+
+include ../configs/common.mac
+# va con .. porque los includes a config.* se invocan desde los directorios de los modulos

@@ -1,0 +1,14 @@
+desc=Perfil para la asignatura Programacion de Computadoras de la carrera Licenciatura en Análisis de Sistemas de la Universidad Nacional de Lanús (enviado por el alumno Néstor Piñeiro).
+allow_dinamyc_dimensions=1
+use_nassi_schneiderman=1
+force_define_vars=1
+force_init_vars=1
+allow_concatenation=1
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=1
+allow_word_operators=1
+overload_equal=0
+coloquial_conditions=0
+lazy_syntax=0
+base_zero_arrays=1

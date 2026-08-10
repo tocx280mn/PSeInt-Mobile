@@ -1,0 +1,14 @@
+> verdadero
+VERDADERO
+> v
+VERDADERO
+> 1
+VERDADERO
+> 0
+FALSO
+> falso
+FALSO
+> f
+FALSO
+> 72
+=== Line 21: ExeError 120

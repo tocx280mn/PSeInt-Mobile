@@ -1,0 +1,14 @@
+desc=Configuración usada en Fundamentos de la Informática, Int. a la Programación y Resolución de Problemas y Algoritmos del Dpto. de Informática de la Facultad de Ciencias Físico Matemáticas y Naturales de la Universidad Nacional de San Luis (enviado por la Prof. Jacqueline Fernandez).
+allow_dinamyc_dimensions=0
+use_nassi_schneiderman=0
+force_define_vars=1
+force_init_vars=0
+allow_concatenation=0
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=0
+allow_word_operators=0
+overload_equal=0
+coloquial_conditions=0
+lazy_syntax=0
+base_zero_arrays=0

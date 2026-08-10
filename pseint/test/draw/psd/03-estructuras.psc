@@ -1,0 +1,68 @@
+29
+2 1 1 
+* Este ejemplo es para observar las estructuras condicionales y 
+2 2 1 
+repetitivas más simples
+3 4 1 PROCESO SIN_TITULO
+1 28
+
+sin_titulo
+
+6 5 1 C<-0;
+c
+0
+14 6 1 MIENTRAS C<=10 HACER
+7 c<=10
+6 7 1 C<-C+1;
+c
+c+1
+7 8 1 ESCRIBIR C;
+1 1
+c
+15 9 1 FINMIENTRAS
+6 11 1 C<-0;
+c
+0
+16 12 1 REPETIR
+12
+6 13 1 C<-C+1;
+c
+c+1
+7 14 1 ESCRIBIR C;
+1 1
+c
+17 15 1 HASTA QUE C=10
+0 c=10
+6 17 1 C<-0;
+c
+0
+16 18 1 REPETIR
+17
+6 19 1 C<-C+1;
+c
+c+1
+7 20 1 ESCRIBIR C;
+1 1
+c
+17 21 1 MIENTRAS QUE C<10
+1 c<10
+18 23 1 SI C=10 ENTONCES
+-1 21 c=10
+19 23 2 ENTONCES
+7 24 1 ESCRIBIR 'Si';
+1 1
+'Si'
+21 25 1 FINSI
+18 27 1 SI C=10 ENTONCES
+25 27 c=10
+19 27 2 ENTONCES
+7 28 1 ESCRIBIR 'Si';
+1 1
+'Si'
+20 29 1 SINO
+7 30 1 ESCRIBIR 'No';
+1 1
+'No'
+21 31 1 FINSI
+4 33 1 FINPROCESO
+1 sin_titulo

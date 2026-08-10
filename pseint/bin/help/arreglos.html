@@ -1,0 +1,32 @@
+<HTML>
+	<HEAD>
+		<TITLE>PSeudo Intérprete</TITLE>
+	</HEAD>
+	<BODY>
+<B>Arreglos</B>
+<BR><BR>
+&nbsp;&nbsp;&nbsp;Los arreglos son estructuras de datos homogéneas (todos sus datos son del mismo tipo) que permiten almacenar un determinado número de datos bajo un mismo identificador, para luego referirse a los mismos utilizando uno o más subíndices. Los arreglos pueden pensarse como vectores, matrices, etc. Para poder utilizar un arreglo, primero es obligatorio su dimensionamiento; es decir, declarar los rangos de sus subíndices, lo cual determina cuantos elementos se almacenarán y como se accederá a los mismos.
+<BR><BR>
+<B>Dimensionamiento</B>
+<BR><BR>
+&nbsp;&nbsp;&nbsp;La instrucción Dimensionar (o Dimensión) permite declarar un arreglo, indicando sus dimensiones.<br><BR>
+<code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Dimensionar &lt;identificador&gt;[&lt;maxl&gt;,...,&lt;maxN&gt;];
+</code><br><BR>
+&nbsp;&nbsp;&nbsp;Esta instrucción define un arreglo con el nombre indicado en &lt;identificador&gt; y N dimensiones. Los N parámetros indican la cantidad de dimensiones y el valor máximo de cada una de ellas. La cantidad de dimensiones puede ser una o más, y la máxima cantidad de elementos debe ser una expresión numérica positiva.<BR>
+&nbsp;&nbsp;&nbsp;Si se utilizan arreglos en base 0, al declarar un arreglo de, por ejemplo 15 elementos, los índices de elementos válidos van de 0 a 14; mientras que si se utilizan arreglos en base 1 los índices válidos van de 1 a 15. Esto se configura en el cuadro de <A href="perfiles.html">Opciones del Pseudocódigo</A>.<BR>
+&nbsp;&nbsp;&nbsp;Se pueden declarar más de un arreglo en una misma instrucción, separándolos con una coma (,).<br><BR>
+<code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Dimensionar Vec[10], Mat[5,8]
+</code><br><BR>
+&nbsp;&nbsp;&nbsp;El ejemplo <A href="example:Mayores.psc">Mayores</A> muestra cómo cargar datos en un arreglo y buscar luego el mayor entre dichos datos.<BR>
+&nbsp;&nbsp;&nbsp;El ejemplo <A href="example:Sucursales.psc">Sucursales</A> utiliza un arreglo bidimensional (matriz) para guardar las ventas de una empresa discriminadas por producto (una de las dimensiones) y por sucursal (la dimensión restante).<BR>
+<BR>
+<B>Redimensionamiento</B><BR>
+<BR>
+&nbsp;&nbsp;&nbsp;De acuerdo a la <a href="perfiles.html">personalización del lenguaje</a>, puede permitirse redimensionar un arreglo con la palabra clave Redimensionar (ó Redimensión). Cuando se redimensiona un arreglo se debe respetar la cantidad de dimensiones declaradas originalmente, pero se puede variar los tamaños (valores máximos de los índices) para cada una de ellas.<BR>
+<BR>
+<code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Dimensionar Lista[10];<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ...x<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Redimensionar Lista[20];<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ...</code><br><BR>
+<BR>
+</BODY></HTML>

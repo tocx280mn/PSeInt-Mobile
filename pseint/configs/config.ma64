@@ -1,0 +1,5 @@
+ARCH=ma20
+MAC_PREFIX=arm64-apple-darwin20.4
+
+include ../configs/common.mac
+# va con .. porque los includes a config.* se invocan desde los directorios de los modulos

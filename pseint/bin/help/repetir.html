@@ -1,0 +1,22 @@
+<HTML>
+	<HEAD>
+		<TITLE>PSeudo Intérprete</TITLE>
+	</HEAD>
+	<BODY>
+<B>Lazos Repetir</B>
+<BR><BR>
+<CENTER><img src="ps_repetir.png"></TD></CENTER><BR>
+&nbsp;&nbsp;&nbsp;La instrucción <i>Repetir-Hasta Que</i> ejecuta una secuencia de instrucciones hasta que la condición sea verdadera.<BR><br>
+<code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Repetir <BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;instrucciones&gt; <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hasta Que &lt;condición&gt; 
+</code><BR><BR>
+&nbsp;&nbsp;&nbsp;Al ejecutarse esta instrucción, la secuencia de instrucciones que forma el cuerpo del ciclo se ejecuta una vez y luego se evalúa la condición. Si la condición es falsa, el cuerpo del ciclo se ejecuta nuevamente y se vuelve a evaluar la condición. Esto se repite hasta que la condición sea verdadera. <BR>
+&nbsp;&nbsp;&nbsp;Note que, dado que la condición se evalúa al final, las instrucciones del cuerpo del ciclo serán ejecutadas al menos una vez. <BR>
+&nbsp;&nbsp;&nbsp;Además, a fin de evitar ciclos infinitos, el cuerpo del ciclo debe contener alguna instrucción que modifique la o las variables involucradas en la condición de modo que en algún momento la condición sea verdadera y se finalice la ejecución del ciclo.<BR>
+<BR>
+&nbsp;&nbsp;&nbsp;Si se utiliza sintaxis flexible (ver <A href="perfiles.html">Opciones del Pseudocódigo</A>) se permite opcionalmente utilizar <I>Mientras Que</I> en lugar de <I>Hasta Que</I>, de modo que el conjunto de acciones contenidas en el bucle se ejecuta mientras que la condición sea verdadera. Notar que la palabra <I>Que</I> es la que diferencia el uso de la palabra <I>Mientras</I> en la estructura repetir de la estructura <I>Mientras</I>. Es decir, si se omite la palabra que se considera como el comienzo de un bucle <A href="mientras.html">Mientras</A> en lugar de el final de un bucle <I>Repetir</I>.<BR>
+<BR>
+&nbsp;&nbsp;&nbsp;El ejemplo <A href="example:Menu.psc">Menú</A> muestra un programa muy simple que utiliza esta estructura de control para mostrar un menú repetidamente hasta que el usuario seleccione la opción para salir.<BR>
+<BR>
+</BODY></HTML>

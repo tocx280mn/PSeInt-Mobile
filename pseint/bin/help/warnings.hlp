@@ -1,0 +1,5 @@
+329
+  Debido a la forma en que se almacenan los números en la memoria, y a que el tamaño de una variable numérica es fijo, estas solo pueden guardar una cierta cantidad de dígitos. Si se intenta guardar un número con mayor cantidad de dígitos (más de 16), este podría sufrir un redondeo, y consecuentemente los cálculos sobre ese valor resultar inexactos.
+
+333
+  Se utiliza un arreglo en lugar de una variable simple cuando se quieren guardar/organizar varios valores relacionados en lugar de uno solo. Es por esto que un arreglo de tamaño 1 (o con una de sus dimensiones de tamaño 1) no parece tener sentido práctico. Probablemente puede omitir esa dimensión (y usar una variable común si es la única dimensión), o tambien puede ser que se trate de un error donde en verdad se requiera un arreglo pero el tamaño deba ser mayor.

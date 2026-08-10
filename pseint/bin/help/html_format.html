@@ -1,0 +1,80 @@
+<HTML>
+	<HEAD>
+		<TITLE>PSeudo Intérprete</TITLE>
+	</HEAD>
+	<BODY>
+<B>Sobre el formato de "help.html"</B><BR>
+<BR>
+En este archivo deberá utilizar un sub-conjunto reducido de HTML. En particular, algunos tags útiles son: H1/H2/H3/H4 (títulos de diferentes niveles), B (negrita), UL (lista desordenada), OL (lista ordenada), LI (item en una lista), I (cursiva), BR (salto de linea), IMG (imagen) TABLE (tabla), TR (fila en una tabla), TD (celda en una fila de una tabla), CODE (usar fuente especial para código), U (subrayado), CENTER (centrado) y HR (Linea horizontal).<BR>
+<BR>
+Además, algunos caracteres especiales son interpretados por el parser HTML en lugar de mostrarse como parte del texto. En particular, para ingresar el signo &lt; debe utilizar "&amp;lt;", para el signo &gt; "&amp;gt;", para &amp; "&amp;amp;", y para espacios adicionales "&amp;nbsp;".<BR>
+<BR>
+Para introducir una imagen, se utiliza el tag IMG y se coloca la dirección de la imágen en su atributo src. En el ejercicio autocontenido debe añadir a la dirección de la imagen (nombre del archivo) el prefijo "memory:", y utilizar solo imagenes en formato png.<BR>
+<BR><BR>
+<B>Ejemplos</B><BR>
+<BR>
+<CENTER>
+<TABLE border=1 cellpadding=10>
+
+<TR bgcolor="#CCCCCC"><TD><CENTER><B><U>Código HTML</U></B></CENTER></TD><TD><CENTER><B><U>Resultado</U></B></CENTER></TD></TR>
+
+<TR><TD><CODE>&lt;H1&gt;Titulo 1&lt;/H1&gt;</CODE></TD><TD><H1>Titulo 1</H1></TD></TR>
+<TR><TD><CODE>&lt;H2&gt;Titulo 1&lt;/H2&gt;</CODE></TD><TD><H2>Titulo 2</H2></TD></TR>
+<TR><TD><CODE>&lt;H3&gt;Titulo 1&lt;/H3&gt;</CODE></TD><TD><H3>Titulo 3</H3></TD></TR>
+<TR><TD><CODE>&lt;H4&gt;Titulo 1&lt;/H4&gt;</CODE></TD><TD><H4>Titulo 4</H4></TD></TR>
+<TR><TD><CODE>&lt;H5&gt;Titulo 1&lt;/H5&gt;</CODE></TD><TD><H5>Titulo 5</H5></TD></TR>
+
+<TR><TD><CODE>&lt;B&gt;Negrita&lt;/B&gt;</CODE></TD><TD><B>Negrita</B></TD></TR>
+<TR><TD><CODE>&lt;U&gt;Subrayado&lt;/U&gt;</CODE></TD><TD><U>Subrayado</U></TD></TR>
+<TR><TD><CODE>&lt;I&gt;Cursiva&lt;/I&gt;</CODE></TD><TD><I>Cursiva</I></TD></TR>
+<TR><TD><CODE>&lt;CODE&gt;Código fuente&lt;/CODE&gt;</CODE></TD><TD><CODE>Código fuente</CODE></TD></TR>
+
+<TR><TD><CODE>&lt;CENTER&gt;Centrado&lt;/CENTER&gt;</CODE></TD><TD><CENTER>Centrado</CENTER></TD></TR>
+
+<TR><TD><CODE>&lt;HR&gt;</CODE></TD><TD><HR></TD></TR>
+
+<TR><TD><CODE>Mayor: &amp;gt;</CODE></TD><TD>Mayor: &gt;</TD></TR>
+<TR><TD><CODE>Menor: &amp;lt;</CODE></TD><TD>Menor: &lt;</TD></TR>
+<TR><TD><CODE>Ampersand: &amp;amp;</CODE></TD><TD>Ampersand: &amp;</TD></TR>
+<TR><TD><CODE>Varios&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Espacios</CODE></TD><TD>Varios&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Espacios</TD></TR>
+<TR><TD><CODE>Salto&lt;BR&gt;de&lt;BR&gt;Linea</CODE></TD><TD>Salto<BR>de<BR>Linea</TD></TR>
+
+
+<TR><TD><CODE>&lt;OL&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;UL&gt;Lista&lt;/UL&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;UL&gt;numerada&lt;/UL&gt;<BR>&lt;/OL&gt;</CODE></TD><TD><OL><LI>Lista</LI><LI>numerada</LI></OL></TD></TR>
+<TR><TD><CODE>&lt;UL&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;UL&gt;Lista&lt;/UL&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;UL&gt;sin&lt;/UL&gt;<BR>&nbsp;&nbsp;&nbsp;&lt;UL&gt;numerar&lt;/UL&gt;<BR>&lt;/UL&gt;</CODE></TD><TD><UL><LI>Lista</LI><LI>sin</LI><LI>numerar</LI></UL></TD></TR>
+
+<TR><TD><CODE>&lt;IMG src="memory:pseint64.png"&gt;</CODE></TD><TD><IMG src="../imgs/icon64.png"></TD></TR>
+
+<TR><TD><CODE>
+	&lt;TABLE&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&lt;TR&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;TD&gt;1,1&lt;/TD&gt;&lt;TD&gt;1,2&lt;/TD&gt;&lt;TD&gt;1,3&lt;/TD&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&lt;/TR&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&lt;TR&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;TD&gt;2,1&lt;/TD&gt;&lt;TD&gt;2,2&lt;/TD&gt;&lt;TD&gt;2,3&lt;/TD&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&lt;/TR&gt;<BR>
+	&lt;/TABLE&gt;
+</CODE></TD><TD>
+	<TABLE><TR><TD>1,1</TD><TD>1,2</TD><TD>1,3</TD></TR>
+	<TR><TD>2,1</TD><TD>2,2</TD><TD>2,3</TD></TR></TABLE>
+</TD></TR>
+
+<TR><TD><CODE>
+	&lt;TABLE border=1 cellpadding=10&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&lt;TR&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;TD bgcolor="#FF0000"&gt;1,1&lt;/TD&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;TD bgcolor="#00FF00"&gt;1,2&lt;/TD&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&lt;/TR&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&lt;TR bgcolor="#0000FF"&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;TD&gt;2,1&lt;/TD&gt;&lt;TD&gt;2,2&lt;/TD&gt;<BR>
+	&nbsp;&nbsp;&nbsp;&lt;/TR&gt;<BR>
+	&lt;/TABLE&gt;
+</CODE></TD><TD>
+	<TABLE border=1 cellpadding=10><TR><TD bgcolor="#FF0000">1,1</TD><TD bgcolor="#00FF00">1,2</TD></TR>
+	<TR bgcolor="#0000FF"><TD>2,1</TD><TD>2,2</TD></TR></TABLE>
+</TD></TR>
+
+</TABLE>
+</CENTER>
+<BR><BR>
+</BODY></HTML>

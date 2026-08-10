@@ -1,0 +1,11 @@
+desc=Perfil para ser usado en el módulo de "Fundamento de Programación" de la carreras de "Técnico en Programación Computacional", "Técnico en Programación y Análisis de Sistemas" e "Ingeniería de Ejecución en Informática", del Instituto Profesional AIEP de la Universidad Andrés Bello - Chile, - Sede Rancagua (enviado por el profesor Luis Soto).
+allow_dinamyc_dimensions=1
+allow_concatenation=1
+force_init_vars=1
+force_semicolon=1
+allow_word_operators=0
+lazy_syntax=0
+base_zero_arrays=1
+overload_equal=0
+coloquial_conditions=0
+force_define_vars=1

@@ -1,0 +1,33 @@
+#ifndef MXSTATUSBAR_H
+#define MXSTATUSBAR_H
+#include <wx/panel.h>
+#include <wx/font.h>
+
+enum STATUS { 
+		STATUS_BASE=0,
+		STATUS_UPDATE_CHECKING, /*STATUS_UPDATE_DISABLED, */STATUS_UPDATE_ERROR, STATUS_UPDATE_NONEWS, STATUS_UPDATE_FOUND,
+		STATUS_WELCOME, STATUS_PROFILE, STATUS_NEW_SOURCE,
+		STATUS_COMMAND, STATUS_SYNTAX_CHECK_OK, STATUS_SYNTAX_CHECK_ERROR, STATUS_SYNTAX_OK, STATUS_SYNTAX_ERROR, STATUS_SYNTAX_ERROR_DETAIL, STATUS_NO_RTSYNTAX,
+		STATUS_DEBUG_RUNNING, STATUS_DEBUG_PAUSED, STATUS_DEBUG_ENDED, STATUS_DEBUG_STOPPED,
+		STATUS_RUNNING, STATUS_RUNNING_CHANGED, STATUS_RUNNING_UPDATED, STATUS_RUNNED_OK, STATUS_RUNNED_INT, 
+		STATUS_FLOW, STATUS_FLOW_CHANGED, STATUS_EXAMPLE, STATUS_COUNT };
+
+class mxStatusBar : public wxPanel {
+private:
+	int status;
+	wxFont font;
+	wxColour bg_color;
+	void OnPaint(wxPaintEvent &event);
+	void OnClick(wxMouseEvent &event);
+	DECLARE_EVENT_TABLE();
+public:
+	void SetStatus(int what);
+//	void SetStatus(wxString what);
+	mxStatusBar(wxWindow *parent);
+	int GetHeight() const;
+};
+
+extern mxStatusBar *status_bar;
+
+#endif
+

@@ -1,0 +1,6 @@
+ARCH=w32
+RM=del
+MKDIR=mkdir
+
+include ../configs/common.w32
+# va con .. porque los includes a config.* se invocan desde los directorios de los modulos

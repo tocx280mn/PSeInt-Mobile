@@ -1,0 +1,42 @@
+El paquete que contiene al ejercicio es un zip con los siguientes archivos (sin 
+subcarpetas):
+
+	- input-*.txt: datos de entrada de los casos de prueba, donde * es el nombre 
+		del caso de prueba
+		
+	- output-*.txt: resultados correctos de la ejecución de los casos de prueba 
+		(es decir, lo que se vería en consola, que incluye entrada y salida)
+		
+	- base.psc: opcional, plantilla de pseudocódigo para utilizar como base para 
+		el ejercicio
+		
+	- help.hml: opciona, ayuda o descripción arbitraria del ejercicio, para 
+		mostrar en el editor en el panel de ayuda rápida, html básico (sin css, 
+		ni imágenes, ni nada raro, para wxHtmlWindow)
+		
+	- config.ini: archivo de texto con opciones que configuran el ejercicio, una
+			opción por linea, en cualquier orden, con el formato campo=valor, 
+			donde los campos pueden ser:
+		- mensaje exito: mensaje que muestra el evaluador cuando el alumno 
+				supera correctamente todos los casos de prueba
+		- mensaje error = mensaje que muestra el evaluador cuando el alumno 
+				falla uno o más casos de prueba (no debe incluir la pregunta 
+				acerca de mostrar o no el caso fallido)
+		- mostrar casos fallidos = si es "primero" o "todos", al fallar uno o 
+				más casos de prueba, el evaluador pregunta al alumno si quiere 
+				ver ese caso, y en caso afirmativo despliega una nueva ventana 
+				con la lista de casos fallidos (solo si el valor es "todos", 
+				sino se utiliza solo el primero que falla) y dos cuadros de 
+				texto con las entradas y salidas
+		- mostrar soluciones = si es "si", la ventana que muestra los casos 
+				fallidos muestra en sus dos cuadros de texto la salida del 
+				alumno y la salida correcto, si es no, solo la entrada y la 
+				salida del alumno
+		- mezclar casos = si es "si" los casos se reordenan aleatoriamente antes
+				de ser verificados
+		- version requerida = indica la versión mínima requerida en el 
+				evaluador y en editor para procesar correctamente el caso, si no 
+				es la que el alumno utiliza en lugar de abrir el ejercicio 
+				muestra un mensaje de error indicandole que debe actualizar 
+				pseint
+

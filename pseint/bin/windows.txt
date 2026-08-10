@@ -1,0 +1,10 @@
+ Notas sobre la distribución de PSeInt para Windows
+====================================================
+
+El sistema consta de varios ejecutables, el principal (y que se encarga de invocar a los demás) es wxPSeInt.
+
+Para descargar actualizaciones u obtener mayor documentación consulte la ayuda en línea del programa o visite la página oficial del proyecto (http://pseint.sourceforge.net).
+
+Este programa se distribuye bajo licencia GPL (ver help\gpl.html), por lo que está permitido copiar y redistribuir libremente bajo los términos de la misma. Para conseguir los fuentes visite pseint.sourceforge.net. Para más detalles sobre el código fuente, sus dependencias y otros recursos utilizados, vea el archivo help/about.html.
+
+

@@ -1,0 +1,23 @@
+<HTML>
+	<HEAD>
+		<TITLE>PSeudo Intérprete</TITLE>
+	</HEAD>
+	<BODY>
+<B>Escritura</B>
+<BR><BR>
+<CENTER><img src="ps_escribir.png"></TD></CENTER><BR>
+&nbsp;&nbsp;&nbsp;La instrucción Escribir permite mostrar valores al ambiente.<BR><BR>
+<code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Escribir &lt;exprl&gt; , &lt;expr2&gt; , ... , &lt;exprN&gt;&nbsp;;
+</code><BR><BR>
+&nbsp;&nbsp;&nbsp;Esta instrucción informa al ambiente (en este caso escribiendo en pantalla) los valores obtenidos de evaluar N expresiones. Dado que puede incluir una o más expresiones, mostrará uno o más valores. Si hay más de una expresión, se escriben una a continuación de la otra sin separación, por lo que el algoritmo debe explicitar los espacios necesarios para diferenciar dos resultados si así lo requiere.<BR>
+<BR>
+&nbsp;&nbsp;&nbsp;Si en algún punto de la linea se encuentran las palabras clave "SIN SALTAR" o "SIN BAJAR" los valores se muestran en la pantalla, pero no se avanza a la linea siguiente, de modo que la próxima acción de lectura o escritura continuará en la misma linea. En caso contrario, se añade un salto de línea luego de las expresiones mostradas.<BR>
+<BR>
+<code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Escribir Sin Saltar &lt;exprl&gt;  , ... , &lt;exprN&gt;;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Escribir &lt;exprl&gt; ,  ... , &lt;exprN&gt; Sin Saltar;
+</code><BR><BR>
+&nbsp;&nbsp;&nbsp;Puede utilizarse indistintamente las palabras Imprimir y Mostrar en lugar de Escribir si su perfil de lenguaje permite sintaxis flexible. Además, en este caso se permite opcionalmente separar las expresiones a mostrar simplemente con espacios en lugar de comas. Esto se configura en el cuadro de <A href="perfiles.html">Opciones del Pseudocódigo</A>.<BR>
+<BR>
+&nbsp;&nbsp;&nbsp;El ejemplo <A href="example:Suma.psc">Suma</A> muestra un programa muy simple que lee dos números mostrando con la instrucción Escribir las indicaciones para el usuario y el resultado de sumar los mismos.<BR>
+<BR>
+</BODY></HTML>

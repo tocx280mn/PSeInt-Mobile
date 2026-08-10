@@ -1,0 +1,31 @@
+function sin_titulo() {
+	var a, b, c, d, e, f;
+	a = 11;
+	b = 2;
+	c = true;
+	d = false;
+	e = "Hola";
+	f = "Mundo";
+	document.write(a+b, '<BR/>');
+	document.write(a*b, '<BR/>');
+	document.write(a/b, '<BR/>');
+	document.write(a-b, '<BR/>');
+	document.write(Math.pow(a, b), '<BR/>');
+	document.write(a%b, '<BR/>');
+	document.write(a==b, '<BR/>');
+	document.write(a!=b, '<BR/>');
+	document.write(a<b, '<BR/>');
+	document.write(a>b, '<BR/>');
+	document.write(a<=b, '<BR/>');
+	document.write(a>=b, '<BR/>');
+	document.write(c && d, '<BR/>');
+	document.write(c || d, '<BR/>');
+	document.write(!(c && d), '<BR/>');
+	document.write(e+" "+f, '<BR/>');
+	document.write(e==f, '<BR/>');
+	document.write(e!=f, '<BR/>');
+	document.write(e<f, '<BR/>');
+	document.write(e>f, '<BR/>');
+	document.write(e<=f, '<BR/>');
+	document.write(e>=f, '<BR/>');
+}

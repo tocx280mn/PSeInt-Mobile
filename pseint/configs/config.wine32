@@ -1,0 +1,7 @@
+ARCH=wine32
+RM=rm -f
+MKDIR=mkdir -p
+PREFIX=wine32 
+
+include ../configs/common.w32
+# va con .. porque los includes a config.* se invocan desde los directorios de los modulos

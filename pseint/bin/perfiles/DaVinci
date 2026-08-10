@@ -1,0 +1,15 @@
+desc=Perfil para la carrera de Desarrollo de Videojuegos de la Escuela de Arte Multimedial Da Vinci (enviado por el docente Miguel Vedoya).
+allow_dinamyc_dimensions=1
+use_alternative_io_shapes=0
+use_nassi_schneiderman=0
+force_define_vars=1
+force_init_vars=1
+allow_concatenation=1
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=1
+allow_word_operators=0
+overload_equal=1
+coloquial_conditions=0
+lazy_syntax=0
+base_zero_arrays=1

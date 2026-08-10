@@ -1,0 +1,7 @@
+ARCH=wine64
+RM=rm -f
+MKDIR=mkdir -p
+PREFIX=wine64 
+
+include ../configs/common.w64
+# va con .. porque los includes a config.* se invocan desde los directorios de los modulos

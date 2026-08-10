@@ -1,0 +1,24 @@
+DIM c AS DOUBLE
+c = 0
+WHILE c<=10
+	c = c+1
+	PRINT c
+WEND
+c = 0
+DO
+	c = c+1
+	PRINT c
+LOOP UNTIL c=10
+c = 0
+DO
+	c = c+1
+	PRINT c
+LOOP WHILE c<10
+IF c=10 THEN
+	PRINT "Si"
+END
+IF c=10 THEN
+	PRINT "Si"
+ELSE
+	PRINT "No"
+END

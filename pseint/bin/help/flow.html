@@ -1,0 +1,47 @@
+<HTML>
+<HEAD>
+	<TITLE>PSeudo Intérprete</TITLE>
+</HEAD>
+<BODY>
+	<img src="../imgs/tools/32/flujo.png">&nbsp;&nbsp;<B>Edición de un diagrama de flujo</B>
+	<BR>
+	<BR>
+	<A href="flow-quick.html">Ayuda rápida..."</a></BR>
+	<BR>
+	<BR>
+	&nbsp;&nbsp;&nbsp; PSeInt permite editar un algoritmo modificando el pseudocódigo o modificando su diagrama de flujo. Para utilizar este segundo mecanismo debe abrir el pseudocódigo del algoritmo a editar y hacer click sobre el ítem "Editar diagrama de flujo..." del menú "Archivo", o el botón correspondiente en la barra de herramientas. Esta acción abrirá una nueva ventana en la que podrá visualizar y editar dicho diagrama.<BR>
+	<BR>
+	La barra de herramientas de la ventana de edición de Diagramas de flujo permite:<UL>
+		<LI><img src="../imgs/flow/32/tb_sub.png"> (F3): muestra la lista de <B>procesos y subprocesos</B> del algoritmo actual para seleccionar cual de ellos mostrar y editar en el diagrama, o para agregar/eliminar subprocesos.<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_run.png"> (F9): regenera el pseudocódigo a partir del diagrama para reflejar los cambios e intenta <B>ejecutar el algoritmo resultante</B>. Si el algoritmo generado es correcto, se ejecutará, si no lo es los errores se marcarán con íconos en rojo sobre las entidades que los producen y al pasar el cursor del ratón sobre éstas se mostraran las descripciones cortas de los errores en la parte inferior izquierda de la ventana (para obtener las descripción detalladas deberá seleccionar los errores en el editor de pseudocódigo).<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_debug.png"> (F5): aplica los cambios realizados en el editor de diagramas sobre el pseudocódigo en la ventana principal de PSeInt, e inicia la <B>ejecución <A href="debug.html">paso a paso</A></B>. Durante la ejecución paso a paso las instrucciones que se vayan ejecutando se irán marcarán tanto en el pseudocódigo como en el diagrama de flujo (con una flecha verde a la izquierda de la instrucción). Si en la configuración de la ventana principal está seleccionada la opción "Organizar Ventanas al Iniciar el Paso a Paso" las ventanas del pseudocódigo y diagrama se redimensionarán y reposicionarán para ocupar la mitad de la pantalla cada una, de modo que pueda utilizar los controles de la ejecución paso a paso de la ventana principal sin perder de vista el diagrama.<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_save.png">: permite <B>exportar</B> el diagrama como archivo de imágen. Se presentará un cuadro de diálogo para modificar las opciones para generar la imágen (tipo de diagrama, mostrar o no comentarios, usar o no colores, qué subproceso utilizar, etc). Nota: la configuración por defecto en dicho cuadro no es la seleccionada en el editor al momento de generar la imágen.<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_zoom.png"> (F12): acomoda el <B>zoom y el desplazamiento</B> del diagrama de flujo para que se muestre completo en la ventana.<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_fullscreen.png"> (F11): cambia a modo <B>pantalla completa</B>, o retorna a modo ventana.<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_style.png"> (F9): alterna entre el <B>diagrama de flujo clásico, y el diagrama de Nassi-Shneiderman</B>. Esta opción no es persistente; es decir, si cambia el tipo de diagrama, al cerrar el editor y abrirlo nuevametne, el cambio no se mantendrá. Para elegir qué tipo de diagrama utilizar por defecto, utilice la opción "Utilizar diagramas de Nassi-Shneiderman" del menú "Configurar" de la ventana principal de PSeInt. Nota: el valor por defecto para esta opción puede variar con el perfil.<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_comments.png">: muestra u oculta los <B>comentarios</B> del algoritmo.<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_crop.png">: habilita o deshabilita el <B>corte/abreviado de etiquetas</B>. Esta funcionalidad hace que se muestren en el diagrama solo las primeras letras del texto de cada entidad, para evitar que instrucciones o expresiones muy largas deformen excesivamente el diagrama, y permitir que se observe mejor el flujo de la ejecución. Cuando esta opción está activada, puede ver en la parte inferior de la ventana el texto completo de una entidad colocando el puntero del mouse sobre la mimsa, o al editarlo.<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_colors.png">: habilita o deshabilita el <B>coloreado de entidades</B> según su tipo. La versión coloreada aporta mayores referencias visuales, pero la versión sin colorear puede ser más apta para su impresión en blanco y negro.<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_help.png"> (F1): muestra esta ventana de <B>ayuda</B>.<BR></LI>
+		<LI><img src="../imgs/flow/32/tb_close.png"> (Esc): <B>cierra el editor</B>, preguntando si se debe actualizar el pseudocódigo de la ventana principal en caso de que existan cambios sin aplicar.<BR></LI>
+	</UL><BR>
+	&nbsp;&nbsp;&nbsp; Para <B>añadir nuevas entidades</B> (instrucciones o estructuras de control) al diagrama, debe seleccionarlas desde la barra de entidades que se despliega al llevar el puntero del mouse al margen derecho de la ventana, y arrastrarlas hasta la posición en el diagrama donde desee insertarla.<!-- Puede hacer que la barra de entidades permanezca siempre desplegada presionando la tecla Tab.--> Algunas entidades pueden presentar variaciones. Por ejemplo, un comentario puede asociarse a un punto en el flujo, o a otra instrucción; Repetir-Mientras Que es la alternativa a Repetir-Hasta Que, o Para Cada es la variante del Para convencional. Para insertar una entidad en su <B>versión alternativa</B> debe mantener presionada la tecla Shift mientras la selecciona. Notará que al presionar la tecla Shift, el texto de ayuda que aparece en la parte inferior de la ventana cambia mostrando la descripción de la variante.<BR>
+	<BR>
+	&nbsp;&nbsp;&nbsp; Alternativamente puede <B>duplicar una entidad existente</B>. Para ello debe arrastrar la entidad que quiere copiar manteniendo la tecla Shift presionada.<BR>
+	<BR>
+	&nbsp;&nbsp;&nbsp; Para <B>modificar el texto</B> de una entidad debe hacer doble click sobre el texto de la misma con el botón izquierdo del mouse, o un click simple con el botón derecho.<BR>
+	<BR>
+	&nbsp;&nbsp;&nbsp; Para <B>eliminar una entidad</B> debe arrastrarla hasta la papelera ubicada en la esquina inferior izquierda de la ventana. Normalmente esta papelera no es visible. Se presentará en pantalla al comenzar a arrastrar una entidad.<BR>
+	<BR>
+	&nbsp;&nbsp;&nbsp; Para realizar una <B>selección múltiple</B> puede mantener presionada la tecla Shift y utilizar el botón izquierdo del mouse (arrastrando). Esta acción delimita un área rectangular, y al finalizar agrupa cualquier conjunto de entidades lógicamente contiguas contenidas en dicha área. Verá una línea de trazos alrededor de las mismas. Esto indica que si se intenta mover, duplicar o borrar una de ellas, la acción se realiza en realidad sobre todo el conjunto. Para desagrupar el conjunto de entidades debe utilizar el ícono de la esquina superior izquierda del conjunto (una X).<BR>
+	<BR>
+	&nbsp;&nbsp;&nbsp; Puede utilizar la rueda del mouse para variar el <B>zoom</B> gradualmente, o seleccionar un área de la ventana con el botón del medio para hacer zoom sobre dicha área. Para <B>mover todo el diagrama</B> debe arrastrar el fondo (es decir, haciendo click en un lugar que no contenga ninguna entidad) con los botones derecho o izquierdo. Además, puede pasar al modo pantalla completa mediante la tecla F11.<BR>
+	<BR>
+	Puede utilizar además la tecla F7 para alternar entre los modos de solo visualización, y de edición. En el primero, no podrá modificar el algoritmo (si el algoritmo era de solo lectura en el editor de pseudocódigo, el editor de diagramas no permitirá pasar al modo edición). Finalmente, mientras edita el algortimo, puede anclar el panel de entidades (el panel de la derecha) para que permanezca siempre visible, utilizando la tecla Tab.<BR>
+	<BR>
+	&nbsp;&nbsp;&nbsp; En cualquier momento, si el algoritmo no contiene errores, puede visualizar su conversión a pseudocódigo volviendo el foco al editor de pseudocódigo de la ventana principal de PSeInt. Es decir, al hacer click en el viejo pseudocódigo, este se actualizará reflejando los cambios generados en el diagrama.<BR>
+	<BR>
+	&nbsp;&nbsp;&nbsp; Por último, debe notar que los errores solo se marcan sobre el diagrama cuando se regenera el pseudocódigo en la ventana principal, y no automáticamente luego de cada cambio como ocurre con en dicha ventana cuando la opción "Comprobar sintaxis mientras escribe" está seleccionada. Pero puede regenerar el pseudocódigo en cualquier momento sin necesidad de ejecutar el algoritmo, utilizando la tecla F2.<BR>
+	<BR>
+	<BR><BR>
+</BODY></HTML>

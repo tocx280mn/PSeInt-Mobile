@@ -1,0 +1,15 @@
+DIM a AS LONG
+DIM b AS DOUBLE
+DIM c AS INTEGER
+DIM d AS INTEGER
+DIM e AS STRING
+DIM f AS STRING
+DIM p AS STRING
+a = 1
+b = 2.5
+c = 1
+d = 0
+e = "Hola"
+f = "Hola Mundo"
+LINE INPUT p
+PRINT p

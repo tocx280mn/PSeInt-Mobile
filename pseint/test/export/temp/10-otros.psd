@@ -1,0 +1,7 @@
+Algoritmo OTROS
+	Limpiar Pantalla
+	Esperar Tecla
+	Esperar 100 Milisegundos
+	Esperar 1 Segundos
+	Escribir PI
+FinAlgoritmo

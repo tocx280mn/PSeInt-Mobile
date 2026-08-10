@@ -1,0 +1,23 @@
+<HTML>
+	<HEAD>
+		<TITLE>PSeudo Intérprete</TITLE>
+	</HEAD>
+	<BODY>
+<B>Selección Múltiple</B>
+<BR><BR>
+<CENTER><img src="ps_segun.png"></TD></CENTER><BR>
+&nbsp;&nbsp;&nbsp;La secuencia de instrucciones ejecutada por una instrucción <i>Segun</i> depende del valor de una variable numérica.<BR><BR>
+<code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Segun &lt;variable&gt; Hacer <BR>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   &lt;número1&gt;: &lt;instrucciones&gt; <BR>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   &lt;número2&gt;,&lt;número3&gt;:  &lt;instrucciones&gt; <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &lt;...&gt; <BR>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; De Otro Modo: &lt;instrucciones&gt; <BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FinSegun <BR>
+</code><BR><BR>
+&nbsp;&nbsp;&nbsp;Esta instrucción permite ejecutar opcionalmente varias acciones posibles, dependiendo del valor almacenado en una variable de tipo numérico. Al ejecutarse, se evalúa el contenido de la variable y se ejecuta la secuencia de instrucciones asociada con dicho valor. <BR>
+&nbsp;&nbsp;&nbsp;Cada opción está formada por uno o más números separados por comas, dos puntos y una secuencia de instrucciones. Si una opción incluye varios números, la secuencia de instrucciones asociada se debe ejecutar cuando el valor de la variable es uno de esos números.<BR>
+&nbsp;&nbsp;&nbsp;Opcionalmente, se puede agregar una opción final, denominada <i>De Otro Modo</i>, cuya secuencia de instrucciones asociada se ejecutará sólo si el valor almacenado en la variable no coincide con ninguna de las opciones anteriores.<BR>
+<BR>
+&nbsp;&nbsp;&nbsp;El ejemplo <A href="example:Menu.psc">Menú</A> muestra un programa muy simple que utiliza esta estructura de control para elegir que salida mostrar en pantalla de acuerdo a qué opción el usuario selecciona mediante un menú.<BR>
+<BR>
+</BODY></HTML>

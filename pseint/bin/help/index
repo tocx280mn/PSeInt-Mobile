@@ -1,0 +1,44 @@
+	0 interfaz.html Interfaz
+		0 configuracion.html Configuración
+		0 flow.html Edición de Diagramas de Flujo
+		0 debug.html Seguimiento de algoritmos
+			0 prueba.html Prueba de Escritorio
+		0 ejercicios.html Ejercicios autocontenidos
+	0 pseudocodigo.html PSeudoCódigo
+		0 forma.html Forma general de un algoritmo
+		0 variables.html Variables
+		0 tipos.html Tipos de datos
+			0 simples.html Tipos simples
+			0 arreglos.html Arreglos
+			0 definir.html Definición explícita
+		0 expresiones.html Expresiones
+			0 operadores.html Operadores
+			0 funciones.html Funciones Predefinidas
+			0 colcond.html Expresiones coloquiales
+		0 secuenciales.html Acciones secuenciales
+			0 asignacion.html Asignación
+			0 lectura.html Lectura
+			0 escritura.html Escritura
+			0 secotras.html Otras
+		0 estructuras.html Estructuras de control
+			0 condicionales.html Condicionales
+				0 si.html Si-Entonces
+				0 segun.html Según
+			0 repetitivas.html Repetitivas
+				0 mientras.html Mientras
+				0 repetir.html Repetir
+				0 para.html Para
+		0 subprocesos.html Funciones/Subprocesos
+		0 otros.html Otras consideraciones
+		0 perfiles.html Personalización del lenguaje
+	0 ejemplos.html Ejemplos de algoritmos
+	0 docentes.html Información para docentes
+		0 doc_perfiles.html Creación de perfiles
+		0 doc_ejercicios.html Creación de ejercicios
+			0 html_format.html Formato help.html
+	0 about.html Notas sobre PSeInt
+		0 about.html#a Licencias y Contactos
+		0 cambios.html Registro de cambios
+		0 gpl.html General Public License
+		0 bugs.html Reporte de Errores
+		0 cucarachasracing.html Cucarachas Racing (blog)

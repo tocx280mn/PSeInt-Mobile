@@ -1,0 +1,15 @@
+desc=Perfil para la materia Introducción a la progración dictada en la Universidad Autónoma de la Ciudad de México (enviado por el Profr. David Estrada Espinosa).
+allow_dinamyc_dimensions=0
+use_alternative_io_shapes=0
+use_nassi_schneiderman=0
+force_define_vars=1
+force_init_vars=1
+allow_concatenation=0
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=1
+allow_word_operators=0
+overload_equal=0
+coloquial_conditions=0
+lazy_syntax=0
+base_zero_arrays=1

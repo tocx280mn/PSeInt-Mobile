@@ -1,0 +1,21 @@
+wxPSeInt maneja varios procesos al mismo tiempo.
+
+	Sintaxis en tiempo real
+		Hay un proceso interprete oculto para verificar la sintaxis en tiempo real, con el cual se comunica por pipes, es gestionado por el RTSyntaxManager, y se reutiliza el mismo proceso para todos los fuentes. Es el unico proceso hijo que no se gestiona con un mxProcess.
+		
+	Ejecución Paso a Paso
+		Un proceso interprete se lanza por cada ejecucion paso a paso, no puede haber dos o más al mismo tiempo, se crea mediante un mxProcess, que es gestionado por el DebugManager, y se comunica por un mxSocket. Si bien el proceso es nuevo en cada ejecución, la clase DebugManager es siempre la misma.
+		
+	Visualización/Edición de Diagramas de Flujo
+		En un momento dado, solo puede haber 1 proceso de este tipo por fuente (mxSource), que es instancia de mxProcess y se comunica por un mxSocket. El fuente conoce su mxSocket y su mxProcess para el diagrama. Si el mxProcess de un fuente es NULL quiere decir que no se está editando como diagrama.
+		
+	Ejecución en terminal propia (psterm)
+		En un momento dado, solo puede haber 1 proceso de este tipo por fuente (mxSource), que es instancia de mxProcess y se comunica por un mxSocket. El fuente conoce su mxSocket y su mxProcess para ejecución. Si el mxProcess de un fuente es NULL quiere decir que no se está ejecutando.
+		
+	Ejecución en terminal del sistema
+		Se gestiona con un mxProcess, y puede haber tantas como se quiera, aún para un mismo fuente. No hay comunicación con el editor.
+		
+
+En todas las comunicaciones por sockets wxPSeInt es servidor, y el otro proceso recive el puerto como argumento. El abrir y cerrar de sockets se gestiona en el CommunicationsManager. Cuando un cliente saluda dice de que tipo es y el id del fuente asociado (o -1 si no es necesario) para que el CommunicationManager despues puede derivar los eventos de input a quien corresponda.
+
+Los procesos se elimina en su evento de terminate (en realidad se marcan para eliminar, se eliminan efectivamente mas tarde para no hacer "delete this;"). A los sockets los elimina el CommunicationsManager en el evento de perdida de la conexion, ya que por esta clase pasan todos los eventos de cualquier socket.

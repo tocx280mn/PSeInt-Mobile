@@ -1,0 +1,76 @@
+ESCRIBIR
+  <UL>
+  <LI>{lista_de_expresiones}: complete aquí la lista de expresiones que desea mostrar separadas por comas(,).</LI>
+  </UL>
+LEER
+  <UL>
+  <LI>{lista_de_variables}: complete aquí la lista de variables que desea ingresar separadas por comas(,).</LI>
+  </UL>
+ASIGNAR
+  <UL>
+  <LI>{variable}: complete aquí el nombre de la variable cuyo contenido desea modificar.</LI>
+  <LI>{expresion}: complete aquí la expresión cuyo resultado desea asignar a {variable}.</LI>
+  </UL>
+SI - ENTONCES
+  <UL>
+  <LI>{expresion_logica}: complete aquí la condición a evaluar para decidir que grupo de acciones se deben ejecutar.</LI>
+  <LI>{acciones_por_verdadero}: complete aquí las acciones que se deben ejecutar si la condición ({expresion_logica}) resulta verdadera.</LI>
+  </UL>
+SI - ENTONCES - SINO
+  <UL>
+  <LI>{expresion_logica}: complete aquí la condición a evaluar para decidir que grupo de acciones se deben ejecutar.</LI>
+  <LI>{acciones_por_verdadero}: complete aquí las acciones que se deben ejecutar si la condición ({expresion_logica}) resulta verdadera.</LI>
+  <LI>{acciones_por_falso}: complete aquí las acciones que se deben ejecutar si la condición ({expresion_logica}) resulta falsa. Si no desea realizar nada en este caso, elimine esta linea y la anterior (SINO).</LI>
+  </UL>
+SEGUN
+  <UL>
+  <LI>{variable_numerica}: complete aquí la variable cuyo contenido se debe evaluar para decidir que acciones ejecutar.</LI>
+  <LI>{opcion_n} y {secuencia_de_acciones_n}: reemplaze {opcion_n} por un posible valores para {variable_numerica} y complete {secuencia_de_acciones_n} con las instrucciones a ejecutar en caso de que el valor coincida. Puede agregar {opcion_n} y {secuencia_de_acciones_n} tantas veces como sea necesario para cubrir los casos que correspondan. Puede asociar más de una opción a un mismo grupo de acciones colocando en {opcion_n} la lista de valores separados por comas.</LI>
+  <LI>{secuencia_de_acciones_dom}: complete aqui el conjunto de instrucciones a ejecutar si el valor de {variable_numerica} no coincide con ninguna de las opciones anteriormente planteadas. Si no desea incluir un conjunto de acciones para estos casos elimine esta linea y la anterior (De Otro Modo:).</LI>
+  </UL>
+MIENTRAS
+  <UL>
+  <LI>{expresion_logica}: complete aquí la condición que se debe evaluar para realizar una iteración.</LI>
+  <LI>{secuencia_de_acciones}: complete aqui la lista de instrucciones que desea repetir mientras la condicion {expresion_logica} sea verdadera. Recuerde que debe incluir aquí alguna acción que pueda modificar dicha condición.</LI>
+  </UL>
+REPETIR - MIENTRAS QUE
+  <UL>
+  <LI>{secuencia_de_acciones}: complete aqui la lista de instrucciones que desea repetir hasta que la condicion {expresion_logica} sea verdadera. Recuerde que debe incluir aquí alguna acción que pueda modificar dicha condición.</LI>
+  <LI>{expresion_logica}: complete aquí la condición que se debe evaluar para determinar si se continúa iterando.</LI>
+  </UL>
+REPETIR - HASTA QUE
+  <UL>
+  <LI>{secuencia_de_acciones}: complete aqui la lista de instrucciones que desea repetir hasta que la condicion {expresion_logica} sea verdadera. Recuerde que debe incluir aquí alguna acción que pueda modificar dicha condición.</LI>
+  <LI>{expresion_logica}: complete aquí la condición que se debe evaluar para determinar si se continúa iterando.</LI>
+  </UL>
+PARA CADA
+  <UL>
+  <LI>{id_elemento}: ingrese aquí un nuevo identificador/nombre de variable, que representará en cada iteración un elemento del arreglo.</LI>
+  <LI>{id_arreglo}: introduzca aquí el identificador/nombre del arreglo a recorrer.</LI>
+  </UL>
+PARA
+  <UL>
+  <LI>{variable_numerica}: complete aquí el identificador de la variable que utilizará para iterar.</LI>
+  <LI>{valor_inicial}: introduzca aquí el valor de {variable_numerica} desde el cual se comenzará a iterar.</LI>
+  <LI>{valor_final}: introduzca aquí el valor final de {variable_numerica} hasta el cual se continuará iterando.</LI>
+  <LI>{paso}: introduzca aquí el incremente que se debe realizar a {variable_numerica} en cada iteración.</LI>
+  <LI>{secuencia_de_acciones}: complete aqui la lista de instrucciones que desea repetir en cada iteración.</LI>
+  </UL>
+SUBPROCESO
+  <UL>
+  <LI>{variable_de_retorno}: si su función/subproceso calcula y devuelve algún valor, complete aquí el nombre de la variable que utilizará para almacenar ese valor; si su función/subproceso no devuelve nada puede eliminar la variable y la flecha de asignación.</LI>
+  <LI>{nombre}: introduzca aquí el nombre que recibirá la función/subproceso.</LI>
+  <LI>{argumentos}: introduzca aquí la lista de argumentos que requiere su función, utlizando comas para separarlos, e ingresando el identificador para cada uno y opcionalmente las palabras clave "por valor" o "por referencia" para indicar el tipo de pasaje; si la función/subproceso no requiere argumentos puede dejar este campo en blanco, y opcionalmente omitir los paréntesis.</LI>
+  </UL>
+SUBALGORITMO
+  <UL>
+  <LI>{variable_de_retorno}: si su función/subproceso calcula y devuelve algún valor, complete aquí el nombre de la variable que utilizará para almacenar ese valor; si su función/subproceso no devuelve nada puede eliminar la variable y la flecha de asignación.</LI>
+  <LI>{nombre}: introduzca aquí el nombre que recibirá la función/subproceso.</LI>
+  <LI>{argumentos}: introduzca aquí la lista de argumentos que requiere su función, utlizando comas para separarlos, e ingresando el identificador para cada uno y opcionalmente las palabras clave "por valor" o "por referencia" para indicar el tipo de pasaje; si la función/subproceso no requiere argumentos puede dejar este campo en blanco, y opcionalmente omitir los paréntesis.</LI>
+  </UL>
+FUNCION
+  <UL>
+  <LI>{variable_de_retorno}: si su función/subproceso calcula y devuelve algún valor, complete aquí el nombre de la variable que utilizará para almacenar ese valor; si su función/subproceso no devuelve nada puede eliminar la variable y la flecha de asignación.</LI>
+  <LI>{nombre}: introduzca aquí el nombre que recibirá la función/subproceso.</LI>
+  <LI>{argumentos}: introduzca aquí la lista de argumentos que requiere su función, utlizando comas para separarlos, e ingresando el identificador para cada uno y opcionalmente las palabras clave "por valor" o "por referencia" para indicar el tipo de pasaje; si la función/subproceso no requiere argumentos puede dejar este campo en blanco, y opcionalmente omitir los paréntesis.</LI>
+  </UL>

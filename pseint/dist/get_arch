@@ -1,0 +1,6 @@
+#!/bin/sh
+if uname -a | grep x86_64 >/dev/null; then 
+  echo -n l64
+else
+  echo -n l32
+fi

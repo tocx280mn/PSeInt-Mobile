@@ -1,0 +1,8 @@
+// icons are internally sorted alphabetically, and first one will be used as executable's icon, so we define this one
+// with aaaaa to ensure it will end first in the list (or you will see wx's one)
+aaaaaa ICON "../bin/imgs/icon.ico"
+#include "winuser.h"
+#include "wx/msw/wx.rc"
+//1 RT_MANIFEST "manifest.xml"
+
+

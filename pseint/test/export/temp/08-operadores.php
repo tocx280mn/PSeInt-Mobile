@@ -1,0 +1,30 @@
+<?php
+	$a = 11;
+	$b = 2;
+	$c = true;
+	$d = false;
+	$e = 'Hola';
+	$f = 'Mundo';
+	echo $a+$b, PHP_EOL;
+	echo $a*$b, PHP_EOL;
+	echo $a/$b, PHP_EOL;
+	echo $a-$b, PHP_EOL;
+	echo pow($a, $b), PHP_EOL;
+	echo $a%$b, PHP_EOL;
+	echo $a==$b, PHP_EOL;
+	echo $a!=$b, PHP_EOL;
+	echo $a<$b, PHP_EOL;
+	echo $a>$b, PHP_EOL;
+	echo $a<=$b, PHP_EOL;
+	echo $a>=$b, PHP_EOL;
+	echo $c && $d, PHP_EOL;
+	echo $c || $d, PHP_EOL;
+	echo !($c && $d), PHP_EOL;
+	echo $e.' '.$f, PHP_EOL;
+	echo $e==$f, PHP_EOL;
+	echo $e!=$f, PHP_EOL;
+	echo $e<$f, PHP_EOL;
+	echo $e>$f, PHP_EOL;
+	echo $e<=$f, PHP_EOL;
+	echo $e>=$f, PHP_EOL;
+?>

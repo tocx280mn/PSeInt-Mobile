@@ -1,0 +1,9 @@
+# -*- coding: iso-8859-15 -*-
+from math import pi
+from time import sleep
+if __name__ == '__main__':
+	print ""
+	raw_input()
+	sleep(100/1000.0)
+	sleep(1)
+	print pi

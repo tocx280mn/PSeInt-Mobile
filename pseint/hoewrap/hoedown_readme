@@ -1,0 +1,15 @@
+En esta carpeta hay un pequeño wrapper para una parte de la biblioteca Hoedown. 
+Hoedown es una biblioteca para parsear texto en formato markdown y convertirlo
+a otros formatos, en particular html. Todos los archivos de la carpeta hoedown
+provienen del repositorio de dicho proyecto (https://github.com/hoedown/hoedown.git)
+clonado el 5/5/16 (último commit: 980b9c549b4348d50b683ecee6abee470b98acda)
+
+Según el readme de hoedown:
+
+	"Hoedown` is a revived fork of [Sundown](https://github.com/vmg/sundown),
+	the Markdown parser based on the original code of the
+	[Upskirt library](http://fossil.instinctive.eu/libupskirt/index)
+	by Natacha Porté."
+
+
+

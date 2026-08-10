@@ -1,0 +1,89 @@
+OBJS=${OBJS_DIR}/Load.o ${OBJS_DIR}/Canvas.o ${OBJS_DIR}/MainWindow.o ${OBJS_DIR}/Comm.o ${OBJS_DIR}/DClasico.o ${OBJS_DIR}/DNassiSchne.o ${OBJS_DIR}/EntityEditorDraw.o ${OBJS_DIR}/Entity.o ${OBJS_DIR}/Events.o ${OBJS_DIR}/Global.o ${OBJS_DIR}/Application.o ${OBJS_DIR}/Textures.o ${OBJS_DIR}/zockets.o ${OBJS_DIR}/Text.o ${OBJS_DIR}/LangSettings.o ${OBJS_DIR}/osdep.o ${OBJS_DIR}/EntityLinking.o ${OBJS_DIR}/ShapesBar.o ${OBJS_DIR}/ToolBar.o ${OBJS_DIR}/Trash.o ${OBJS_DIR}/ProcessSelector.o ${OBJS_DIR}/ProgramaDump.o ${OBJS_DIR}/DataValue.o ${OBJS_DIR}/Keywords.o ${OBJS_DIR}/strFuncs.o ${OBJS_DIR}/EntityEditor.o ${OBJS_DIR}/StatusBar.o ${OBJS_DIR}/Scene.o ${OBJS_DIR}/glRenderer.o 
+
+${OBJS_DIR}/Load.o: Load.cpp Load.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Events.h ProcessSelector.h Scene.h ../wxPSeInt/CommonParsingFunctions.h ../pseint/Programa.hpp ../pseint/Instruccion.hpp ../pseint/DataValue.h ../pseint/Code.h ../pseint/ProgramaDump.hpp
+	${GPP} ${CXXFLAGS} -c Load.cpp -o $@
+
+${OBJS_DIR}/Canvas.o: Canvas.cpp GLstuff.h gl_lite.h Events.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Textures.h Canvas.h
+	${GPP} ${CXXFLAGS} -c Canvas.cpp -o $@
+
+${OBJS_DIR}/MainWindow.o: MainWindow.cpp ../wxPSeInt/string_conversions.h MainWindow.h ToolBar.h Canvas.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h Load.h Events.h Comm.h
+	${GPP} ${CXXFLAGS} -c MainWindow.cpp -o $@
+
+${OBJS_DIR}/Comm.o: Comm.cpp GLstuff.h gl_lite.h ../pseint/zockets.h Comm.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Events.h Load.h MainWindow.h
+	${GPP} ${CXXFLAGS} -c Comm.cpp -o $@
+
+${OBJS_DIR}/DClasico.o: DClasico.cpp Entity.h EntityLinking.h Vector.h Global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Renderer.h glRenderer.h
+	${GPP} ${CXXFLAGS} -c DClasico.cpp -o $@
+
+${OBJS_DIR}/DNassiSchne.o: DNassiSchne.cpp Entity.h EntityLinking.h Vector.h Global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Text.h Renderer.h glRenderer.h
+	${GPP} ${CXXFLAGS} -c DNassiSchne.cpp -o $@
+
+${OBJS_DIR}/EntityEditorDraw.o: EntityEditorDraw.cpp GLstuff.h gl_lite.h MainWindow.h ProcessSelector.h Scene.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Events.h Textures.h Canvas.h Text.h ShapesBar.h ToolBar.h Trash.h ../pseint/strFuncs.hpp EntityEditor.h StatusBar.h
+	${GPP} ${CXXFLAGS} -c EntityEditorDraw.cpp -o $@
+
+${OBJS_DIR}/Entity.o: Entity.cpp Entity.h EntityLinking.h Vector.h Global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Events.h Text.h Renderer.h glRenderer.h ShapesBar.h Textures.h GLstuff.h gl_lite.h ../pseint/strFuncs.hpp
+	${GPP} ${CXXFLAGS} -c Entity.cpp -o $@
+
+${OBJS_DIR}/Events.o: Events.cpp GLstuff.h gl_lite.h Events.h Entity.h EntityLinking.h Vector.h Global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Comm.h Load.h Textures.h MainWindow.h Canvas.h ShapesBar.h Trash.h ProcessSelector.h Scene.h EntityEditor.h
+	${GPP} ${CXXFLAGS} -c Events.cpp -o $@
+
+${OBJS_DIR}/Global.o: Global.cpp Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Trash.h Textures.h GLstuff.h gl_lite.h ShapesBar.h ToolBar.h StatusBar.h ProcessSelector.h Scene.h EntityEditor.h
+	${GPP} ${CXXFLAGS} -c Global.cpp -o $@
+
+${OBJS_DIR}/Application.o: Application.cpp Application.h GLstuff.h gl_lite.h MainWindow.h Version.h ../pseint/version_common.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Comm.h Load.h ../wxPSeInt/osdep.h
+	${GPP} ${CXXFLAGS} -c Application.cpp -o $@
+
+${OBJS_DIR}/Textures.o: Textures.cpp Textures.h GLstuff.h gl_lite.h Entity.h EntityLinking.h Vector.h Text.h Global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h
+	${GPP} ${CXXFLAGS} -c Textures.cpp -o $@
+
+${OBJS_DIR}/zockets.o: ../pseint/zockets.cpp ../pseint/zockets.h
+	${GPP} ${CXXFLAGS} -c ../pseint/zockets.cpp -o $@
+
+${OBJS_DIR}/Text.o: Text.cpp GLstuff.h gl_lite.h Text.h Textures.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h
+	${GPP} ${CXXFLAGS} -c Text.cpp -o $@
+
+${OBJS_DIR}/LangSettings.o: ../pseint/LangSettings.cpp ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h ../wxPSeInt/Logger.h ../wxPSeInt/version.h ../pseint/version_common.h
+	${GPP} ${CXXFLAGS} -c ../pseint/LangSettings.cpp -o $@
+
+${OBJS_DIR}/osdep.o: ../wxPSeInt/osdep.cpp ../wxPSeInt/osdep.h
+	${GPP} ${CXXFLAGS} -c ../wxPSeInt/osdep.cpp -o $@
+
+${OBJS_DIR}/EntityLinking.o: EntityLinking.cpp EntityLinking.h Vector.h Events.h Entity.h
+	${GPP} ${CXXFLAGS} -c EntityLinking.cpp -o $@
+
+${OBJS_DIR}/ShapesBar.o: ShapesBar.cpp ShapesBar.h Textures.h GLstuff.h gl_lite.h Canvas.h Entity.h EntityLinking.h Vector.h Global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Events.h Text.h StatusBar.h
+	${GPP} ${CXXFLAGS} -c ShapesBar.cpp -o $@
+
+${OBJS_DIR}/ToolBar.o: ToolBar.cpp ToolBar.h Events.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h StatusBar.h
+	${GPP} ${CXXFLAGS} -c ToolBar.cpp -o $@
+
+${OBJS_DIR}/Trash.o: Trash.cpp ../wxPSeInt/string_conversions.h Trash.h Textures.h GLstuff.h gl_lite.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h Text.h
+	${GPP} ${CXXFLAGS} -c Trash.cpp -o $@
+
+${OBJS_DIR}/ProcessSelector.o: ProcessSelector.cpp ProcessSelector.h Scene.h Trash.h Textures.h GLstuff.h gl_lite.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Text.h Load.h Events.h EntityEditor.h
+	${GPP} ${CXXFLAGS} -c ProcessSelector.cpp -o $@
+
+${OBJS_DIR}/ProgramaDump.o: ../pseint/ProgramaDump.cpp ../pseint/ProgramaDump.hpp ../pseint/Programa.hpp ../pseint/Instruccion.hpp ../pseint/debug.h ../pseint/DataValue.h ../pseint/Code.h ../pseint/case_map.h
+	${GPP} ${CXXFLAGS} -c ../pseint/ProgramaDump.cpp -o $@
+
+${OBJS_DIR}/DataValue.o: ../pseint/DataValue.cpp ../pseint/DataValue.h ../pseint/debug.h ../pseint/utils.h ../pseint/new_memoria.h ../pseint/new_memoria_inter.h ../pseint/Programa.hpp ../pseint/Instruccion.hpp ../pseint/Code.h ../pseint/global.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../wxPSeInt/string_conversions.h
+	${GPP} ${CXXFLAGS} -c ../pseint/DataValue.cpp -o $@
+
+${OBJS_DIR}/Keywords.o: ../pseint/Keywords.cpp ../pseint/Keywords.hpp ../pseint/debug.h ../pseint/utils.h ../pseint/new_memoria.h ../pseint/new_memoria_inter.h ../pseint/DataValue.h ../pseint/Programa.hpp ../pseint/Instruccion.hpp ../pseint/Code.h ../pseint/global.h ../pseint/LangSettings.h ../wxPSeInt/string_conversions.h ../pseint/strFuncs.hpp
+	${GPP} ${CXXFLAGS} -c ../pseint/Keywords.cpp -o $@
+
+${OBJS_DIR}/strFuncs.o: ../pseint/strFuncs.cpp ../pseint/strFuncs.hpp ../pseint/debug.h
+	${GPP} ${CXXFLAGS} -c ../pseint/strFuncs.cpp -o $@
+
+${OBJS_DIR}/EntityEditor.o: EntityEditor.cpp EntityEditor.h Scene.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Trash.h Textures.h GLstuff.h gl_lite.h ShapesBar.h Events.h Canvas.h
+	${GPP} ${CXXFLAGS} -c EntityEditor.cpp -o $@
+
+${OBJS_DIR}/StatusBar.o: StatusBar.cpp GLstuff.h gl_lite.h StatusBar.h Global.h Entity.h EntityLinking.h Vector.h ../pseint/LangSettings.h ../pseint/Keywords.hpp ../pseint/debug.h ../wxPSeInt/string_conversions.h Text.h
+	${GPP} ${CXXFLAGS} -c StatusBar.cpp -o $@
+
+${OBJS_DIR}/Scene.o: Scene.cpp Scene.h
+	${GPP} ${CXXFLAGS} -c Scene.cpp -o $@
+
+${OBJS_DIR}/glRenderer.o: glRenderer.cpp GLstuff.h gl_lite.h glRenderer.h Text.h
+	${GPP} ${CXXFLAGS} -c glRenderer.cpp -o $@
+

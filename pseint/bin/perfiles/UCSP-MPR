@@ -1,0 +1,14 @@
+desc=Perfil para utilizar en el Curso de Informática del Programa Profesional de Ingeniería Industrial de la Universidad Católica de San Pablo (enviado por María Pilar Rondón).
+force_init_vars=0
+force_define_vars=1
+force_semicolon=0
+allow_concatenation=1
+allow_word_operators=1
+base_zero_arrays=1
+allow_dinamyc_dimensions=1
+lazy_syntax=0
+coloquial_conditions=0
+overload_equal=1
+use_nassi_schneiderman=0
+enable_string_functions=1
+enable_user_functions=1
