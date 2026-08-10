@@ -495,7 +495,11 @@ FinAlgoritmo"""
                         }
                     }
                 } else if (currentTab == AppTab.Diagram) {
-                    DiagramView(code = code, isNassiShneiderman = (diagramType == DiagramType.NassiShneiderman))
+                    DiagramView(
+                        code = code,
+                        onCodeChanged = { updated -> code = updated },
+                        isNassiShneiderman = (diagramType == DiagramType.NassiShneiderman)
+                    )
                 } else if (currentTab == AppTab.Settings) {
                     SettingsView(
                         selectedProfile = selectedProfile,
@@ -526,7 +530,7 @@ FinAlgoritmo"""
                     )
                 }
 
-                // Operators & Functions Drawer (Exact PSeInt Desktop Screenshot Match)
+                // Operators & Functions Drawer
                 if (showOperatorsDrawer) {
                     OperatorsAndFunctionsDialog(
                         onInsert = { symbol ->
