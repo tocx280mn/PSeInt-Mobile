@@ -103,6 +103,7 @@ FinAlgoritmo"""
     var showExportDialog by remember { mutableStateOf(false) }
     var showProfilePickerDialog by remember { mutableStateOf(false) }
     var showEditCustomProfileDialog by remember { mutableStateOf(false) }
+    var showOperatorsDrawer by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
     val evaluator = remember { PSeIntEvaluator() }
@@ -133,7 +134,7 @@ FinAlgoritmo"""
                     sb.append(line).append("\n")
                 }
                 code = sb.toString()
-                Toast.makeText(context, "Archivo cargado con éxito", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Archivo .psc cargado con éxito", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(context, "Error al abrir el archivo: ${e.message}", Toast.LENGTH_LONG).show()
             }
@@ -331,6 +332,9 @@ FinAlgoritmo"""
                         SecondaryActionChip("Abrir", Icons.Outlined.FolderOpen, primaryText) {
                             filePickerLauncher.launch("*/*")
                         }
+                        SecondaryActionChip("Operadores", Icons.Outlined.Functions, primaryText) {
+                            showOperatorsDrawer = !showOperatorsDrawer
+                        }
                         SecondaryActionChip("Exportar", Icons.Outlined.Code, primaryText) {
                             showExportDialog = true
                         }
@@ -522,6 +526,17 @@ FinAlgoritmo"""
                     )
                 }
 
+                // Operators & Functions Drawer (Exact PSeInt Desktop Screenshot Match)
+                if (showOperatorsDrawer) {
+                    OperatorsAndFunctionsDialog(
+                        onInsert = { symbol ->
+                            code = "$code $symbol"
+                            showOperatorsDrawer = false
+                        },
+                        onDismiss = { showOperatorsDrawer = false }
+                    )
+                }
+
                 // Export Dialog
                 if (showExportDialog) {
                     ExportCodeDialog(
@@ -573,6 +588,63 @@ FinAlgoritmo"""
 }
 
 @Composable
+fun OperatorsAndFunctionsDialog(
+    onInsert: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Operadores y Funciones PSeInt", fontWeight = FontWeight.Bold) },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(340.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text("Algebraicos", color = Color(0xFF4CAF50), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Button(onClick = { onInsert("+") }, modifier = Modifier.weight(1f)) { Text("+ (suma)") }
+                    Button(onClick = { onInsert("-") }, modifier = Modifier.weight(1f)) { Text("- (resta)") }
+                    Button(onClick = { onInsert("*") }, modifier = Modifier.weight(1f)) { Text("* (mult)") }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Button(onClick = { onInsert("/") }, modifier = Modifier.weight(1f)) { Text("/ (div)") }
+                    Button(onClick = { onInsert("^") }, modifier = Modifier.weight(1f)) { Text("^ (pot)") }
+                    Button(onClick = { onInsert("%") }, modifier = Modifier.weight(1f)) { Text("% (mod)") }
+                }
+                Spacer(Modifier.height(10.dp))
+                Text("Lógicos y Relacionales", color = Color(0xFF4CAF50), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Button(onClick = { onInsert("==") }, modifier = Modifier.weight(1f)) { Text("= (igual)") }
+                    Button(onClick = { onInsert("<>") }, modifier = Modifier.weight(1f)) { Text("<> (distinto)") }
+                    Button(onClick = { onInsert("<") }, modifier = Modifier.weight(1f)) { Text("< (menor)") }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Button(onClick = { onInsert(">") }, modifier = Modifier.weight(1f)) { Text("> (mayor)") }
+                    Button(onClick = { onInsert("&") }, modifier = Modifier.weight(1f)) { Text("& (Y)") }
+                    Button(onClick = { onInsert("|") }, modifier = Modifier.weight(1f)) { Text("| (O)") }
+                }
+                Spacer(Modifier.height(10.dp))
+                Text("Funciones Matemáticas", color = Color(0xFF4CAF50), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Button(onClick = { onInsert("rc()") }, modifier = Modifier.weight(1f)) { Text("rc(x)") }
+                    Button(onClick = { onInsert("abs()") }, modifier = Modifier.weight(1f)) { Text("abs(x)") }
+                    Button(onClick = { onInsert("trunc()") }, modifier = Modifier.weight(1f)) { Text("trunc(x)") }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Button(onClick = { onInsert("redon()") }, modifier = Modifier.weight(1f)) { Text("redon(x)") }
+                    Button(onClick = { onInsert("azar()") }, modifier = Modifier.weight(1f)) { Text("azar(x)") }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text("Cerrar") }
+        }
+    )
+}
+
+@Composable
 fun ProfilePickerDialog(
     selectedProfileName: String,
     onSelectProfileName: (String) -> Unit,
@@ -586,13 +658,14 @@ fun ProfilePickerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Seleccionar Perfil (${PSeIntProfile.PopularNames.size} disponibles)", fontSize = 16.sp, fontWeight = FontWeight.Bold) },
+        title = { Text("Opciones del Lenguaje (${PSeIntProfile.PopularNames.size} perfiles)", fontSize = 16.sp, fontWeight = FontWeight.Bold) },
         text = {
             Column(modifier = Modifier.fillMaxWidth().height(360.dp)) {
+                Text("Puede buscar por nombre de la institución, materia, docente, siglas, etc.", fontSize = 11.sp, color = Color.Gray, modifier = Modifier.padding(bottom = 6.dp))
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
-                    placeholder = { Text("Buscar universidad o colegio...") },
+                    placeholder = { Text("Buscar: (ej. UNAM, SENA, UTN...)") },
                     leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                     singleLine = true

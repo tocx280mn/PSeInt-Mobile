@@ -1,5 +1,7 @@
 package com.example
 
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,18 +10,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.ui.theme.*
 
 // Parallelogram shape for IO (Leer / Escribir)
 val ParallelogramShape = GenericShape { size, _ ->
@@ -42,33 +46,58 @@ val DiamondShape = GenericShape { size, _ ->
 
 @Composable
 fun DiagramView(code: String, isNassiShneiderman: Boolean = false) {
+    val context = LocalContext.current
     val lines = code.lines().map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("//") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF181820))
+            .background(Color(0xFF222226))
             .verticalScroll(rememberScrollState())
-            .padding(20.dp),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Diagram Header Banner
-        Text(
-            text = if (isNassiShneiderman) "DIAGRAMA NASSI-SHNEIDERMAN" else "DIAGRAMA DE FLUJO CLÁSICO",
-            color = Color(0xFF8AB4F8),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 1.sp,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        // PSDraw Title Bar & Export Button
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = if (isNassiShneiderman) "PSDraw - Diagrama Nassi-Shneiderman" else "PSDraw - Diagrama de Flujo Clásico",
+                color = Color(0xFFFFD54F),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace
+            )
+            Button(
+                onClick = {
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_SUBJECT, "Diagrama de Flujo PSeInt")
+                        putExtra(Intent.EXTRA_TEXT, "Diagrama de Flujo PSeInt:\n\n${lines.joinToString("\n")}")
+                    }
+                    context.startActivity(Intent.createChooser(shareIntent, "Exportar Diagrama"))
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
+                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+                shape = RoundedCornerShape(6.dp)
+            ) {
+                Icon(Icons.Filled.Share, contentDescription = null, tint = Color.White, modifier = Modifier.size(14.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("Exportar", fontSize = 11.sp, color = Color.White)
+            }
+        }
 
         if (isNassiShneiderman) {
-            // Nassi-Shneiderman Container Block
+            // Nassi-Shneiderman Container Block (Exact PSeInt Desktop Look)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .border(2.dp, Color(0xFF4C8DF6), RoundedCornerShape(4.dp))
-                    .background(Color(0xFF22222E))
+                    .border(2.dp, Color(0xFF64B5F6), RoundedCornerShape(4.dp))
+                    .background(Color(0xFF1E1E24))
             ) {
                 for (line in lines) {
                     val lowerLine = line.lowercase()
@@ -76,7 +105,8 @@ fun DiagramView(code: String, isNassiShneiderman: Boolean = false) {
                         lowerLine.startsWith("algoritmo") || lowerLine.startsWith("proceso") -> Color(0xFF1B5E20)
                         lowerLine.startsWith("finalgoritmo") || lowerLine.startsWith("finproceso") -> Color(0xFFB71C1C)
                         lowerLine.startsWith("si ") || lowerLine.startsWith("mientras ") -> Color(0xFF4A148C)
-                        lowerLine.startsWith("leer") || lowerLine.startsWith("escribir") -> Color(0xFF004D40)
+                        lowerLine.startsWith("leer") -> Color(0xFFAD1457)
+                        lowerLine.startsWith("escribir") -> Color(0xFF004D40)
                         else -> Color(0xFF0D47A1)
                     }
 
@@ -84,7 +114,7 @@ fun DiagramView(code: String, isNassiShneiderman: Boolean = false) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(1.dp, Color(0xFF444454))
-                            .background(bgColor.copy(alpha = 0.6f))
+                            .background(bgColor.copy(alpha = 0.75f))
                             .padding(12.dp)
                     ) {
                         Text(
@@ -92,41 +122,41 @@ fun DiagramView(code: String, isNassiShneiderman: Boolean = false) {
                             color = Color.White,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 13.sp,
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
             }
         } else {
-            // Classic Flowchart Nodes
+            // PSDraw Classic Flowchart Nodes (Exact Desktop Colors & Shapes)
             for ((index, line) in lines.withIndex()) {
                 val lowerLine = line.lowercase()
 
-                val (nodeType, text, bgColor, strokeColor) = when {
+                val (nodeType, text, bgColor, strokeColor, textColor) = when {
                     lowerLine.startsWith("algoritmo") || lowerLine.startsWith("proceso") -> 
-                        Quadruple("StartEnd", line.removePrefix("Algoritmo").removePrefix("Proceso").trim(), Color(0xFF2E7D32), Color(0xFF81C784))
+                        Quintuple("StartEnd", line.removePrefix("Algoritmo").removePrefix("Proceso").trim(), Color(0xFF222226), Color(0xFFFFD54F), Color(0xFFFFD54F))
                     lowerLine.startsWith("finalgoritmo") || lowerLine.startsWith("finproceso") -> 
-                        Quadruple("StartEnd", "FinAlgoritmo", Color(0xFFC62828), Color(0xFFEF9A9A))
+                        Quintuple("StartEnd", "FinAlgoritmo", Color(0xFF222226), Color(0xFFFFD54F), Color(0xFFFFD54F))
                     lowerLine.startsWith("si ") || lowerLine.startsWith("mientras ") || lowerLine.startsWith("repetir") || lowerLine.startsWith("para ") -> 
-                        Quadruple("Decision", line, Color(0xFF7B1FA2), Color(0xFFCE93D8))
+                        Quintuple("Decision", line, Color(0xFF0D47A1), Color(0xFF64B5F6), Color.White)
                     lowerLine.startsWith("sino") || lowerLine.startsWith("finsi") || lowerLine.startsWith("finmientras") || lowerLine.startsWith("finpara") || lowerLine.startsWith("hasta que") -> 
-                        Quadruple("Flow", line, Color.Transparent, Color(0xFF9E9E9E))
+                        Quintuple("Flow", line, Color.Transparent, Color(0xFF9E9E9E), Color(0xFFA0A0A0))
                     lowerLine.startsWith("leer") -> 
-                        Quadruple("Input", line, Color(0xFFE65100), Color(0xFFFFB74D))
+                        Quintuple("Input", line, Color(0xFFAD1457), Color(0xFFF48FB1), Color.White)
                     lowerLine.startsWith("escribir") || lowerLine.startsWith("mostrar") || lowerLine.startsWith("imprimir") -> 
-                        Quadruple("Output", line, Color(0xFF00695C), Color(0xFF80CBC4))
+                        Quintuple("Output", line, Color(0xFF004D40), Color(0xFF80CBC4), Color.White)
                     else -> 
-                        Quadruple("Process", line, Color(0xFF1565C0), Color(0xFF90CAF9))
+                        Quintuple("Process", line, Color(0xFF0D47A1), Color(0xFFFFD54F), Color(0xFFFFD54F))
                 }
 
-                DiagramNodeCard(nodeType, text, bgColor, strokeColor)
+                DiagramNodeCard(nodeType, text, bgColor, strokeColor, textColor)
 
                 if (index < lines.size - 1) {
                     Box(
                         modifier = Modifier
                             .width(2.dp)
-                            .height(20.dp)
-                            .background(Color(0xFF8AB4F8))
+                            .height(22.dp)
+                            .background(Color(0xFFE53935))
                     )
                 }
             }
@@ -135,21 +165,21 @@ fun DiagramView(code: String, isNassiShneiderman: Boolean = false) {
 }
 
 @Composable
-fun DiagramNodeCard(type: String, text: String, bgColor: Color, strokeColor: Color) {
+fun DiagramNodeCard(type: String, text: String, bgColor: Color, strokeColor: Color, textColor: Color) {
     val shape = when (type) {
         "StartEnd" -> RoundedCornerShape(24.dp)
         "Input", "Output" -> ParallelogramShape
         "Decision" -> DiamondShape
-        else -> RoundedCornerShape(6.dp)
+        else -> RoundedCornerShape(4.dp)
     }
 
     val paddingV = if (type == "Decision") 14.dp else 10.dp
-    val paddingH = if (type == "Input" || type == "Output") 26.dp else 20.dp
+    val paddingH = if (type == "Input" || type == "Output") 26.dp else 22.dp
 
     if (type == "Flow") {
         Text(
             text = text,
-            color = Color(0xFFA0A0A0),
+            color = textColor,
             fontFamily = FontFamily.Monospace,
             fontSize = 11.sp,
             fontWeight = FontWeight.Normal,
@@ -160,14 +190,14 @@ fun DiagramNodeCard(type: String, text: String, bgColor: Color, strokeColor: Col
         Box(
             modifier = Modifier
                 .clip(shape)
-                .background(bgColor.copy(alpha = 0.85f))
+                .background(bgColor)
                 .border(2.dp, strokeColor, shape)
                 .padding(horizontal = paddingH, vertical = paddingV),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = text,
-                color = Color.White,
+                color = textColor,
                 fontFamily = FontFamily.Monospace,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
@@ -177,4 +207,4 @@ fun DiagramNodeCard(type: String, text: String, bgColor: Color, strokeColor: Col
     }
 }
 
-private data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
+private data class Quintuple<A, B, C, D, E>(val first: A, val second: B, val third: C, val fourth: D, val fifth: E)
