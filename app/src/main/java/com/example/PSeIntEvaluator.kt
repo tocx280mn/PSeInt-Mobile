@@ -4,15 +4,60 @@ import kotlinx.coroutines.delay
 import kotlin.math.*
 import kotlin.random.Random
 
+data class SyntaxResult(
+    val isValid: Boolean,
+    val errorMessage: String = "",
+    val errorLine: Int = -1
+)
+
 class PSeIntEvaluator {
 
     private val variables = mutableMapOf<String, String>()
     private val declaredVariables = mutableSetOf<String>()
     private val arrays = mutableMapOf<String, MutableList<String>>()
 
+    fun checkSyntax(code: String, profile: PSeIntProfile): SyntaxResult {
+        val lines = code.lines().map { it.trim() }
+        var hasAlgoritmo = false
+        var hasFinAlgoritmo = false
+
+        for ((idx, line) in lines.withIndex()) {
+            if (line.isEmpty() || line.startsWith("//")) continue
+            val lower = line.lowercase().replace(";", "")
+
+            if (lower.startsWith("algoritmo ") || lower.startsWith("proceso ")) {
+                hasAlgoritmo = true
+            }
+            if (lower == "finalgoritmo" || lower == "finproceso") {
+                hasFinAlgoritmo = true
+            }
+
+            if (profile.forceDefineVariables && (line.contains("<-") || (line.contains("=") && !line.contains("==")))) {
+                val sep = if (line.contains("<-")) "<-" else "="
+                val target = line.split(sep)[0].trim()
+                if (target.isNotEmpty() && !declaredVariables.contains(target) && !target.contains("[") && !target.startsWith("definir", ignoreCase = true)) {
+                    // Check if defined earlier in text
+                    val isDefinedEarlier = lines.take(idx).any { prev ->
+                        prev.lowercase().startsWith("definir ") && prev.lowercase().contains(target.lowercase())
+                    }
+                    if (!isDefinedEarlier) {
+                        return SyntaxResult(false, "Variable '$target' no ha sido definida.", idx + 1)
+                    }
+                }
+            }
+        }
+
+        if (!hasAlgoritmo) return SyntaxResult(false, "Falta la cabecera 'Algoritmo <nombre>'", 1)
+        if (!hasFinAlgoritmo) return SyntaxResult(false, "Falta la instrucción de cierre 'FinAlgoritmo'", lines.size)
+
+        return SyntaxResult(true, "El pseudocódigo es correcto. Presione Ejecutar para probarlo.")
+    }
+
     suspend fun evaluate(
         code: String,
         profile: PSeIntProfile = PSeIntProfile.Flexible,
+        isStepByStep: Boolean = false,
+        onStep: (Int) -> Unit = {},
         onOutput: (String) -> Unit,
         onRequestInput: suspend (String) -> String,
         onFinish: () -> Unit
@@ -28,7 +73,7 @@ class PSeIntEvaluator {
         }
 
         try {
-            executeBlock(cleanLines, profile, onOutput, onRequestInput)
+            executeBlock(cleanLines, profile, isStepByStep, onStep, onOutput, onRequestInput)
         } catch (e: Exception) {
             onOutput("Error de ejecución: ${e.message}")
         } finally {
@@ -39,6 +84,8 @@ class PSeIntEvaluator {
     private suspend fun executeBlock(
         lines: List<String>,
         profile: PSeIntProfile,
+        isStepByStep: Boolean,
+        onStep: (Int) -> Unit,
         onOutput: (String) -> Unit,
         onRequestInput: suspend (String) -> String
     ) {
@@ -50,19 +97,17 @@ class PSeIntEvaluator {
                 continue
             }
 
+            if (isStepByStep) {
+                onStep(i + 1)
+                delay(600) // Delay to visually highlight execution step
+            }
+
             val lowerLine = line.lowercase().replace(";", "")
 
             when {
-                lowerLine.startsWith("algoritmo ") || lowerLine.startsWith("proceso ") -> {
-                    // Header line
-                }
-                lowerLine == "finalgoritmo" || lowerLine == "finproceso" -> {
-                    // Footer line
-                }
                 lowerLine.startsWith("definir ") -> {
-                    // Definir var1, var2 Como Tipo
                     val parts = line.substring(8).split("como", "Como", "COMO")
-                    if (parts.size >= 1) {
+                    if (parts.isNotEmpty()) {
                         val varsStr = parts[0]
                         val varNames = varsStr.split(",").map { it.trim() }
                         for (v in varNames) {
@@ -74,7 +119,6 @@ class PSeIntEvaluator {
                     }
                 }
                 lowerLine.startsWith("dimension ") || lowerLine.startsWith("dimensión ") -> {
-                    // Dimension var[size]
                     val dimStr = line.substring(10).trim()
                     val bracketStart = dimStr.indexOf('[')
                     val bracketEnd = dimStr.indexOf(']')
@@ -107,7 +151,6 @@ class PSeIntEvaluator {
                     declaredVariables.add(varName)
                 }
                 lowerLine.startsWith("si ") -> {
-                    // Si condicion Entonces ... Sino ... FinSi
                     val entoncesIdx = lowerLine.indexOf("entonces")
                     val conditionStr = if (entoncesIdx != -1) {
                         line.substring(3, entoncesIdx).trim()
@@ -119,14 +162,13 @@ class PSeIntEvaluator {
                     val condResult = evaluateCondition(conditionStr)
 
                     if (condResult) {
-                        executeBlock(thenBlock, profile, onOutput, onRequestInput)
+                        executeBlock(thenBlock, profile, isStepByStep, onStep, onOutput, onRequestInput)
                     } else if (elseBlock.isNotEmpty()) {
-                        executeBlock(elseBlock, profile, onOutput, onRequestInput)
+                        executeBlock(elseBlock, profile, isStepByStep, onStep, onOutput, onRequestInput)
                     }
                     i = nextIndex
                 }
                 lowerLine.startsWith("mientras ") -> {
-                    // Mientras condicion Hacer ... FinMientras
                     val hacerIdx = lowerLine.indexOf("hacer")
                     val conditionStr = if (hacerIdx != -1) {
                         line.substring(9, hacerIdx).trim()
@@ -138,7 +180,7 @@ class PSeIntEvaluator {
 
                     var loopCount = 0
                     while (evaluateCondition(conditionStr) && loopCount < 1000) {
-                        executeBlock(bodyBlock, profile, onOutput, onRequestInput)
+                        executeBlock(bodyBlock, profile, isStepByStep, onStep, onOutput, onRequestInput)
                         delay(10)
                         loopCount++
                     }
@@ -148,14 +190,13 @@ class PSeIntEvaluator {
                     val (bodyBlock, nextIndex, conditionStr) = extractRepetirBlock(lines, i)
                     var loopCount = 0
                     do {
-                        executeBlock(bodyBlock, profile, onOutput, onRequestInput)
+                        executeBlock(bodyBlock, profile, isStepByStep, onStep, onOutput, onRequestInput)
                         delay(10)
                         loopCount++
                     } while (!evaluateCondition(conditionStr) && loopCount < 1000)
                     i = nextIndex
                 }
                 lowerLine.startsWith("para ") -> {
-                    // Para i<-1 Hasta 10 Con Paso 1 Hacer ... FinPara
                     val (headerInfo, bodyBlock, nextIndex) = parseParaHeader(line, lines, i)
                     if (headerInfo != null) {
                         val (varName, startVal, endVal, stepVal) = headerInfo
@@ -165,7 +206,7 @@ class PSeIntEvaluator {
                             if (loopCount > 1000) break
                             variables[varName] = current.toString()
                             declaredVariables.add(varName)
-                            executeBlock(bodyBlock, profile, onOutput, onRequestInput)
+                            executeBlock(bodyBlock, profile, isStepByStep, onStep, onOutput, onRequestInput)
                             current += stepVal
                             delay(10)
                             loopCount++
@@ -313,7 +354,6 @@ class PSeIntEvaluator {
             }
         }
 
-        // Simple math solver (+, -, *, /)
         val num = trimmed.toDoubleOrNull()
         if (num != null) return if (num % 1.0 == 0.0) num.toLong().toString() else num.toString()
 
@@ -410,7 +450,6 @@ class PSeIntEvaluator {
     }
 
     private fun parseParaHeader(headerLine: String, lines: List<String>, startIdx: Int): Triple<ParaInfo?, List<String>, Int> {
-        // Para i<-1 Hasta 10 Con Paso 1 Hacer
         val bodyBlock = mutableListOf<String>()
         var i = startIdx + 1
         var depth = 1

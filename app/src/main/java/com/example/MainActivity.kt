@@ -2,10 +2,13 @@ package com.example
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,6 +16,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 import kotlinx.coroutines.launch
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,58 +72,84 @@ fun PSeIntApp() {
     val prefs = remember { context.getSharedPreferences("pseint_prefs", Context.MODE_PRIVATE) }
     var showOnboarding by remember { mutableStateOf(prefs.getBoolean("first_run", true)) }
 
+    // Persistent State Setup
+    var selectedTheme by remember {
+        mutableStateOf(AppTheme.valueOf(prefs.getString("selected_theme", AppTheme.Dark.name) ?: AppTheme.Dark.name))
+    }
+    var fontSizeSp by remember { mutableStateOf(prefs.getInt("font_size", 14)) }
+    var showLineNumbers by remember { mutableStateOf(prefs.getBoolean("show_line_numbers", true)) }
+    var diagramType by remember {
+        mutableStateOf(DiagramType.valueOf(prefs.getString("diagram_type", DiagramType.Classic.name) ?: DiagramType.Classic.name))
+    }
+
     var code by remember {
         mutableStateOf(
-            """Algoritmo Ejemplo_PSeInt
-    Definir nombre Como Caracter
-    Definir edad Como Entero
-    
-    Escribir "Ingrese su nombre:"
-    Leer nombre
-    
-    Escribir "Ingrese su edad:"
-    Leer edad
-    
-    Si edad >= 18 Entonces
-        Escribir "Hola ", nombre, ", eres mayor de edad."
-    Sino
-        Escribir "Hola ", nombre, ", eres menor de edad."
-    FinSi
+            """Algoritmo HolaMundo
+    Escribir "¡Hola Mundo!"
 FinAlgoritmo"""
         )
     }
 
     var output by remember { mutableStateOf(listOf<String>()) }
     var isRunning by remember { mutableStateOf(false) }
+    var isDebugRunning by remember { mutableStateOf(false) }
+    var currentExecutingLine by remember { mutableStateOf(-1) }
+
     var awaitingInput by remember { mutableStateOf(false) }
     var inputPromptVar by remember { mutableStateOf("") }
     var currentInput by remember { mutableStateOf("") }
 
     var currentTab by remember { mutableStateOf(AppTab.Editor) }
     var showExportDialog by remember { mutableStateOf(false) }
+    var showProfilePickerDialog by remember { mutableStateOf(false) }
+    var showEditCustomProfileDialog by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
     val evaluator = remember { PSeIntEvaluator() }
 
+    var customProfileObj by remember { mutableStateOf(PSeIntProfile.loadCustomProfile(context)) }
     val savedProfileName = prefs.getString("selected_profile", "Flexible") ?: "Flexible"
-    var selectedProfile by remember {
-        mutableStateOf(PSeIntProfile.PopularProfiles.find { it.name == savedProfileName } ?: PSeIntProfile.Flexible)
-    }
 
-    var fontSizeSp by remember { mutableStateOf(14) }
-    var selectedTheme by remember { mutableStateOf(AppTheme.Dark) }
-    var diagramType by remember { mutableStateOf(DiagramType.Classic) }
-    var showLineNumbers by remember { mutableStateOf(true) }
+    var selectedProfile by remember {
+        mutableStateOf(
+            if (savedProfileName == "Personalizado") customProfileObj
+            else PSeIntProfile(name = savedProfileName, description = "Perfil activo $savedProfileName")
+        )
+    }
 
     val clipboardManager = LocalClipboardManager.current
 
-    // Theme Colors Definition
-    val (editorBgColor, editorTextColor, editorLineNumBg, surfaceColor) = when (selectedTheme) {
-        AppTheme.Dark -> Quadruple(IdeSurface, IdeText, IdeSurfaceVariant, IdeBackground)
-        AppTheme.LightClassic -> Quadruple(Color(0xFFFAFAFA), Color(0xFF111111), Color(0xFFE0E0E0), Color(0xFFF0F0F0))
-        AppTheme.HackerMatrix -> Quadruple(Color(0xFF050505), Color(0xFF00FF66), Color(0xFF0A1A0F), Color(0xFF001100))
-        AppTheme.OceanBlue -> Quadruple(Color(0xFF0F1B2B), Color(0xFFE2F1FF), Color(0xFF18293D), Color(0xFF08101C))
+    // File Picker Launcher for Opening .psc files
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            try {
+                val inputStream = context.contentResolver.openInputStream(it)
+                val reader = BufferedReader(InputStreamReader(inputStream))
+                val sb = StringBuilder()
+                var line: String?
+                while (reader.readLine().also { l -> line = l } != null) {
+                    sb.append(line).append("\n")
+                }
+                code = sb.toString()
+                Toast.makeText(context, "Archivo cargado con éxito", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(context, "Error al abrir el archivo: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
     }
+
+    // Dynamic Theme Colors (Full Contrast Fix)
+    val (editorBgColor, editorTextColor, lineNumBg, surfaceColor, primaryText, secondaryText) = when (selectedTheme) {
+        AppTheme.Dark -> Sextuple(Color(0xFF1E1E28), Color(0xFFE0E0E0), Color(0xFF14141D), Color(0xFF14141D), Color.White, Color(0xFFA0A0B5))
+        AppTheme.LightClassic -> Sextuple(Color(0xFFFFFFFF), Color(0xFF111111), Color(0xFFEEEEEE), Color(0xFFF5F5F5), Color(0xFF111111), Color(0xFF666666))
+        AppTheme.HackerMatrix -> Sextuple(Color(0xFF030A04), Color(0xFF00FF66), Color(0xFF061408), Color(0xFF020703), Color(0xFF00FF66), Color(0xFF00AA44))
+        AppTheme.OceanBlue -> Sextuple(Color(0xFF0D1B2A), Color(0xFFE0F2FE), Color(0xFF1B2A4A), Color(0xFF08101E), Color(0xFFE0F2FE), Color(0xFF7DD3FC))
+    }
+
+    // Syntax Status Result
+    val syntaxResult = remember(code, selectedProfile) { evaluator.checkSyntax(code, selectedProfile) }
 
     val insertCommand: (String) -> Unit = { cmd ->
         code = "$code\n$cmd"
@@ -130,7 +163,10 @@ FinAlgoritmo"""
                 prefs.edit().putString("selected_profile", it.name).apply()
             },
             selectedTheme = selectedTheme,
-            onThemeSelected = { selectedTheme = it },
+            onThemeSelected = {
+                selectedTheme = it
+                prefs.edit().putString("selected_theme", it.name).apply()
+            },
             onFinishOnboarding = {
                 prefs.edit().putBoolean("first_run", false).apply()
                 showOnboarding = false
@@ -141,20 +177,20 @@ FinAlgoritmo"""
             containerColor = surfaceColor,
             bottomBar = {
                 Column {
-                    Divider(color = IdeBorder)
+                    Divider(color = Color(0xFF333344))
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(64.dp)
+                            .height(60.dp)
                             .background(surfaceColor)
                             .padding(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.SpaceAround,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        BottomNavButton("Editor", Icons.Outlined.Edit, currentTab == AppTab.Editor) { currentTab = AppTab.Editor }
-                        BottomNavButton("Diagrama", Icons.Outlined.AccountTree, currentTab == AppTab.Diagram) { currentTab = AppTab.Diagram }
-                        BottomNavButton("Terminal", Icons.Outlined.Terminal, currentTab == AppTab.Terminal) { currentTab = AppTab.Terminal }
-                        BottomNavButton("Ajustes", Icons.Outlined.Settings, currentTab == AppTab.Settings) { currentTab = AppTab.Settings }
+                        BottomNavButton("Editor", Icons.Outlined.Edit, currentTab == AppTab.Editor, primaryText, secondaryText) { currentTab = AppTab.Editor }
+                        BottomNavButton("Diagrama", Icons.Outlined.AccountTree, currentTab == AppTab.Diagram, primaryText, secondaryText) { currentTab = AppTab.Diagram }
+                        BottomNavButton("Terminal", Icons.Outlined.Terminal, currentTab == AppTab.Terminal, primaryText, secondaryText) { currentTab = AppTab.Terminal }
+                        BottomNavButton("Ajustes", Icons.Outlined.Settings, currentTab == AppTab.Settings, primaryText, secondaryText) { currentTab = AppTab.Settings }
                     }
                 }
             }
@@ -164,11 +200,11 @@ FinAlgoritmo"""
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                // Header Bar
+                // Top Action Header Bar
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(60.dp)
+                        .height(56.dp)
                         .background(surfaceColor)
                         .padding(horizontal = 16.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -178,18 +214,65 @@ FinAlgoritmo"""
                         Image(
                             painter = painterResource(id = R.drawable.logo_pseint),
                             contentDescription = "PSeInt Logo",
-                            modifier = Modifier.height(32.dp)
+                            modifier = Modifier.height(30.dp)
                         )
                         Column {
-                            Text("PSeInt Mobile", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = editorTextColor)
-                            Text("PERFIL: ${selectedProfile.name.uppercase()}", fontSize = 10.sp, fontWeight = FontWeight.SemiBold, color = IdeSecondary, letterSpacing = 0.5.sp)
+                            Text("PSeInt Mobile", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = primaryText)
+                            Text("PERFIL: ${selectedProfile.name.uppercase()}", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50), letterSpacing = 0.5.sp)
                         }
                     }
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        // Paso a Paso (Debug) Button
                         IconButton(
                             onClick = {
-                                if (isRunning) {
+                                if (isRunning || isDebugRunning) {
                                     isRunning = false
+                                    isDebugRunning = false
+                                    awaitingInput = false
+                                    currentExecutingLine = -1
+                                } else {
+                                    currentTab = AppTab.Terminal
+                                    output = listOf("*** Ejecución Paso a Paso Iniciada (${selectedProfile.name}) ***")
+                                    isDebugRunning = true
+                                    coroutineScope.launch {
+                                        evaluator.evaluate(
+                                            code = code,
+                                            profile = selectedProfile,
+                                            isStepByStep = true,
+                                            onStep = { lineNum -> currentExecutingLine = lineNum },
+                                            onOutput = { msg -> output = output + msg },
+                                            onRequestInput = { varName ->
+                                                awaitingInput = true
+                                                inputPromptVar = varName
+                                                while (awaitingInput && isDebugRunning) { kotlinx.coroutines.delay(100) }
+                                                val res = currentInput
+                                                currentInput = ""
+                                                output = output + "> $res"
+                                                res
+                                            },
+                                            onFinish = {
+                                                isDebugRunning = false
+                                                awaitingInput = false
+                                                currentExecutingLine = -1
+                                                output = output + "*** Ejecución Paso a Paso Finalizada. ***"
+                                            }
+                                        )
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                                .size(36.dp)
+                                .background(Color(0xFFFFF176), CircleShape)
+                        ) {
+                            Icon(Icons.Filled.DirectionsWalk, contentDescription = "Paso a Paso", tint = Color.Black)
+                        }
+
+                        // Normal Run Button
+                        IconButton(
+                            onClick = {
+                                if (isRunning || isDebugRunning) {
+                                    isRunning = false
+                                    isDebugRunning = false
                                     awaitingInput = false
                                 } else {
                                     currentTab = AppTab.Terminal
@@ -219,36 +302,39 @@ FinAlgoritmo"""
                                 }
                             },
                             modifier = Modifier
-                                .size(38.dp)
-                                .background(if (isRunning) Color(0xFFFFDAD6) else IdeSecondary, CircleShape)
+                                .size(36.dp)
+                                .background(if (isRunning || isDebugRunning) Color(0xFFFF5252) else Color(0xFF4CAF50), CircleShape)
                         ) {
                             Icon(
-                                imageVector = if (isRunning) Icons.Filled.Stop else Icons.Filled.PlayArrow,
+                                imageVector = if (isRunning || isDebugRunning) Icons.Filled.Stop else Icons.Filled.PlayArrow,
                                 contentDescription = "Ejecutar",
-                                tint = if (isRunning) Color(0xFFBA1A1A) else Color(0xFF001D36)
+                                tint = Color.White
                             )
                         }
                     }
                 }
-                Divider(color = IdeBorder)
+                Divider(color = Color(0xFF333344))
 
                 if (currentTab == AppTab.Editor) {
-                    // Secondary Toolbar with Export & Share
+                    // Toolbar Chip Controls
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(surfaceColor)
                             .horizontalScroll(rememberScrollState())
-                            .padding(horizontal = 12.dp, vertical = 6.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            .padding(horizontal = 10.dp, vertical = 5.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         PrimaryActionChip("Nuevo", Icons.Outlined.Description) {
                             code = "Algoritmo SinTitulo\n\nFinAlgoritmo"
                         }
-                        SecondaryActionChip("Exportar", Icons.Outlined.Code) {
+                        SecondaryActionChip("Abrir", Icons.Outlined.FolderOpen, primaryText) {
+                            filePickerLauncher.launch("*/*")
+                        }
+                        SecondaryActionChip("Exportar", Icons.Outlined.Code, primaryText) {
                             showExportDialog = true
                         }
-                        SecondaryActionChip("Compartir", Icons.Outlined.Share) {
+                        SecondaryActionChip("Compartir", Icons.Outlined.Share, primaryText) {
                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
                                 putExtra(Intent.EXTRA_SUBJECT, "Codigo PSeInt")
@@ -256,24 +342,13 @@ FinAlgoritmo"""
                             }
                             context.startActivity(Intent.createChooser(shareIntent, "Compartir Pseudocódigo"))
                         }
-                        SecondaryActionChip("Limpiar", Icons.Outlined.Delete) {
-                            code = ""
-                        }
-                        SecondaryActionChip("Ejemplo", Icons.Outlined.Lightbulb) {
-                            code = """Algoritmo SumaNumeros
-    Definir a, b, suma Como Entero
-    Escribir "Ingrese primer número:"
-    Leer a
-    Escribir "Ingrese segundo número:"
-    Leer b
-    suma <- a + b
-    Escribir "La suma es: ", suma
-FinAlgoritmo"""
+                        SecondaryActionChip("Perfil", Icons.Outlined.Tune, primaryText) {
+                            showProfilePickerDialog = true
                         }
                     }
-                    Divider(color = IdeBorder)
+                    Divider(color = Color(0xFF333344))
 
-                    // Code Editor Area
+                    // Code Editor Container
                     Row(
                         modifier = Modifier
                             .weight(1f)
@@ -284,16 +359,18 @@ FinAlgoritmo"""
                                 modifier = Modifier
                                     .width(36.dp)
                                     .fillMaxHeight()
-                                    .background(editorLineNumBg)
-                                    .border(1.dp, IdeBorder)
-                                    .padding(top = 14.dp),
+                                    .background(lineNumBg)
+                                    .border(1.dp, Color(0xFF333344))
+                                    .padding(top = 12.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 val lineCount = code.count { it == '\n' } + 1
                                 for (i in 1..lineCount) {
+                                    val isCurrentDebugLine = (i == currentExecutingLine)
                                     Text(
                                         text = i.toString(),
-                                        color = LineNumberColor,
+                                        color = if (isCurrentDebugLine) Color(0xFFFFD54F) else LineNumberColor,
+                                        fontWeight = if (isCurrentDebugLine) FontWeight.Bold else FontWeight.Normal,
                                         fontSize = (fontSizeSp - 3).sp,
                                         fontFamily = FontFamily.Monospace,
                                         modifier = Modifier.padding(bottom = 3.dp)
@@ -309,7 +386,7 @@ FinAlgoritmo"""
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(editorBgColor)
-                                .padding(14.dp)
+                                .padding(12.dp)
                                 .verticalScroll(scrollState),
                             textStyle = TextStyle(
                                 color = editorTextColor,
@@ -322,30 +399,52 @@ FinAlgoritmo"""
                         )
                     }
 
-                    Divider(color = IdeBorder)
-                    // Quick Commands Palette with Original Desktop PNG Assets
+                    // Desktop-Style Status Bar (Syntax Status Display)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(if (syntaxResult.isValid) Color(0xFF1B4332) else Color(0xFF4A0E17))
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = if (syntaxResult.isValid) Icons.Filled.CheckCircle else Icons.Filled.Error,
+                            contentDescription = null,
+                            tint = if (syntaxResult.isValid) Color(0xFF52B788) else Color(0xFFFF6B6B),
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            text = syntaxResult.errorMessage,
+                            color = Color.White,
+                            fontSize = 11.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
+
+                    Divider(color = Color(0xFF333344))
+                    // Quick Commands Palette with Original Desktop Assets
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(editorLineNumBg)
-                            .padding(8.dp)
+                            .background(lineNumBg)
+                            .padding(6.dp)
                     ) {
-                        Text("TODOS LOS COMANDOS DE PSEINT", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = IdeTextMuted, letterSpacing = 0.5.sp, modifier = Modifier.padding(bottom = 6.dp, start = 4.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            PSeIntCommandAssetButton("Escribir", R.drawable.escribir) { insertCommand("Escribir \"\"") }
-                            PSeIntCommandAssetButton("Leer", R.drawable.leer) { insertCommand("Leer variable") }
-                            PSeIntCommandAssetButton("Asignar", R.drawable.asignar) { insertCommand("variable <- expresion") }
-                            PSeIntCommandAssetButton("Definir", R.drawable.asignar) { insertCommand("Definir var Como Entero") }
-                            PSeIntCommandAssetButton("Dimension", R.drawable.asignar) { insertCommand("Dimension arreglo[10]") }
-                            PSeIntCommandAssetButton("Si-Entonces", R.drawable.si) { insertCommand("Si condicion Entonces\n\t// acciones\nFinSi") }
-                            PSeIntCommandAssetButton("Según", R.drawable.segun) { insertCommand("Segun variable Hacer\n\topcion1:\n\t\t// acciones\n\tDe Otro Modo:\n\t\t// acciones\nFinSegun") }
-                            PSeIntCommandAssetButton("Mientras", R.drawable.mientras) { insertCommand("Mientras condicion Hacer\n\t// acciones\nFinMientras") }
-                            PSeIntCommandAssetButton("Repetir", R.drawable.repetir) { insertCommand("Repetir\n\t// acciones\nHasta Que condicion") }
-                            PSeIntCommandAssetButton("Para", R.drawable.para) { insertCommand("Para i<-1 Hasta 10 Con Paso 1 Hacer\n\t// acciones\nFinPara") }
-                            PSeIntCommandAssetButton("Función", R.drawable.funcion) { insertCommand("Funcion res <- MiFuncion(arg)\n\tres <- arg * 2\nFinFuncion") }
+                            PSeIntCommandAssetButton("Escribir", R.drawable.escribir, primaryText) { insertCommand("Escribir \"\"") }
+                            PSeIntCommandAssetButton("Leer", R.drawable.leer, primaryText) { insertCommand("Leer variable") }
+                            PSeIntCommandAssetButton("Asignar", R.drawable.asignar, primaryText) { insertCommand("variable <- expresion") }
+                            PSeIntCommandAssetButton("Definir", R.drawable.asignar, primaryText) { insertCommand("Definir var Como Entero") }
+                            PSeIntCommandAssetButton("Dimension", R.drawable.asignar, primaryText) { insertCommand("Dimension arreglo[10]") }
+                            PSeIntCommandAssetButton("Si-Entonces", R.drawable.si, primaryText) { insertCommand("Si condicion Entonces\n\t// acciones\nFinSi") }
+                            PSeIntCommandAssetButton("Según", R.drawable.segun, primaryText) { insertCommand("Segun variable Hacer\n\topcion1:\n\t\t// acciones\n\tDe Otro Modo:\n\t\t// acciones\nFinSegun") }
+                            PSeIntCommandAssetButton("Mientras", R.drawable.mientras, primaryText) { insertCommand("Mientras condicion Hacer\n\t// acciones\nFinMientras") }
+                            PSeIntCommandAssetButton("Repetir", R.drawable.repetir, primaryText) { insertCommand("Repetir\n\t// acciones\nHasta Que condicion") }
+                            PSeIntCommandAssetButton("Para", R.drawable.para, primaryText) { insertCommand("Para i<-1 Hasta 10 Con Paso 1 Hacer\n\t// acciones\nFinPara") }
+                            PSeIntCommandAssetButton("Función", R.drawable.funcion, primaryText) { insertCommand("Funcion res <- MiFuncion(arg)\n\tres <- arg * 2\nFinFuncion") }
                         }
                     }
                 } else if (currentTab == AppTab.Terminal) {
@@ -379,12 +478,12 @@ FinAlgoritmo"""
                                     textStyle = TextStyle(color = Color.White, fontFamily = FontFamily.Monospace),
                                     trailingIcon = {
                                         IconButton(onClick = { awaitingInput = false }) {
-                                            Icon(Icons.Filled.Send, contentDescription = "Enviar", tint = IdeSecondary)
+                                            Icon(Icons.Filled.Send, contentDescription = "Enviar", tint = Color(0xFF4CAF50))
                                         }
                                     },
                                     singleLine = true,
                                     colors = OutlinedTextFieldDefaults.colors(
-                                        focusedBorderColor = IdeSecondary,
+                                        focusedBorderColor = Color(0xFF4CAF50),
                                         unfocusedBorderColor = Color.DarkGray
                                     )
                                 )
@@ -396,22 +495,34 @@ FinAlgoritmo"""
                 } else if (currentTab == AppTab.Settings) {
                     SettingsView(
                         selectedProfile = selectedProfile,
-                        onProfileSelected = {
-                            selectedProfile = it
-                            prefs.edit().putString("selected_profile", it.name).apply()
-                        },
+                        onOpenProfilePicker = { showProfilePickerDialog = true },
+                        onEditCustomProfile = { showEditCustomProfileDialog = true },
                         fontSizeSp = fontSizeSp,
-                        onFontSizeChanged = { fontSizeSp = it },
+                        onFontSizeChanged = {
+                            fontSizeSp = it
+                            prefs.edit().putInt("font_size", it).apply()
+                        },
                         selectedTheme = selectedTheme,
-                        onThemeSelected = { selectedTheme = it },
+                        onThemeSelected = {
+                            selectedTheme = it
+                            prefs.edit().putString("selected_theme", it.name).apply()
+                        },
                         diagramType = diagramType,
-                        onDiagramTypeSelected = { diagramType = it },
+                        onDiagramTypeSelected = {
+                            diagramType = it
+                            prefs.edit().putString("diagram_type", it.name).apply()
+                        },
                         showLineNumbers = showLineNumbers,
-                        onShowLineNumbersToggled = { showLineNumbers = it },
-                        onReopenWizard = { showOnboarding = true }
+                        onShowLineNumbersToggled = {
+                            showLineNumbers = it
+                            prefs.edit().putBoolean("show_line_numbers", it).apply()
+                        },
+                        onReopenWizard = { showOnboarding = true },
+                        primaryText = primaryText
                     )
                 }
 
+                // Export Dialog
                 if (showExportDialog) {
                     ExportCodeDialog(
                         code = code,
@@ -423,9 +534,131 @@ FinAlgoritmo"""
                         }
                     )
                 }
+
+                // Full Profiles Searchable Dialog
+                if (showProfilePickerDialog) {
+                    ProfilePickerDialog(
+                        selectedProfileName = selectedProfile.name,
+                        onSelectProfileName = { name ->
+                            if (name == "Personalizado") {
+                                selectedProfile = customProfileObj
+                            } else {
+                                selectedProfile = PSeIntProfile(name = name, description = "Perfil seleccionado: $name")
+                            }
+                            prefs.edit().putString("selected_profile", name).apply()
+                            showProfilePickerDialog = false
+                        },
+                        onDismiss = { showProfilePickerDialog = false }
+                    )
+                }
+
+                // Edit Custom Profile Dialog
+                if (showEditCustomProfileDialog) {
+                    EditCustomProfileDialog(
+                        customProfile = customProfileObj,
+                        onSave = { updated ->
+                            customProfileObj = updated
+                            selectedProfile = updated
+                            PSeIntProfile.saveCustomProfile(context, updated)
+                            prefs.edit().putString("selected_profile", "Personalizado").apply()
+                            showEditCustomProfileDialog = false
+                            Toast.makeText(context, "Perfil Personalizado guardado", Toast.LENGTH_SHORT).show()
+                        },
+                        onDismiss = { showEditCustomProfileDialog = false }
+                    )
+                }
             }
         }
     }
+}
+
+@Composable
+fun ProfilePickerDialog(
+    selectedProfileName: String,
+    onSelectProfileName: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var searchQuery by remember { mutableStateOf("") }
+    val filteredProfiles = remember(searchQuery) {
+        if (searchQuery.isEmpty()) PSeIntProfile.PopularNames
+        else PSeIntProfile.PopularNames.filter { it.contains(searchQuery, ignoreCase = true) }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Seleccionar Perfil (${PSeIntProfile.PopularNames.size} disponibles)", fontSize = 16.sp, fontWeight = FontWeight.Bold) },
+        text = {
+            Column(modifier = Modifier.fillMaxWidth().height(360.dp)) {
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    placeholder = { Text("Buscar universidad o colegio...") },
+                    leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                    singleLine = true
+                )
+                LazyColumn(modifier = Modifier.weight(1f)) {
+                    items(filteredProfiles) { name ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onSelectProfileName(name) }
+                                .padding(vertical = 10.dp, horizontal = 8.dp)
+                        ) {
+                            RadioButton(selected = selectedProfileName == name, onClick = { onSelectProfileName(name) })
+                            Spacer(Modifier.width(8.dp))
+                            Text(name, fontSize = 14.sp)
+                        }
+                        Divider(color = Color(0xFF333344))
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text("Cerrar") }
+        }
+    )
+}
+
+@Composable
+fun EditCustomProfileDialog(
+    customProfile: PSeIntProfile,
+    onSave: (PSeIntProfile) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var forceDefine by remember { mutableStateOf(customProfile.forceDefineVariables) }
+    var allowEquals by remember { mutableStateOf(customProfile.allowEqualsAssignment) }
+    var requireSemicolon by remember { mutableStateOf(customProfile.requireSemicolons) }
+    var strictTypes by remember { mutableStateOf(customProfile.strictTypes) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Editar Perfil Personalizado", fontWeight = FontWeight.Bold) },
+        text = {
+            Column {
+                CustomToggleRow("Obligar a definir variables", forceDefine) { forceDefine = it }
+                CustomToggleRow("Permitir signo = en asignación", allowEquals) { allowEquals = it }
+                CustomToggleRow("Exigir punto y coma al final", requireSemicolon) { requireSemicolon = it }
+                CustomToggleRow("Tipos de datos estrictos", strictTypes) { strictTypes = it }
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+                onSave(customProfile.copy(
+                    forceDefineVariables = forceDefine,
+                    allowEqualsAssignment = allowEquals,
+                    requireSemicolons = requireSemicolon,
+                    strictTypes = strictTypes
+                ))
+            }) {
+                Text("Guardar Perfil")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancelar") }
+        }
+    )
 }
 
 @Composable
@@ -448,40 +681,38 @@ fun OnboardingWizard(
         Image(
             painter = painterResource(id = R.drawable.logo_pseint),
             contentDescription = "PSeInt Logo",
-            modifier = Modifier.height(70.dp).padding(bottom = 12.dp)
+            modifier = Modifier.height(64.dp).padding(bottom = 12.dp)
         )
-        Text("¡Bienvenido a PSeInt Mobile!", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.White, textAlign = TextAlign.Center)
-        Text("Configuración Inicial de la Aplicación", fontSize = 13.sp, color = Color(0xFFA0A0B0), modifier = Modifier.padding(bottom = 24.dp))
+        Text("¡Bienvenido a PSeInt Mobile!", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White, textAlign = TextAlign.Center)
+        Text("Configuración Inicial de la Aplicación", fontSize = 12.sp, color = Color(0xFFA0A0B0), modifier = Modifier.padding(bottom = 20.dp))
 
-        // Step 1: Select Profile
         Surface(
             color = Color(0xFF1E1E2C),
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("1. Selecciona tu Perfil de Lenguaje", color = IdeSecondary, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
-                PSeIntProfile.PopularProfiles.take(4).forEach { profile ->
+            Column(modifier = Modifier.padding(14.dp)) {
+                Text("1. Perfil Inicial de Lenguaje", color = Color(0xFF4CAF50), fontSize = 13.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 6.dp))
+                listOf("Flexible", "Estricto", "SENA (Colombia)", "UNAM (México)").forEach { name ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth().clickable { onProfileSelected(profile) }.padding(vertical = 6.dp)
+                        modifier = Modifier.fillMaxWidth().clickable { onProfileSelected(PSeIntProfile(name, "")) }.padding(vertical = 4.dp)
                     ) {
-                        RadioButton(selected = selectedProfile.name == profile.name, onClick = { onProfileSelected(profile) })
+                        RadioButton(selected = selectedProfile.name == name, onClick = { onProfileSelected(PSeIntProfile(name, "")) })
                         Spacer(Modifier.width(8.dp))
-                        Text(profile.name, color = Color.White, fontSize = 14.sp)
+                        Text(name, color = Color.White, fontSize = 13.sp)
                     }
                 }
             }
         }
 
-        // Step 2: Select Theme
         Surface(
             color = Color(0xFF1E1E2C),
             shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
+            modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("2. Apariencia Inicial", color = IdeSecondary, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+            Column(modifier = Modifier.padding(14.dp)) {
+                Text("2. Tema de Apariencia Inicial", color = Color(0xFF4CAF50), fontSize = 13.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 6.dp))
                 ThemeOptionRow("PSeInt Oscuro (Noche)", AppTheme.Dark, selectedTheme) { onThemeSelected(AppTheme.Dark) }
                 ThemeOptionRow("PSeInt Clásico (Blanco Escritorio)", AppTheme.LightClassic, selectedTheme) { onThemeSelected(AppTheme.LightClassic) }
             }
@@ -489,11 +720,11 @@ fun OnboardingWizard(
 
         Button(
             onClick = onFinishOnboarding,
-            colors = ButtonDefaults.buttonColors(containerColor = IdeSecondary),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.fillMaxWidth().height(50.dp)
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier.fillMaxWidth().height(48.dp)
         ) {
-            Text("COMENZAR A PROGRAMAR", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            Text("COMENZAR A PROGRAMAR", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.White)
         }
     }
 }
@@ -509,10 +740,10 @@ fun ExportCodeDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Exportar Código a Otro Lenguaje", fontWeight = FontWeight.Bold) },
+        title = { Text("Exportar Pseudocódigo", fontWeight = FontWeight.Bold) },
         text = {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Text("Selecciona el lenguaje destino:", fontSize = 12.sp, color = IdeTextMuted, modifier = Modifier.padding(bottom = 8.dp))
+                Text("Selecciona el lenguaje destino:", fontSize = 12.sp, color = Color.Gray, modifier = Modifier.padding(bottom = 6.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -525,11 +756,11 @@ fun ExportCodeDialog(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Surface(
                     color = Color(0xFF111118),
                     shape = RoundedCornerShape(8.dp),
-                    modifier = Modifier.fillMaxWidth().height(160.dp).padding(4.dp)
+                    modifier = Modifier.fillMaxWidth().height(160.dp).padding(2.dp)
                 ) {
                     Text(
                         text = exportedCode,
@@ -547,9 +778,7 @@ fun ExportCodeDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
-            }
+            TextButton(onClick = onDismiss) { Text("Cancelar") }
         }
     )
 }
@@ -557,7 +786,8 @@ fun ExportCodeDialog(
 @Composable
 fun SettingsView(
     selectedProfile: PSeIntProfile,
-    onProfileSelected: (PSeIntProfile) -> Unit,
+    onOpenProfilePicker: () -> Unit,
+    onEditCustomProfile: () -> Unit,
     fontSizeSp: Int,
     onFontSizeChanged: (Int) -> Unit,
     selectedTheme: AppTheme,
@@ -566,22 +796,21 @@ fun SettingsView(
     onDiagramTypeSelected: (DiagramType) -> Unit,
     showLineNumbers: Boolean,
     onShowLineNumbersToggled: (Boolean) -> Unit,
-    onReopenWizard: () -> Unit
+    onReopenWizard: () -> Unit,
+    primaryText: Color
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(IdeBackground)
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Text("PERSONALIZACIÓN Y APARIENCIA", color = IdeText, fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 6.dp))
-        Text("Personaliza el tema, los diagramas y el editor igual que en PSeInt Desktop:", color = IdeTextMuted, fontSize = 12.sp, modifier = Modifier.padding(bottom = 16.dp))
+        Text("PERSONALIZACIÓN Y APARIENCIA", color = primaryText, fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 12.dp))
 
         // Onboarding Re-run Button
         Button(
             onClick = onReopenWizard,
-            colors = ButtonDefaults.buttonColors(containerColor = IdeSecondary),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0)),
             shape = RoundedCornerShape(8.dp),
             modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
@@ -590,32 +819,53 @@ fun SettingsView(
             Text("Reabrir Asistente de Configuración Inicial", color = Color.White, fontSize = 13.sp)
         }
 
-        // Appearance & Themes Card
-        Text("Tema de Color de la App", color = IdeSecondary, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+        // Language Profile Section
+        Text("Perfil de Lenguaje Activo", color = Color(0xFF4CAF50), fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 6.dp))
         Surface(
-            color = IdeSurface,
+            color = Color(0xFF1E1E2C),
             shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, IdeBorder),
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text("Perfil actual: ${selectedProfile.name}", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = onOpenProfilePicker, modifier = Modifier.weight(1f)) {
+                        Text("Buscar Perfiles (${PSeIntProfile.PopularNames.size})", fontSize = 12.sp)
+                    }
+                    if (selectedProfile.name == "Personalizado") {
+                        OutlinedButton(onClick = onEditCustomProfile) {
+                            Text("Editar Reglas", fontSize = 12.sp)
+                        }
+                    }
+                }
+            }
+        }
+
+        // Appearance & Themes Card
+        Text("Tema de Color de la App", color = Color(0xFF4CAF50), fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 6.dp))
+        Surface(
+            color = Color(0xFF1E1E2C),
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
             Column {
                 ThemeOptionRow("PSeInt Oscuro (Modo Noche)", AppTheme.Dark, selectedTheme) { onThemeSelected(AppTheme.Dark) }
-                Divider(color = IdeBorder)
+                Divider(color = Color(0xFF333344))
                 ThemeOptionRow("PSeInt Clásico (Blanco / Escritorio)", AppTheme.LightClassic, selectedTheme) { onThemeSelected(AppTheme.LightClassic) }
-                Divider(color = IdeBorder)
+                Divider(color = Color(0xFF333344))
                 ThemeOptionRow("Azul Océano (Ocean)", AppTheme.OceanBlue, selectedTheme) { onThemeSelected(AppTheme.OceanBlue) }
-                Divider(color = IdeBorder)
+                Divider(color = Color(0xFF333344))
                 ThemeOptionRow("Hacker Matrix (Verde / Negro)", AppTheme.HackerMatrix, selectedTheme) { onThemeSelected(AppTheme.HackerMatrix) }
             }
         }
 
         // Diagram Style Card
-        Text("Formato de Diagramas", color = IdeSecondary, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+        Text("Formato de Diagramas", color = Color(0xFF4CAF50), fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 6.dp))
         Surface(
-            color = IdeSurface,
+            color = Color(0xFF1E1E2C),
             shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, IdeBorder),
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
             Column {
                 Row(
@@ -624,27 +874,26 @@ fun SettingsView(
                 ) {
                     RadioButton(selected = diagramType == DiagramType.Classic, onClick = { onDiagramTypeSelected(DiagramType.Classic) })
                     Spacer(Modifier.width(8.dp))
-                    Text("Diagrama de Flujo Clásico (Rombos/Paralelogramos)", color = IdeText, fontSize = 13.sp)
+                    Text("Diagrama de Flujo Clásico (Rombos/Paralelogramos)", color = Color.White, fontSize = 13.sp)
                 }
-                Divider(color = IdeBorder)
+                Divider(color = Color(0xFF333344))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth().clickable { onDiagramTypeSelected(DiagramType.NassiShneiderman) }.padding(12.dp)
                 ) {
                     RadioButton(selected = diagramType == DiagramType.NassiShneiderman, onClick = { onDiagramTypeSelected(DiagramType.NassiShneiderman) })
                     Spacer(Modifier.width(8.dp))
-                    Text("Diagrama Nassi-Shneiderman (Bloques Estructurados)", color = IdeText, fontSize = 13.sp)
+                    Text("Diagrama Nassi-Shneiderman (Bloques Estructurados)", color = Color.White, fontSize = 13.sp)
                 }
             }
         }
 
         // Editor Options Card
-        Text("Opciones de Editor", color = IdeSecondary, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
+        Text("Opciones de Editor", color = Color(0xFF4CAF50), fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 6.dp))
         Surface(
-            color = IdeSurface,
+            color = Color(0xFF1E1E2C),
             shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, IdeBorder),
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
@@ -652,52 +901,18 @@ fun SettingsView(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Tamaño de Fuente (${fontSizeSp}sp)", color = IdeText, fontSize = 14.sp)
+                    Text("Tamaño de Fuente (${fontSizeSp}sp)", color = Color.White, fontSize = 14.sp)
                     Row {
                         IconButton(onClick = { if (fontSizeSp > 10) onFontSizeChanged(fontSizeSp - 2) }) {
-                            Icon(Icons.Filled.Remove, contentDescription = "Menos", tint = IdeText)
+                            Icon(Icons.Filled.Remove, contentDescription = "Menos", tint = Color.White)
                         }
                         IconButton(onClick = { if (fontSizeSp < 24) onFontSizeChanged(fontSizeSp + 2) }) {
-                            Icon(Icons.Filled.Add, contentDescription = "Más", tint = IdeText)
+                            Icon(Icons.Filled.Add, contentDescription = "Más", tint = Color.White)
                         }
                     }
                 }
-                Divider(color = IdeBorder, modifier = Modifier.padding(vertical = 8.dp))
+                Divider(color = Color(0xFF333344), modifier = Modifier.padding(vertical = 8.dp))
                 CustomToggleRow("Mostrar Números de Línea", showLineNumbers) { onShowLineNumbersToggled(it) }
-            }
-        }
-
-        // Language Profiles Card
-        Text("Perfil de Lenguaje Institucional", color = IdeSecondary, fontSize = 14.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 8.dp))
-        Surface(
-            color = IdeSurface,
-            shape = RoundedCornerShape(12.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, IdeBorder)
-        ) {
-            Column {
-                PSeIntProfile.PopularProfiles.forEachIndexed { index, profile ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onProfileSelected(profile) }
-                            .padding(vertical = 12.dp, horizontal = 16.dp)
-                    ) {
-                        RadioButton(
-                            selected = selectedProfile.name == profile.name,
-                            onClick = { onProfileSelected(profile) },
-                            colors = RadioButtonDefaults.colors(selectedColor = IdeSecondary, unselectedColor = IdeTextMuted)
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column {
-                            Text(profile.name, color = IdeText, fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                            Text(profile.description, color = IdeTextMuted, fontSize = 11.sp)
-                        }
-                    }
-                    if (index < PSeIntProfile.PopularProfiles.size - 1) {
-                        Divider(color = IdeBorder, modifier = Modifier.padding(horizontal = 16.dp))
-                    }
-                }
             }
         }
     }
@@ -711,7 +926,7 @@ fun ThemeOptionRow(title: String, theme: AppTheme, selectedTheme: AppTheme, onCl
     ) {
         RadioButton(selected = theme == selectedTheme, onClick = onClick)
         Spacer(Modifier.width(8.dp))
-        Text(title, color = IdeText, fontSize = 13.sp)
+        Text(title, color = Color.White, fontSize = 13.sp)
     }
 }
 
@@ -722,34 +937,34 @@ fun CustomToggleRow(title: String, checked: Boolean, onCheckedChange: (Boolean) 
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp)
     ) {
-        Text(title, color = IdeText, fontSize = 13.sp)
+        Text(title, color = Color.White, fontSize = 13.sp)
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(checkedThumbColor = IdeSecondary)
+            colors = SwitchDefaults.colors(checkedThumbColor = Color(0xFF4CAF50))
         )
     }
 }
 
 @Composable
-fun PSeIntCommandAssetButton(text: String, iconRes: Int, onClick: () -> Unit) {
+fun PSeIntCommandAssetButton(text: String, iconRes: Int, textColor: Color, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .width(74.dp)
-            .background(IdeSurface, RoundedCornerShape(10.dp))
-            .border(1.dp, IdeBorder, RoundedCornerShape(10.dp))
+            .width(72.dp)
+            .background(Color(0xFF22222E), RoundedCornerShape(10.dp))
+            .border(1.dp, Color(0xFF333344), RoundedCornerShape(10.dp))
             .clickable(onClick = onClick)
             .padding(6.dp)
     ) {
         Image(
             painter = painterResource(id = iconRes),
             contentDescription = text,
-            modifier = Modifier.size(28.dp)
+            modifier = Modifier.size(26.dp)
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = IdeText, textAlign = TextAlign.Center)
+        Text(text, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Color.White, textAlign = TextAlign.Center)
     }
 }
 
@@ -758,7 +973,7 @@ fun PrimaryActionChip(text: String, icon: ImageVector, onClick: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .background(IdeSecondary, RoundedCornerShape(8.dp))
+            .background(Color(0xFF4CAF50), RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 6.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -769,37 +984,38 @@ fun PrimaryActionChip(text: String, icon: ImageVector, onClick: () -> Unit) {
 }
 
 @Composable
-fun SecondaryActionChip(text: String, icon: ImageVector, onClick: () -> Unit) {
+fun SecondaryActionChip(text: String, icon: ImageVector, textColor: Color, onClick: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .border(1.dp, IdeTextMuted, RoundedCornerShape(8.dp))
+            .background(Color(0xFF22222E), RoundedCornerShape(8.dp))
+            .border(1.dp, Color(0xFF444455), RoundedCornerShape(8.dp))
             .clickable(onClick = onClick)
             .padding(horizontal = 12.dp, vertical = 6.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp), tint = IdeText)
-        if (text.isNotEmpty()) Text(text, fontSize = 12.sp, fontWeight = FontWeight.Medium, color = IdeText)
+        Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp), tint = Color.White)
+        if (text.isNotEmpty()) Text(text, fontSize = 12.sp, fontWeight = FontWeight.Medium, color = Color.White)
     }
 }
 
 @Composable
-fun BottomNavButton(text: String, icon: ImageVector, selected: Boolean, onClick: () -> Unit) {
+fun BottomNavButton(text: String, icon: ImageVector, selected: Boolean, primaryText: Color, secondaryText: Color, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable(onClick = onClick).padding(8.dp)
+        modifier = Modifier.clickable(onClick = onClick).padding(6.dp)
     ) {
         Box(
             modifier = Modifier
                 .clip(CircleShape)
-                .background(if (selected) IdeSecondary else Color.Transparent)
-                .padding(horizontal = 18.dp, vertical = 4.dp)
+                .background(if (selected) Color(0xFF4CAF50) else Color.Transparent)
+                .padding(horizontal = 16.dp, vertical = 4.dp)
         ) {
-            Icon(icon, contentDescription = null, tint = if (selected) Color.White else IdeTextMuted)
+            Icon(icon, contentDescription = null, tint = if (selected) Color.White else secondaryText)
         }
         Spacer(modifier = Modifier.height(2.dp))
-        Text(text, fontSize = 10.sp, fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium, color = if (selected) IdeSecondary else IdeTextMuted)
+        Text(text, fontSize = 10.sp, fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium, color = if (selected) Color(0xFF4CAF50) else secondaryText)
     }
 }
 
-private data class Quadruple<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
+private data class Sextuple<A, B, C, D, E, F>(val first: A, val second: B, val third: C, val fourth: D, val fifth: E, val sixth: F)
