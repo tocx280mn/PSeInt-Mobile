@@ -3,6 +3,7 @@
 > **La experiencia completa de PSeInt en tu dispositivo Android.**  
 > Editor de pseudocódigo, diagramas de flujo interactivos y ejecución nativa offline con el motor C++ original de Pablo Novara.
 
+[![Sitio Web](https://img.shields.io/badge/Sitio%20Web-pseint--mobile.unaux.com-0879c9?logo=googlechrome&logoColor=white)](http://pseint-mobile.unaux.com)
 [![Licencia: GNU GPL v2](https://img.shields.io/badge/Licencia-GNU%20GPL%20v2-blue.svg)](website/licenses/pseint-gpl-v2.txt)
 [![Copyleft](https://img.shields.io/badge/Copyleft-Pablo%20Novara-orange.svg)](https://pseint.sourceforge.net/)
 [![Android 7.0+](https://img.shields.io/badge/Android-7.0%2B%20(API%2024%2B)-green.svg)](https://developer.android.com)
@@ -13,6 +14,8 @@
 ## 🌟 Descripción
 
 **PSeInt Mobile** es una adaptación independiente, libre y de código abierto para Android diseñada para estudiantes, docentes y entusiastas de la lógica de programación. 
+
+🌐 **Sitio web oficial y descargas:** [http://pseint-mobile.unaux.com](http://pseint-mobile.unaux.com)
 
 A diferencia de otras soluciones que aproximan o interpretan el lenguaje de manera incompleta, PSeInt Mobile **integra y compila el motor C++ nativo original de PSeInt** de Pablo Novara mediante la interfaz NDK/JNI de Android. Esto asegura una compatibilidad absoluta de sintaxis, reglas, ejecución y perfiles institucionales.
 
@@ -124,11 +127,15 @@ pseint-mobile/
 
 ---
 
-## 🌐 Sitio Web Estático
+## 🌐 Sitio Web Oficial
 
-En la carpeta [`website/`](website/) se encuentra la landing page oficial del proyecto, lista para desplegarse en cualquier hosting estático (GitHub Pages, Cloudflare Pages, Netlify, Vercel). Incluye:
-- Presentación de funciones y galería con lightbox.
-- Panel de descarga directa del APK.
+El sitio oficial del proyecto se encuentra disponible en:  
+👉 **[http://pseint-mobile.unaux.com](http://pseint-mobile.unaux.com)**
+
+El código fuente completo de la web se encuentra en la carpeta [`website/`](website/), preparado para desplegarse en cualquier hosting estático o servidor. Incluye:
+- Presentación de funciones, diseño adaptable a móviles y galería interactiva con lightbox.
+- Descarga directa del instalador APK conectado a los lanzamientos oficiales de GitHub Releases.
+- Enlace directo al repositorio del proyecto en GitHub: [`https://github.com/tocx280mn/PSeInt-Mobile`](https://github.com/tocx280mn/PSeInt-Mobile).
 - Sección completa de créditos, Copyleft y visor integrado de la licencia GNU GPL v2 en [`credits.html`](website/credits.html).
 
 ---
