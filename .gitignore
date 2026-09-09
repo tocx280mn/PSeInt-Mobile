@@ -1,18 +1,32 @@
+# Gradle y compilación
 *.iml
-.gradle
-.kotlin
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.gradle/
+.kotlin/
+/build/
+/app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+*.hprof
+
+# Configuración local y secretos
 local.properties
+/local.properties
 .env
 debug.keystore
+
+# Entornos de desarrollo e IDE
+.idea/
+.DS_Store
+Thumbs.db
+
+# Artefactos y perfiles de pruebas de website
+website/build/
+
+# Clientes y herramientas de IA
+.artifacts/
+.codex*
+.zcode/
+metadata.json
+assets/.aistudio/
+

@@ -1,0 +1,16 @@
+desc=Perfil para el Departamente de Computación Electrónica en la Educación Secundaria en la Región de Nezahualcóyotl (enviado por el docente Sarahí Carmona Monroy).
+force_init_vars=1
+force_define_vars=1
+force_semicolon=1
+allow_concatenation=1
+allow_word_operators=1
+base_zero_arrays=0
+allow_dinamyc_dimensions=1
+lazy_syntax=1
+coloquial_conditions=1
+overload_equal=1
+enable_string_functions=1
+enable_user_functions=1
+use_nassi_schneiderman=0
+
+

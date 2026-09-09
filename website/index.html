@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PSeInt Mobile lleva el editor de pseudocódigo, los diagramas y el motor original de PSeInt a Android.">
+  <meta name="theme-color" content="#0879c9">
+  <meta property="og:title" content="PSeInt Mobile">
+  <meta property="og:description" content="Pseudocódigo, diagramas y ejecución de PSeInt en Android.">
+  <!-- Al publicar, reemplaza la ruta de og:image por la URL absoluta de esta imagen
+       y añade og:url + canonical con el dominio definitivo. -->
+  <meta property="og:image" content="assets/screenshots/editor-clasico.png">
+  <title>PSeInt Mobile · Pseudocódigo para Android</title>
+  <link rel="icon" href="assets/pseint-icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/pseint-icon-192.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="#inicio" aria-label="PSeInt Mobile, inicio">
+        <img src="assets/pseint-icon.png" width="42" height="42" alt="">
+        <span><strong>PSeInt</strong> <em>Mobile</em></span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-controls="site-navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+        <span class="sr-only">Abrir navegación</span>
+      </button>
+
+      <nav id="site-navigation" class="site-navigation" aria-label="Principal">
+        <a href="#funciones">Funciones</a>
+        <a href="#capturas">Capturas</a>
+        <a href="#instalar">Instalar</a>
+        <a href="credits.html">Licencia</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Activar tema oscuro" title="Cambiar tema">
+          <span aria-hidden="true">◐</span>
+        </button>
+        <a class="button button-small" href="downloads/PSeInt-Mobile-v1.0.apk" download>Descargar APK</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section id="inicio" class="hero section">
+      <div class="shell hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-mark">›_</span> Pseudocódigo para Android</p>
+          <h1>Aprende a programar con <span>la experiencia de PSeInt.</span></h1>
+          <p class="hero-lead">Escribe, ejecuta y transforma tus algoritmos en diagramas desde el teléfono. PSeInt Mobile conserva la esencia del editor de escritorio y usa el motor original de PSeInt.</p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="downloads/PSeInt-Mobile-v1.0.apk" download>
+              <span aria-hidden="true">↓</span> Descargar para Android
+            </a>
+            <a class="text-link" href="#capturas">Ver la aplicación <span aria-hidden="true">→</span></a>
+          </div>
+
+          <ul class="trust-list" aria-label="Compatibilidad de la aplicación">
+            <li><span class="check">✓</span> Android 7.0 o posterior</li>
+            <li><span class="check">✓</span> APK de 27.1 MB</li>
+            <li><span class="check">✓</span> Sin cuenta ni conexión obligatoria</li>
+          </ul>
+        </div>
+
+        <figure class="hero-visual">
+          <div class="desktop-window hero-window">
+            <div class="window-titlebar">
+              <div class="window-brand"><img src="assets/pseint-icon.png" alt=""> PSeInt Mobile</div>
+              <div class="window-controls" aria-hidden="true"><i></i><i></i><i></i></div>
+            </div>
+            <div class="window-menu" aria-hidden="true"><span>Archivo</span><span>Editar</span><span>Configurar</span><span>Ejecutar</span><span>Ayuda</span></div>
+            <div class="window-toolbar" aria-hidden="true">
+              <img src="assets/icons/nuevo.png" alt=""><img src="assets/icons/abrir.png" alt=""><img src="assets/icons/guardar.png" alt="">
+              <b></b><img src="assets/icons/deshacer.png" alt=""><img src="assets/icons/rehacer.png" alt=""><b></b><img src="assets/icons/ejecutar.png" alt="">
+            </div>
+            <div class="editor-preview">
+              <div class="line-numbers" aria-hidden="true">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8</div>
+              <pre><code><span class="kw">Algoritmo</span> <span class="name">Bienvenida</span>
+    <span class="comment">// Tu primer algoritmo</span>
+    <span class="kw">Definir</span> nombre <span class="kw">Como</span> <span class="type">Caracter</span>
+
+    <span class="kw">Escribir</span> <span class="string">"¿Cómo te llamas?"</span>
+    <span class="kw">Leer</span> nombre
+    <span class="kw">Escribir</span> <span class="string">"Hola, "</span>, nombre
+<span class="kw">FinAlgoritmo</span></code></pre>
+            </div>
+            <div class="window-status"><span><i></i> Pseudocódigo correcto</span><span>Lín 8 · Col 1</span></div>
+          </div>
+          <div class="phone-frame">
+            <div class="phone-speaker"></div>
+            <img src="assets/screenshots/editor-clasico.png" alt="Editor de PSeInt Mobile mostrando un algoritmo de bienvenida">
+          </div>
+          <div class="floating-badge"><span>✓</span><strong>Motor PSeInt</strong><small>Ejecuta tu pseudocódigo</small></div>
+          <figcaption class="sr-only">Vista previa del editor PSeInt Mobile en escritorio y teléfono.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="quick-strip" aria-label="Funciones principales">
+      <div class="shell quick-grid">
+        <div><strong>Editor clásico</strong><span>Con sintaxis y autocompletado</span></div>
+        <div><strong>Diagramas</strong><span>Clásico y Nassi–Shneiderman</span></div>
+        <div><strong>Perfiles</strong><span>Compatibles con PSeInt escritorio</span></div>
+        <div><strong>Ejecuta sin límites</strong><span>Consola y depuración incluidas</span></div>
+      </div>
+    </section>
+
+    <section id="funciones" class="section features-section">
+      <div class="shell">
+        <div class="section-heading">
+          <p class="eyebrow"><span class="eyebrow-mark">01</span> Todo lo que necesitas</p>
+          <h2>El mismo lenguaje, <span>hecho para tu pantalla.</span></h2>
+          <p>Una herramienta completa para practicar lógica, resolver ejercicios y crear algoritmos desde cualquier lugar.</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card feature-editor">
+            <div class="feature-icon"><img src="assets/icons/guardar.png" alt=""></div>
+            <p class="feature-number">01 / EDITOR</p>
+            <h3>Escribe sin perder el hilo</h3>
+            <p>Resaltado de sintaxis, números de línea, búsqueda, sangría automática, deshacer y archivos <code>.psc</code>.</p>
+            <div class="mini-code" aria-hidden="true"><span>Si edad &gt;= 18 Entonces</span><span class="indent">Escribir "Mayor de edad"</span><span>FinSi</span></div>
+          </article>
+
+          <article class="feature-card feature-run">
+            <div class="feature-icon"><img src="assets/icons/ejecutar.png" alt=""></div>
+            <p class="feature-number">02 / EJECUCIÓN</p>
+            <h3>Prueba cada idea</h3>
+            <p>Ejecuta con el motor C++ original de PSeInt, responde entradas desde la consola y detecta errores en su línea.</p>
+            <div class="mini-console" aria-hidden="true"><span>&gt; ¿Cómo te llamas?</span><span>&gt; Ada</span><strong>Hola, Ada</strong></div>
+          </article>
+
+          <article class="feature-card feature-flow">
+            <div class="feature-icon"><img src="assets/icons/flujo.png" alt=""></div>
+            <p class="feature-number">03 / DIAGRAMAS</p>
+            <h3>Ve cómo fluye tu algoritmo</h3>
+            <p>Explora diagramas clásicos y Nassi–Shneiderman, ajusta el zoom y exporta tu resultado a PNG.</p>
+            <div class="mini-flow" aria-hidden="true"><span class="flow-start">Inicio</span><i></i><span class="flow-decision">¿Condición?</span><div><b>Sí</b><b>No</b></div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section desktop-section">
+      <div class="shell desktop-layout">
+        <div class="desktop-visual">
+          <div class="desktop-window compact-window">
+            <div class="window-titlebar"><div class="window-brand"><img src="assets/pseint-icon.png" alt=""> PSeInt</div><div class="window-controls" aria-hidden="true"><i></i><i></i><i></i></div></div>
+            <div class="window-menu" aria-hidden="true"><span>Archivo</span><span>Editar</span><span>Configurar</span><span>Ejecutar</span><span>Ayuda</span></div>
+            <div class="compact-body">
+              <div class="compact-sidebar">Variables<br><br>Operadores<br>y funciones</div>
+              <div class="compact-editor"><span class="line">1</span><code><b>Algoritmo</b> sin_titulo</code><span class="line">2</span><code>&nbsp;&nbsp;&nbsp;&nbsp;<b>Escribir</b> <em>"Hola"</em></code><span class="line">3</span><code><b>FinAlgoritmo</b></code></div>
+            </div>
+          </div>
+          <span class="desktop-caption">Una interfaz familiar, ahora en Android.</span>
+        </div>
+        <div class="desktop-copy">
+          <p class="eyebrow"><span class="eyebrow-mark">02</span> Pensado para quienes ya conocen PSeInt</p>
+          <h2>Tu forma de aprender <span>no tiene que cambiar.</span></h2>
+          <p>Los perfiles, los comandos y las reglas de sintaxis se mantienen alineados con la versión de escritorio. Abre tus archivos, continúa tu práctica y guarda en formato <code>.psc</code>.</p>
+          <ul class="check-list">
+            <li><span>✓</span> Perfil Flexible, Estricto y perfiles personalizados</li>
+            <li><span>✓</span> Autocompletado configurable y ayudas de argumentos</li>
+            <li><span>✓</span> Archivos <code>.psc</code> con UTF-8, UTF-16 y Windows-1252</li>
+            <li><span>✓</span> Diagramas y consola en la misma aplicación</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="capturas" class="section gallery-section">
+      <div class="shell">
+        <div class="section-heading gallery-heading">
+          <p class="eyebrow"><span class="eyebrow-mark">03</span> Mira cómo se siente</p>
+          <h2>Hecho para escribir, <span>ejecutar y entender.</span></h2>
+        </div>
+        <div class="gallery-grid">
+          <button class="gallery-card gallery-card-large" type="button" data-lightbox="assets/screenshots/editor-clasico.png" data-title="Editor con sintaxis de PSeInt">
+            <img src="assets/screenshots/editor-clasico.png" alt="Editor clásico de PSeInt Mobile">
+            <span><strong>Editor clásico</strong><small>Escribe tus algoritmos</small></span>
+          </button>
+          <button class="gallery-card" type="button" data-lightbox="assets/screenshots/diagrama-clasico.png" data-title="Diagrama de flujo clásico">
+            <img src="assets/screenshots/diagrama-clasico.png" alt="Diagrama de flujo clásico en PSeInt Mobile">
+            <span><strong>Diagramas</strong><small>Visualiza cada decisión</small></span>
+          </button>
+          <button class="gallery-card" type="button" data-lightbox="assets/screenshots/consola-resultado.png" data-title="Consola de ejecución">
+            <img src="assets/screenshots/consola-resultado.png" alt="Consola de resultados de PSeInt Mobile">
+            <span><strong>Consola</strong><small>Ejecuta al instante</small></span>
+          </button>
+          <button class="gallery-card gallery-card-wide" type="button" data-lightbox="assets/screenshots/autocompletado-fecha.png" data-title="Autocompletado y ayuda contextual">
+            <img src="assets/screenshots/autocompletado-fecha.png" alt="Autocompletado de FechaActual en PSeInt Mobile">
+            <span><strong>Asistencia al escribir</strong><small>Comandos, funciones y ayuda contextual</small></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="instalar" class="section install-section">
+      <div class="shell install-layout">
+        <div class="download-panel">
+          <div class="download-heading">
+            <img src="assets/pseint-icon.png" width="72" height="72" alt="">
+            <div><p>PSeInt Mobile</p><span>Versión 1.0 · Android</span></div>
+          </div>
+          <h2>Descárgala y empieza a programar.</h2>
+          <p>El archivo incluye el editor, los diagramas y el motor de ejecución. No necesitas crear una cuenta.</p>
+          <a class="button button-primary button-download" href="downloads/PSeInt-Mobile-v1.0.apk" download>
+            <span aria-hidden="true">↓</span> Descargar APK <small>27.1 MB</small>
+          </a>
+          <div class="download-meta"><span>✓ Android 7.0+</span><span>✓ arm64-v8a · armeabi-v7a · x86_64</span></div>
+        </div>
+        <ol class="install-steps">
+          <li><span>1</span><div><strong>Descarga el APK</strong><p>Toca el botón y espera a que termine la descarga.</p></div></li>
+          <li><span>2</span><div><strong>Ábrelo desde tu teléfono</strong><p>Android te pedirá confirmar la instalación desde tu navegador o administrador de archivos.</p></div></li>
+          <li><span>3</span><div><strong>Escribe tu primer algoritmo</strong><p>El asistente inicial te ayudará a elegir el perfil y la apariencia.</p></div></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <a class="brand footer-brand" href="#inicio"><img src="assets/pseint-icon.png" width="34" height="34" alt=""><span><strong>PSeInt</strong> <em>Mobile</em></span></a>
+      <p>Una adaptación para Android basada en el motor original de PSeInt.</p>
+      <p class="footer-note">PSeInt de escritorio es una creación original con Copyleft de Pablo Novara. Distribuido bajo GNU GPL v2.</p>
+      <a class="footer-link" href="credits.html">Créditos y licencia (GNU GPL v2)</a>
+      <p class="copyleft">Copyleft · PSeInt por Pablo Novara</p>
+    </div>
+  </footer>
+
+  <dialog id="lightbox" class="lightbox" aria-labelledby="lightbox-title">
+    <button class="lightbox-close" type="button" aria-label="Cerrar captura">×</button>
+    <img id="lightbox-image" src="" alt="">
+    <p id="lightbox-title"></p>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

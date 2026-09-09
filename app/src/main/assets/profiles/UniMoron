@@ -1,0 +1,14 @@
+desc=la cátedra Programación I de las carreras Lic. en Sistemas e Ing. en Informática de la Facultad de Informática, Cs. de la Comunicación y Técnicas Especiales de la Universidad de Morón (enviado por Sonia Zugna de Jausoro).
+allow_dinamyc_dimensions=1
+use_nassi_schneiderman=0
+force_define_vars=1
+force_init_vars=0
+allow_concatenation=0
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=0
+allow_word_operators=1
+overload_equal=0
+coloquial_conditions=0
+lazy_syntax=1
+base_zero_arrays=1

@@ -1,0 +1,12 @@
+desc=Perfil para la Universidad del Norte, Barranquilla, Colombia (enviado por Augusto Salazar Silva).
+force_init_vars=1
+force_define_vars=1
+force_semicolon=1
+allow_concatenation=0
+allow_word_operators=0
+base_zero_arrays=1
+allow_dinamyc_dimensions=0
+lazy_syntax=0
+coloquial_conditions=0
+overload_equal=1
+

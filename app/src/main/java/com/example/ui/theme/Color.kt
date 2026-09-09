@@ -12,12 +12,28 @@ val IdeTextMuted = Color(0xFF8B949E)
 val IdeBorder = Color(0xFF30363D)
 
 // Syntax Highlighting Colors
-val CodeKeyword = Color(0xFFFF7B72)
-val CodeFunction = Color(0xFFD2A8FF)
-val CodeString = Color(0xFFA5D6FF)
-val CodeNumber = Color(0xFF79C0FF)
-val CodeComment = Color(0xFF8B949E)
-val CodeVariable = Color(0xFFE6EDF3)
-val CodeOperator = Color(0xFFFF7B72)
+// Classic colors from the desktop editor (wxPSeInt/mxSource.cpp).
+val CodeKeyword = Color(0xFF000080)
+val CodeFunction = CodeKeyword
+val CodeString = Color(0xFF006400)
+val CodeNumber = Color(0xFFA0522D)
+val CodeComment = Color(0xFF727272)
+val CodeVariable = Color(0xFF111111)
+val CodeOperator = CodeKeyword
 val LineNumberColor = Color(0xFF6E7681)
 val CurrentLineHighlight = Color(0xFF21262D)
+
+data class EditorSyntaxColors(
+    val keyword: Color,
+    val string: Color,
+    val number: Color,
+    val comment: Color
+) {
+    companion object {
+        fun forTheme(darkTheme: Boolean) = if (darkTheme) {
+            EditorSyntaxColors(Color(0xFF9999FA), Color(0xFF99FA99), Color(0xFFFAFA99), Color(0xFFAAAAAA))
+        } else {
+            EditorSyntaxColors(CodeKeyword, CodeString, CodeNumber, CodeComment)
+        }
+    }
+}

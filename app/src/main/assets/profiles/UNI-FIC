@@ -1,0 +1,14 @@
+desc=Perfil para el curso de Programación Digital (código de curso: MA713) de la carrera Ingeniería Civil en la Universidad Nacional de Ingeniería, Lima-Perú (enviado por el Prof. Wilfredo Cupe Román).
+allow_dinamyc_dimensions=1
+use_nassi_schneiderman=0
+force_define_vars=0
+force_init_vars=0
+allow_concatenation=1
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=0
+allow_word_operators=1
+overload_equal=1
+coloquial_conditions=1
+lazy_syntax=1
+base_zero_arrays=0

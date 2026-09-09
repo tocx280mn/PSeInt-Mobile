@@ -1,255 +1,201 @@
 package com.example
 
-import android.content.Intent
+import android.graphics.Bitmap
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.GenericShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFontFamilyResolver
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-// Parallelogram shape for IO (Leer / Escribir)
-val ParallelogramShape = GenericShape { size, _ ->
-    val skew = size.width * 0.15f
-    moveTo(skew, 0f)
-    lineTo(size.width, 0f)
-    lineTo(size.width - skew, size.height)
-    lineTo(0f, size.height)
-    close()
-}
-
-// Diamond shape for Decisions (Si / Mientras)
-val DiamondShape = GenericShape { size, _ ->
-    moveTo(size.width / 2f, 0f)
-    lineTo(size.width, size.height / 2f)
-    lineTo(size.width / 2f, size.height)
-    lineTo(0f, size.height / 2f)
-    close()
-}
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 @Composable
 fun DiagramView(
     code: String,
     onCodeChanged: (String) -> Unit = {},
-    isNassiShneiderman: Boolean = false
+    isNassiShneiderman: Boolean = false,
+    onDiagramTypeChanged: (Boolean) -> Unit = {},
+    profile: PSeIntProfile = PSeIntProfile.Flexible
 ) {
     val context = LocalContext.current
-    var isDarkDiagramBg by remember { mutableStateOf(true) }
-    val lines = code.lines().map { it.trim() }.filter { it.isNotEmpty() }
+    val scope = rememberCoroutineScope()
+    val snackbar = remember { SnackbarHostState() }
+    var dark by rememberSaveable { mutableStateOf(false) }
+    var toolbox by remember { mutableStateOf(false) }
+    var viewport by remember { mutableStateOf(IntSize.Zero) }
+    var zoom by remember { mutableFloatStateOf(1f) }
+    var pan by remember { mutableStateOf(Offset.Zero) }
+    var editing by remember { mutableStateOf<DiagramHitTarget?>(null) }
+    var editingText by remember { mutableStateOf("") }
+    var exportInProgress by remember { mutableStateOf(false) }
+    var pendingExportCode by rememberSaveable { mutableStateOf<String?>(null) }
+    var pendingExportDark by rememberSaveable { mutableStateOf(false) }
+    var pendingExportNassi by rememberSaveable { mutableStateOf(false) }
+    var pendingExportAlternativeIo by rememberSaveable { mutableStateOf(false) }
+    val displayDensity = LocalDensity.current.density
+    val fontResolver = LocalFontFamilyResolver.current
+    val measurer = remember(fontResolver) { TextMeasurer(fontResolver, Density(1f, 1f), LayoutDirection.Ltr, 256) }
+    val ast = remember(code) { DiagramParser.parse(code.lines()) }
+    val layout = remember(ast, dark, isNassiShneiderman, measurer, profile.alternativeIoShapes) {
+        DiagramRenderer.layoutDiagram(ast, measurer, dark, isNassiShneiderman, profile.alternativeIoShapes)
+    }
+    val background = if (dark) Color(0xFF333333) else Color(0xFFFAFAFA)
+    fun fit() {
+        if (viewport.width == 0 || viewport.height == 0) return
+        val padding = 24f * displayDensity
+        zoom = min((viewport.width - padding).coerceAtLeast(1f) / layout.width.coerceAtLeast(1f),
+            (viewport.height - padding).coerceAtLeast(1f) / layout.height.coerceAtLeast(1f)).coerceAtMost(displayDensity * 1.5f).coerceAtLeast(.01f)
+        pan = Offset((viewport.width - layout.width * zoom) / 2, (viewport.height - layout.height * zoom) / 2)
+    }
+    fun setZoom(target: Float) {
+        val newZoom = target.coerceIn(.01f, displayDensity * 6f)
+        val center = Offset(viewport.width / 2f, viewport.height / 2f)
+        pan = center - (center - pan) * (newZoom / zoom)
+        zoom = newZoom
+    }
+    LaunchedEffect(viewport, layout.width, layout.height, isNassiShneiderman) { fit() }
 
-    val diagramBg = if (isDarkDiagramBg) Color(0xFF1E1E24) else Color(0xFFF4F4F6)
-    val textColorDefault = if (isDarkDiagramBg) Color.White else Color(0xFF111111)
-
-    val insertNodeInDiagram: (String) -> Unit = { nodeText ->
-        val clean = code.trim()
-        val endIdx = clean.lowercase().lastIndexOf("finalgoritmo")
-        if (endIdx != -1) {
-            val before = clean.substring(0, endIdx).trimEnd()
-            onCodeChanged("$before\n    $nodeText\nFinAlgoritmo")
-        } else {
-            onCodeChanged("$clean\n$nodeText")
+    val export = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("image/png")) { uri ->
+        val snapshotCode = pendingExportCode
+        pendingExportCode = null
+        if (uri != null && snapshotCode != null) scope.launch {
+            exportInProgress = true
+            var bitmap: Bitmap? = null
+            try {
+                val diagram = DiagramRenderer.layoutDiagram(DiagramParser.parse(snapshotCode.lines()), measurer, pendingExportDark, pendingExportNassi, pendingExportAlternativeIo)
+                val exportScale = min(2f, min(8192f / maxOf(diagram.width, diagram.height), sqrt(16_000_000f / (diagram.width * diagram.height)))).coerceAtLeast(.001f)
+                val width = (diagram.width * exportScale).roundToInt().coerceAtLeast(1)
+                val height = (diagram.height * exportScale).roundToInt().coerceAtLeast(1)
+                val rendered = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                bitmap = rendered
+                val canvas = android.graphics.Canvas(rendered)
+                canvas.drawColor((if (pendingExportDark) Color(0xFF333333) else Color(0xFFFAFAFA)).toArgb())
+                CanvasDrawScope().draw(Density(1f), LayoutDirection.Ltr, androidx.compose.ui.graphics.Canvas(canvas), Size(width.toFloat(), height.toFloat())) {
+                    withTransform({ scale(exportScale, exportScale, Offset.Zero) }) { diagram.draw(this) }
+                }
+                withContext(Dispatchers.IO) {
+                    val stream = context.contentResolver.openOutputStream(uri) ?: error("No se pudo abrir el destino")
+                    stream.use { check(rendered.compress(Bitmap.CompressFormat.PNG, 100, it)) { "No se pudo crear la imagen" } }
+                }
+                snackbar.showSnackbar("Diagrama guardado como PNG")
+            } catch (e: Exception) {
+                snackbar.showSnackbar("No se pudo exportar: ${e.message}")
+            } finally { bitmap?.recycle(); exportInProgress = false }
         }
     }
 
-    Row(modifier = Modifier.fillMaxSize()) {
-        // Main Diagram Canvas Area
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .background(diagramBg)
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // PSDraw Title Bar & Controls
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = if (isNassiShneiderman) "PSDraw - Nassi-Shneiderman" else "PSDraw - Diagrama Clásico",
-                    color = if (isDarkDiagramBg) Color(0xFFFFD54F) else Color(0xFF1565C0),
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Monospace
-                )
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    // Toggle Canvas Dark/Light Background
-                    IconButton(
-                        onClick = { isDarkDiagramBg = !isDarkDiagramBg },
-                        modifier = Modifier.size(32.dp).background(Color(0xFF333344), RoundedCornerShape(6.dp))
-                    ) {
-                        Icon(Icons.Filled.Palette, contentDescription = "Cambiar Fondo", tint = Color.White, modifier = Modifier.size(16.dp))
+    Column(Modifier.fillMaxSize()) {
+        Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+            TextButton(onClick = { onDiagramTypeChanged(!isNassiShneiderman) }) {
+                Text(if (isNassiShneiderman) "Nassi–Shneiderman" else "Clásico", fontSize = 12.sp)
+                Icon(Icons.Default.SwapHoriz, "Cambiar tipo de diagrama", Modifier.size(18.dp))
+            }
+            VerticalDivider(Modifier.height(22.dp))
+            TextButton(onClick = ::fit) { Icon(Icons.Default.FitScreen, null, Modifier.size(18.dp)); Text(" Ajustar", fontSize = 12.sp) }
+            IconButton(onClick = { setZoom(zoom / 1.25f) }) { Icon(Icons.Default.Remove, "Alejar") }
+            Text("${(zoom / displayDensity * 100).roundToInt()}%", fontSize = 11.sp)
+            IconButton(onClick = { setZoom(zoom * 1.25f) }) { Icon(Icons.Default.Add, "Ampliar") }
+            IconButton(onClick = { dark = !dark }) { Icon(if (dark) Icons.Default.LightMode else Icons.Default.DarkMode, "Cambiar fondo del diagrama") }
+            IconButton(onClick = { toolbox = !toolbox }) { Icon(Icons.Default.Widgets, "Insertar figura") }
+            IconButton(enabled = !exportInProgress, onClick = {
+                pendingExportCode = code; pendingExportDark = dark; pendingExportNassi = isNassiShneiderman
+                pendingExportAlternativeIo = profile.alternativeIoShapes
+                export.launch("Diagrama_${if (isNassiShneiderman) "Nassi" else "Clasico"}.png")
+            }) { Icon(Icons.Default.FileDownload, "Exportar PNG") }
+        }
+        HorizontalDivider()
+        Box(Modifier.weight(1f).fillMaxWidth().background(background).clipToBounds()) {
+            Canvas(Modifier.fillMaxSize().testTag("diagram-canvas").onSizeChanged { viewport = it }
+                .semantics { contentDescription = "Diagrama ${if (isNassiShneiderman) "Nassi Shneiderman" else "clásico"}. Arrastra para desplazarte y pellizca para ampliar." }
+                .pointerInput(layout) {
+                    detectTransformGestures { centroid, drag, factor, _ ->
+                        val target = (zoom * factor).coerceIn(.01f, displayDensity * 6f)
+                        pan = centroid - (centroid - pan) * (target / zoom) + drag
+                        zoom = target
                     }
-                    // Export Diagram Button
-                    Button(
-                        onClick = {
-                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                type = "text/plain"
-                                putExtra(Intent.EXTRA_SUBJECT, "Diagrama de Flujo PSeInt")
-                                putExtra(Intent.EXTRA_TEXT, "Diagrama PSDraw PSeInt:\n\n${lines.joinToString("\n")}")
+                }
+                .pointerInput(layout) {
+                    detectTapGestures(onDoubleTap = { fit() }, onTap = { point ->
+                        layout.hitTest((point - pan) / zoom)?.let { hit ->
+                            if (hit.lineIndex in code.lines().indices) {
+                                editing = hit
+                                editingText = code.lines()[hit.lineIndex].trim()
                             }
-                            context.startActivity(Intent.createChooser(shareIntent, "Exportar Diagrama"))
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1976D2)),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                        shape = RoundedCornerShape(6.dp)
-                    ) {
-                        Icon(Icons.Filled.Share, contentDescription = null, tint = Color.White, modifier = Modifier.size(14.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Exportar", fontSize = 11.sp, color = Color.White)
-                    }
+                        }
+                    })
+                }) {
+                withTransform({ translate(pan.x, pan.y); scale(zoom, zoom, Offset.Zero) }) {
+                    layout.draw(this)
+                    editing?.let { drawRect(Color(0xFF2684DB), it.bounds.topLeft, it.bounds.size, style = Stroke(2f / zoom)) }
                 }
             }
-
-            if (isNassiShneiderman) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(2.dp, Color(0xFF64B5F6), RoundedCornerShape(4.dp))
-                        .background(if (isDarkDiagramBg) Color(0xFF181820) else Color.White)
-                ) {
-                    for (line in lines) {
-                        val lowerLine = line.lowercase()
-                        val bgColor = when {
-                            lowerLine.startsWith("algoritmo") || lowerLine.startsWith("proceso") -> Color(0xFF1B5E20)
-                            lowerLine.startsWith("finalgoritmo") || lowerLine.startsWith("finproceso") -> Color(0xFFB71C1C)
-                            lowerLine.startsWith("si ") || lowerLine.startsWith("mientras ") -> Color(0xFF4A148C)
-                            lowerLine.startsWith("leer") -> Color(0xFFAD1457)
-                            lowerLine.startsWith("escribir") -> Color(0xFF004D40)
-                            else -> Color(0xFF0D47A1)
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .border(1.dp, Color(0xFF444454))
-                                .background(bgColor.copy(alpha = 0.8f))
-                                .padding(10.dp)
-                        ) {
-                            Text(
-                                text = line,
-                                color = Color.White,
-                                fontFamily = FontFamily.Monospace,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
-            } else {
-                // PSDraw Classic Flowchart Nodes
-                for ((index, line) in lines.withIndex()) {
-                    val lowerLine = line.lowercase()
-
-                    val (nodeType, text, bgColor, strokeColor, nodeTextColor) = when {
-                        lowerLine.startsWith("algoritmo") || lowerLine.startsWith("proceso") -> 
-                            Quintuple("StartEnd", line.removePrefix("Algoritmo").removePrefix("Proceso").trim(), if (isDarkDiagramBg) Color(0xFF222226) else Color.White, Color(0xFFFFB300), if (isDarkDiagramBg) Color(0xFFFFD54F) else Color(0xFFE65100))
-                        lowerLine.startsWith("finalgoritmo") || lowerLine.startsWith("finproceso") -> 
-                            Quintuple("StartEnd", "FinAlgoritmo", if (isDarkDiagramBg) Color(0xFF222226) else Color.White, Color(0xFFFFB300), if (isDarkDiagramBg) Color(0xFFFFD54F) else Color(0xFFE65100))
-                        lowerLine.startsWith("si ") || lowerLine.startsWith("mientras ") || lowerLine.startsWith("repetir") || lowerLine.startsWith("para ") -> 
-                            Quintuple("Decision", line, Color(0xFF0D47A1), Color(0xFF64B5F6), Color.White)
-                        lowerLine.startsWith("sino") || lowerLine.startsWith("finsi") || lowerLine.startsWith("finmientras") || lowerLine.startsWith("finpara") || lowerLine.startsWith("hasta que") -> 
-                            Quintuple("Flow", line, Color.Transparent, Color(0xFF9E9E9E), if (isDarkDiagramBg) Color(0xFFA0A0A0) else Color(0xFF666666))
-                        lowerLine.startsWith("leer") -> 
-                            Quintuple("Input", line, Color(0xFFAD1457), Color(0xFFF48FB1), Color.White)
-                        lowerLine.startsWith("escribir") || lowerLine.startsWith("mostrar") || lowerLine.startsWith("imprimir") -> 
-                            Quintuple("Output", line, Color(0xFF004D40), Color(0xFF80CBC4), Color.White)
-                        else -> 
-                            Quintuple("Process", line, Color(0xFF0D47A1), Color(0xFFFFD54F), Color(0xFFFFD54F))
-                    }
-
-                    DiagramNodeCard(nodeType, text, bgColor, strokeColor, nodeTextColor)
-
-                    if (index < lines.size - 1) {
-                        Box(
-                            modifier = Modifier
-                                .width(2.dp)
-                                .height(20.dp)
-                                .background(Color(0xFFE53935))
-                        )
-                    }
-                }
+            SnackbarHost(snackbar, Modifier.align(Alignment.BottomCenter))
+            if (exportInProgress) CircularProgressIndicator(Modifier.align(Alignment.Center))
+        }
+        HorizontalDivider()
+        Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 7.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text("PSDraw", fontSize = 11.sp, color = MaterialTheme.colorScheme.primary)
+            Spacer(Modifier.width(10.dp))
+            Text("Toca una figura para editar · Pellizca para ampliar", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        if (toolbox) CommandPalette(profile) { command ->
+            val index = Regex("(?im)^\\s*Fin(?:Algoritmo|Proceso)\\b").find(code)?.range?.first ?: code.length
+            onCodeChanged(insertEditorCommand(TextFieldValue(code, TextRange(index)), command).text)
+        }
+    }
+    if (editing != null) AlertDialog(
+        onDismissRequest = { editing = null }, title = { Text("Editar instrucción · línea ${editing!!.lineIndex + 1}") },
+        text = { OutlinedTextField(editingText, { editingText = it }, label = { Text("Pseudocódigo") }, modifier = Modifier.fillMaxWidth(), singleLine = true) },
+        confirmButton = { TextButton(enabled = editingText.isNotBlank(), onClick = {
+            val target = editing!!
+            val lines = code.lines().toMutableList()
+            if (target.lineIndex in lines.indices) {
+                val indent = lines[target.lineIndex].takeWhile { it.isWhitespace() }
+                lines[target.lineIndex] = indent + editingText.trim()
+                onCodeChanged(lines.joinToString("\n"))
             }
-        }
-
-        // Visual Programming Toolbox (Right Panel Matching Screenshot 172905.png)
-        Column(
-            modifier = Modifier
-                .width(96.dp)
-                .fillMaxHeight()
-                .background(Color(0xFF14141A))
-                .border(1.dp, Color(0xFF2A2A38))
-                .verticalScroll(rememberScrollState())
-                .padding(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "PROGRAMAR\nDIAGRAMA",
-                color = Color(0xFFFFD54F),
-                fontSize = 9.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(vertical = 6.dp)
-            )
-
-            PSDrawShapeToolButton("Asignar", R.drawable.asignar) { insertNodeInDiagram("variable <- expresion") }
-            PSDrawShapeToolButton("Escribir", R.drawable.escribir) { insertNodeInDiagram("Escribir \"\"") }
-            PSDrawShapeToolButton("Leer", R.drawable.leer) { insertNodeInDiagram("Leer variable") }
-            PSDrawShapeToolButton("Si-Entonces", R.drawable.si) { insertNodeInDiagram("Si condicion Entonces\n\t// acciones\nFinSi") }
-            PSDrawShapeToolButton("Según", R.drawable.segun) { insertNodeInDiagram("Segun variable Hacer\n\topcion1:\n\t\t// acciones\nFinSegun") }
-            PSDrawShapeToolButton("Mientras", R.drawable.mientras) { insertNodeInDiagram("Mientras condicion Hacer\n\t// acciones\nFinMientras") }
-            PSDrawShapeToolButton("Repetir", R.drawable.repetir) { insertNodeInDiagram("Repetir\n\t// acciones\nHasta Que condicion") }
-            PSDrawShapeToolButton("Para", R.drawable.para) { insertNodeInDiagram("Para i<-1 Hasta 10 Con Paso 1 Hacer\n\t// acciones\nFinPara") }
-        }
-    }
+            editing = null
+        }) { Text("Aplicar") } },
+        dismissButton = { TextButton(onClick = { editing = null }) { Text("Cancelar") } }
+    )
 }
-
-@Composable
-fun PSDrawShapeToolButton(label: String, iconRes: Int, onClick: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 3.dp)
-            .background(Color(0xFF1E1E28), RoundedCornerShape(6.dp))
-            .border(1.dp, Color(0xFF3B3B4F), RoundedCornerShape(6.dp))
-            .clickable(onClick = onClick)
-            .padding(6.dp)
-    ) {
-        Image(
-            painter = painterResource(id = iconRes),
-            contentDescription = label,
-            modifier = Modifier.size(22.dp)
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(label, fontSize = 8.sp, fontWeight = FontWeight.Bold, color = Color.White, textAlign = TextAlign.Center)
-    }
-}
-
-private data class Quintuple<A, B, C, D, E>(val first: A, val second: B, val third: C, val fourth: D, val fifth: E)

@@ -1,0 +1,11 @@
+desc=Perfil para la asignatura de "Introducción a la  Programación" utilizado en la Universidad Nacional de Educación "Enrique Guzmán y Valle". Chosica - Perú (enviado por Nick B. Palomino Pérez).
+allow_dinamyc_dimensions=1
+allow_concatenation=1
+force_init_vars=0
+force_semicolon=1
+allow_word_operators=1
+lazy_syntax=1
+base_zero_arrays=1
+overload_equal=0
+coloquial_conditions=0
+force_define_vars=0

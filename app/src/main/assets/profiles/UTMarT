@@ -1,0 +1,14 @@
+desc=Perfil para el curso de "Metodología de la Programación" de la carrera de Tecnologías de la Información y Comunicación en la Universidad Tecnológica del Mar de Tamaulipas Bicentenario, (enviado por M.T. Carlos Arturo Sánchez Tamez).
+allow_dinamyc_dimensions=1
+use_nassi_schneiderman=0
+force_define_vars=1
+force_init_vars=1
+allow_concatenation=1
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=1
+allow_word_operators=1
+overload_equal=1
+coloquial_conditions=0
+lazy_syntax=0
+base_zero_arrays=1

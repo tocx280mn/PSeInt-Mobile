@@ -1,0 +1,38 @@
+
+# descripcion del perfil
+
+# puede utilizar varias lineas desc=...... para escribir una descripcion del perfil para mostrar en el cuadro de configuracion
+desc=Este perfil configura el pseudolenguaje para parecerse a un lenguaje de programación real.
+
+
+# configuracion de perfil, para los siguientes valores se acepta 1 como verdadero, 0 como falso
+
+# permitir dimensionar arreglos con variables en lugar de constantes para los tamaños (ej: dimension a[N])
+allow_dinamyc_dimensions=0
+
+# permitir concatenar variables o constantes de tipo caracter con mas (ej: frase <- "Hola " + "Mundo")
+allow_concatenation=0
+
+# controlar que se inicialicen las variables y posiciones de arreglos antes de utilizarlos en expresiones o mostrarlos
+force_init_vars=1
+
+# controlar el uso del ; al final de las instrucciones secuenciales (leer, escribir, asignar(<-), dimension, definir)
+force_semicolon=1
+
+# permitir reemplazar operadores por palabras clave (&=Y, |=O, ~=NO, %=MOD)
+allow_word_operators=0
+
+# permitir omitir las palabras HACER y ENTONCES al final de las estructuras SI, PARA, MIENTRAS, sinonimos como IMPRIMIR para ESCRIBIR, o palabras adicionales como DESDE para definir el valor inicial de un PARA.
+lazy_syntax=0
+
+# indexar arreglos en base 0 (en lugar de base 1 que es el valor por defecto)
+base_zero_arrays=1
+
+# permitir asignar con = (además de <- y :=)
+overload_equal=0
+
+# permitir condiciones como "A ES IGUAL A B", "X ES MULTIPLO DE 5", "Z ES IMPAR", etc
+coloquial_conditions=0
+
+# obliga a definir los tipos de variables con la sentencia DEFINIR antes de utilizarlas
+force_define_vars=1

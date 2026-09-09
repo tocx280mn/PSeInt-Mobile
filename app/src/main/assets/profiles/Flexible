@@ -1,0 +1,57 @@
+# descripcion del perfil
+
+# puede utilizar varias lineas desc=...... para escribir una descripcion del perfil para mostrar en el cuadro de configuracion
+desc=Este perfil configura el pseudolenguaje de la forma más flexible y permisiva posible. Si no sabe qué perfil seleccionar puede comenzar con este.
+
+# Version del intérprete que generó esta configuración
+version=20160321
+
+# configuracion de perfil, para los siguientes valores se acepta 1 como verdadero, 0 como falso
+
+# permitir dimensionar arreglos con variables en lugar de constantes para los tamaños (ej: dimension a[N])
+allow_dinamyc_dimensions=1
+
+# permitir concatenar variables o constantes de tipo caracter con mas (ej: frase <- "Hola " + "Mundo")
+allow_concatenation=1
+
+# controlar que se inicialicen las variables y posiciones de arreglos antes de utilizarlos en expresiones o mostrarlos
+force_init_vars=0
+
+# controlar el uso del ; al final de las instrucciones secuenciales (leer, escribir, asignar(<-), dimension, definir)
+force_semicolon=0
+
+# permitir reemplazar operadores por palabras clave (&=Y, |=O, ~=NO, %=MOD)
+allow_word_operators=1
+
+# permitir omitir las palabras HACER y ENTONCES al final de las estructuras SI, PARA, MIENTRAS, sinonimos como IMPRIMIR para ESCRIBIR, o palabras adicionales como DESDE para definir el valor inicial de un PARA.
+lazy_syntax=1
+
+# indexar arreglos en base 0 (en lugar de base 1 que es el valor por defecto)
+base_zero_arrays=0
+
+# permitir asignar con = (además de <- y :=)
+overload_equal=1
+
+# permitir condiciones como "A ES IGUAL A B", "X ES MULTIPLO DE 5", "Z ES IMPAR", etc
+coloquial_conditions=1
+
+# obliga a definir los tipos de variables con la sentencia DEFINIR antes de utilizarlas
+force_define_vars=0
+
+# dibujar diagramas de flujo de Nassi-Schneiderman en lugar de los clasicos en el editor de diagramas
+use_nassi_schneiderman=0
+
+# habilitar las funciones de manejo de cadenas de caracteres (Longitud, Concatenar, Subcadena, Mayusculas y Minusculas)
+enable_string_functions=1
+
+# permitir definir nuevas funciones en el algoritmo con las palabras claves funcion o subproceso
+enable_user_functions=1
+
+# habilitar el uso de acentos y eñes en nombres de variables y funciones
+allow_accents=1
+
+# preferir "algoritmo" antes que "subproceso"
+	=1
+
+# preferir "funcion" antes que "subproceso" o "algoritmo"
+prefer_funcion=1

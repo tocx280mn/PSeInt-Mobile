@@ -1,503 +1,100 @@
 package com.example
 
-import kotlinx.coroutines.delay
-import kotlin.math.*
-import kotlin.random.Random
+import androidx.annotation.Keep
+import kotlinx.coroutines.*
+import java.nio.CharBuffer
+import java.nio.charset.CodingErrorAction
+import kotlin.coroutines.CoroutineContext
 
-data class SyntaxResult(
-    val isValid: Boolean,
-    val errorMessage: String = "",
-    val errorLine: Int = -1
-)
+data class SyntaxResult(val isValid: Boolean, val errorMessage: String = "", val errorLine: Int = -1)
 
+/** The same C++ parser, memory model and evaluator shipped with desktop PSeInt. */
 class PSeIntEvaluator {
-
-    private val variables = mutableMapOf<String, String>()
-    private val declaredVariables = mutableSetOf<String>()
-    private val arrays = mutableMapOf<String, MutableList<String>>()
-
-    fun checkSyntax(code: String, profile: PSeIntProfile): SyntaxResult {
-        val lines = code.lines().map { it.trim() }
-        var hasAlgoritmo = false
-        var hasFinAlgoritmo = false
-
-        for ((idx, line) in lines.withIndex()) {
-            if (line.isEmpty() || line.startsWith("//")) continue
-            val lower = line.lowercase().replace(";", "")
-
-            if (lower.startsWith("algoritmo ") || lower.startsWith("proceso ")) {
-                hasAlgoritmo = true
-            }
-            if (lower == "finalgoritmo" || lower == "finproceso") {
-                hasFinAlgoritmo = true
-            }
-
-            if (profile.forceDefineVariables && (line.contains("<-") || (line.contains("=") && !line.contains("==")))) {
-                val sep = if (line.contains("<-")) "<-" else "="
-                val target = line.split(sep)[0].trim()
-                if (target.isNotEmpty() && !declaredVariables.contains(target) && !target.contains("[") && !target.startsWith("definir", ignoreCase = true)) {
-                    // Check if defined earlier in text
-                    val isDefinedEarlier = lines.take(idx).any { prev ->
-                        prev.lowercase().startsWith("definir ") && prev.lowercase().contains(target.lowercase())
-                    }
-                    if (!isDefinedEarlier) {
-                        return SyntaxResult(false, "Variable '$target' no ha sido definida.", idx + 1)
-                    }
-                }
-            }
-        }
-
-        if (!hasAlgoritmo) return SyntaxResult(false, "Falta la cabecera 'Algoritmo <nombre>'", 1)
-        if (!hasFinAlgoritmo) return SyntaxResult(false, "Falta la instrucción de cierre 'FinAlgoritmo'", lines.size)
-
-        return SyntaxResult(true, "El pseudocódigo es correcto. Presione Ejecutar para probarlo.")
+    fun checkSyntax(code: String, profile: PSeIntProfile, checkpoint: () -> Unit = {}): SyntaxResult {
+        var firstError: SyntaxResult? = null
+        val callbacks = NativeCallbacks(check = checkpoint, onDiagnostic = { line, number, text, warning ->
+            if (!warning && firstError == null) firstError = SyntaxResult(false, "Error $number: $text", line)
+        })
+        return try {
+            NativePSeInt.execute(desktopBytes(code), profile.nativeFlags().toByteArray(), false, false, callbacks)
+            firstError ?: SyntaxResult(true, "Pseudocódigo correcto")
+        } catch (e: CancellationException) { throw e }
+        catch (e: Exception) { SyntaxResult(false, e.message ?: "No se pudo comprobar el pseudocódigo") }
+        catch (e: LinkageError) { SyntaxResult(false, "No se pudo cargar el motor de PSeInt: ${e.message}") }
     }
 
     suspend fun evaluate(
-        code: String,
-        profile: PSeIntProfile = PSeIntProfile.Flexible,
-        isStepByStep: Boolean = false,
-        onStep: (Int) -> Unit = {},
-        onOutput: (String) -> Unit,
-        onRequestInput: suspend (String) -> String,
-        onFinish: () -> Unit
+        code: String, profile: PSeIntProfile, isStepByStep: Boolean = false,
+        onStep: suspend (Int, String, Map<String, String>) -> Unit = { _, _, _ -> },
+        onOutput: (String) -> Unit, onRequestInput: suspend (String) -> String, onFinish: () -> Unit
     ) {
-        variables.clear()
-        declaredVariables.clear()
-        arrays.clear()
-
-        val rawLines = code.lines()
-        val cleanLines = rawLines.map { line ->
-            val commentIdx = line.indexOf("//")
-            if (commentIdx != -1) line.substring(0, commentIdx).trim() else line.trim()
-        }
-
+        val context = currentCoroutineContext()
         try {
-            executeBlock(cleanLines, profile, isStepByStep, onStep, onOutput, onRequestInput)
-        } catch (e: Exception) {
-            onOutput("Error de ejecución: ${e.message}")
-        } finally {
-            onFinish()
+            withContext(Dispatchers.IO) {
+                val callbacks = NativeCallbacks(
+                    check = { context.ensureActive() },
+                    onOutput = onOutput,
+                    onDiagnostic = { line, number, text, warning ->
+                        onOutput("${if (warning) "Advertencia" else "Error"} $number en línea $line: $text\n")
+                    },
+                    onInput = { name -> runBlocking(context[Job] ?: EmptyJobContext) { onRequestInput(name) } },
+                    onStep = { line, values -> runBlocking(context[Job] ?: EmptyJobContext) {
+                        onStep(line, "Línea $line: ${code.lineSequence().elementAtOrNull(line - 1)?.trim().orEmpty()}", values)
+                    } }
+                )
+                NativePSeInt.execute(desktopBytes(code), profile.nativeFlags().toByteArray(), true, isStepByStep, callbacks)
+            }
+        } catch (e: CancellationException) { throw e }
+        catch (e: Exception) { onOutput("Error: ${e.message ?: "No se pudo ejecutar"}\n") }
+        catch (e: LinkageError) { onOutput("Error: no se pudo cargar el motor de PSeInt. ${e.message}\n") }
+        finally { onFinish() }
+    }
+}
+
+private val EmptyJobContext: CoroutineContext = kotlin.coroutines.EmptyCoroutineContext
+private val desktopCharset = charset("windows-1252")
+internal fun desktopBytes(text: String): ByteArray {
+    val encoder = desktopCharset.newEncoder().onUnmappableCharacter(CodingErrorAction.REPORT)
+        .onMalformedInput(CodingErrorAction.REPORT)
+    return try {
+        val result = encoder.encode(CharBuffer.wrap(text.replace("\r\n", "\n").replace('\r', '\n')))
+        ByteArray(result.remaining()).also { result.get(it) }
+    } catch (_: java.nio.charset.CharacterCodingException) {
+        throw IllegalArgumentException("El motor de escritorio admite caracteres Windows-1252. Revisa los caracteres del documento; no se han sustituido ni perdido datos.")
+    }
+}
+
+@Keep
+internal object NativePSeInt {
+    init {
+        val hostLibrary = System.getProperty("pseint.native.library")
+        if (hostLibrary == null) System.loadLibrary("pseint")
+        else {
+            // A separate loader per JVM sandbox; Android always loads its packaged ABI.
+            val library = java.io.File(hostLibrary)
+            val copy = java.io.File.createTempFile("pseint-host-", ".${library.extension}")
+            library.copyTo(copy, overwrite = true)
+            copy.deleteOnExit()
+            System.load(copy.absolutePath)
         }
     }
+    external fun execute(source: ByteArray, flags: ByteArray, run: Boolean, debug: Boolean, callbacks: NativeCallbacks, testMode: Boolean = false): Int
+}
 
-    private suspend fun executeBlock(
-        lines: List<String>,
-        profile: PSeIntProfile,
-        isStepByStep: Boolean,
-        onStep: (Int) -> Unit,
-        onOutput: (String) -> Unit,
-        onRequestInput: suspend (String) -> String
-    ) {
-        var i = 0
-        while (i < lines.size) {
-            val line = lines[i]
-            if (line.isEmpty()) {
-                i++
-                continue
-            }
-
-            if (isStepByStep) {
-                onStep(i + 1)
-                delay(600) // Delay to visually highlight execution step
-            }
-
-            val lowerLine = line.lowercase().replace(";", "")
-
-            when {
-                lowerLine.startsWith("definir ") -> {
-                    val parts = line.substring(8).split("como", "Como", "COMO")
-                    if (parts.isNotEmpty()) {
-                        val varsStr = parts[0]
-                        val varNames = varsStr.split(",").map { it.trim() }
-                        for (v in varNames) {
-                            if (v.isNotEmpty()) {
-                                declaredVariables.add(v)
-                                variables[v] = "0"
-                            }
-                        }
-                    }
-                }
-                lowerLine.startsWith("dimension ") || lowerLine.startsWith("dimensión ") -> {
-                    val dimStr = line.substring(10).trim()
-                    val bracketStart = dimStr.indexOf('[')
-                    val bracketEnd = dimStr.indexOf(']')
-                    if (bracketStart != -1 && bracketEnd != -1) {
-                        val arrName = dimStr.substring(0, bracketStart).trim()
-                        val sizeExpr = dimStr.substring(bracketStart + 1, bracketEnd).trim()
-                        val size = evaluateExpression(sizeExpr).toIntOrNull() ?: 10
-                        arrays[arrName] = MutableList(size) { "0" }
-                        declaredVariables.add(arrName)
-                    }
-                }
-                lowerLine.startsWith("escribir ") || lowerLine.startsWith("mostrar ") || lowerLine.startsWith("imprimir ") -> {
-                    val keyword = when {
-                        lowerLine.startsWith("escribir ") -> "escribir "
-                        lowerLine.startsWith("mostrar ") -> "mostrar "
-                        else -> "imprimir "
-                    }
-                    val content = line.substring(keyword.length).replace(";", "").trim()
-                    val outStr = formatPrintContent(content)
-                    onOutput(outStr)
-                }
-                lowerLine.startsWith("leer ") -> {
-                    val varName = line.substring(5).replace(";", "").trim()
-                    if (profile.forceDefineVariables && !declaredVariables.contains(varName)) {
-                        onOutput("Error de Sintaxis (Perfil ${profile.name}): La variable '$varName' debe ser definida antes de leerla.")
-                        return
-                    }
-                    val inputVal = onRequestInput(varName)
-                    variables[varName] = inputVal
-                    declaredVariables.add(varName)
-                }
-                lowerLine.startsWith("si ") -> {
-                    val entoncesIdx = lowerLine.indexOf("entonces")
-                    val conditionStr = if (entoncesIdx != -1) {
-                        line.substring(3, entoncesIdx).trim()
-                    } else {
-                        line.substring(3).trim()
-                    }
-
-                    val (thenBlock, elseBlock, nextIndex) = extractSiBlocks(lines, i)
-                    val condResult = evaluateCondition(conditionStr)
-
-                    if (condResult) {
-                        executeBlock(thenBlock, profile, isStepByStep, onStep, onOutput, onRequestInput)
-                    } else if (elseBlock.isNotEmpty()) {
-                        executeBlock(elseBlock, profile, isStepByStep, onStep, onOutput, onRequestInput)
-                    }
-                    i = nextIndex
-                }
-                lowerLine.startsWith("mientras ") -> {
-                    val hacerIdx = lowerLine.indexOf("hacer")
-                    val conditionStr = if (hacerIdx != -1) {
-                        line.substring(9, hacerIdx).trim()
-                    } else {
-                        line.substring(9).trim()
-                    }
-
-                    val (bodyBlock, nextIndex) = extractBlock(lines, i, "mientras", "finmientras")
-
-                    var loopCount = 0
-                    while (evaluateCondition(conditionStr) && loopCount < 1000) {
-                        executeBlock(bodyBlock, profile, isStepByStep, onStep, onOutput, onRequestInput)
-                        delay(10)
-                        loopCount++
-                    }
-                    i = nextIndex
-                }
-                lowerLine.startsWith("repetir") -> {
-                    val (bodyBlock, nextIndex, conditionStr) = extractRepetirBlock(lines, i)
-                    var loopCount = 0
-                    do {
-                        executeBlock(bodyBlock, profile, isStepByStep, onStep, onOutput, onRequestInput)
-                        delay(10)
-                        loopCount++
-                    } while (!evaluateCondition(conditionStr) && loopCount < 1000)
-                    i = nextIndex
-                }
-                lowerLine.startsWith("para ") -> {
-                    val (headerInfo, bodyBlock, nextIndex) = parseParaHeader(line, lines, i)
-                    if (headerInfo != null) {
-                        val (varName, startVal, endVal, stepVal) = headerInfo
-                        var current = startVal
-                        var loopCount = 0
-                        while ((stepVal > 0 && current <= endVal) || (stepVal < 0 && current >= endVal)) {
-                            if (loopCount > 1000) break
-                            variables[varName] = current.toString()
-                            declaredVariables.add(varName)
-                            executeBlock(bodyBlock, profile, isStepByStep, onStep, onOutput, onRequestInput)
-                            current += stepVal
-                            delay(10)
-                            loopCount++
-                        }
-                    }
-                    i = nextIndex
-                }
-                line.contains("<-") || line.contains("=") -> {
-                    val sep = if (line.contains("<-")) "<-" else "="
-                    val parts = line.split(sep, limit = 2)
-                    if (parts.size == 2) {
-                        val target = parts[0].trim()
-                        val expr = parts[1].replace(";", "").trim()
-
-                        if (profile.forceDefineVariables && !declaredVariables.contains(target) && !target.contains("[")) {
-                            onOutput("Error (Perfil ${profile.name}): Variable '$target' no definida.")
-                            return
-                        }
-
-                        val resultVal = evaluateExpression(expr)
-
-                        if (target.contains("[")) {
-                            val arrName = target.substring(0, target.indexOf('[')).trim()
-                            val idxExpr = target.substring(target.indexOf('[') + 1, target.indexOf(']')).trim()
-                            val idx = evaluateExpression(idxExpr).toIntOrNull() ?: 0
-                            val list = arrays[arrName]
-                            if (list != null && idx >= 0 && idx < list.size) {
-                                list[idx] = resultVal
-                            }
-                        } else {
-                            variables[target] = resultVal
-                            declaredVariables.add(target)
-                        }
-                    }
-                }
-            }
-            delay(15)
-            i++
-        }
+@Keep
+internal class NativeCallbacks(
+    private val check: () -> Unit = {},
+    private val onOutput: (String) -> Unit = {},
+    private val onInput: (String) -> String? = { "" },
+    private val onDiagnostic: (Int, Int, String, Boolean) -> Unit = { _, _, _, _ -> },
+    private val onStep: (Int, Map<String, String>) -> Unit = { _, _ -> }
+) {
+    fun checkpoint() = check()
+    fun output(bytes: ByteArray) { check(); onOutput(bytes.toString(desktopCharset)) }
+    fun input(bytes: ByteArray): ByteArray? { check(); return onInput(bytes.toString(desktopCharset).lowercase().replace('(', '[').replace(')', ']'))?.let(::desktopBytes) }
+    fun diagnostic(line: Int, code: Int, bytes: ByteArray, warning: Boolean) = onDiagnostic(line, code, bytes.toString(desktopCharset), warning)
+    fun step(line: Int, values: Array<ByteArray>) {
+        check()
+        onStep(line, values.toList().chunked(2).associate { it[0].toString(desktopCharset).lowercase() to it[1].toString(desktopCharset) })
     }
-
-    private fun formatPrintContent(content: String): String {
-        val sb = StringBuilder()
-        var inQuotes = false
-        var currentToken = StringBuilder()
-        val tokens = mutableListOf<String>()
-
-        for (char in content) {
-            if (char == '"') {
-                inQuotes = !inQuotes
-                currentToken.append(char)
-            } else if (char == ',' && !inQuotes) {
-                tokens.add(currentToken.toString().trim())
-                currentToken = StringBuilder()
-            } else {
-                currentToken.append(char)
-            }
-        }
-        if (currentToken.isNotEmpty()) {
-            tokens.add(currentToken.toString().trim())
-        }
-
-        for (token in tokens) {
-            if (token.startsWith("\"") && token.endsWith("\"")) {
-                sb.append(token.removeSurrounding("\""))
-            } else {
-                sb.append(evaluateExpression(token))
-            }
-        }
-        return sb.toString()
-    }
-
-    private fun evaluateCondition(conditionStr: String): Boolean {
-        val cleanCond = conditionStr.replace(";", "").trim()
-        val eqOps = listOf("==", "=", "<>", "!=", "<=", ">=", "<", ">")
-        for (op in eqOps) {
-            if (cleanCond.contains(op)) {
-                val parts = cleanCond.split(op, limit = 2)
-                val left = evaluateExpression(parts[0].trim())
-                val right = evaluateExpression(parts[1].trim())
-
-                val leftNum = left.toDoubleOrNull()
-                val rightNum = right.toDoubleOrNull()
-
-                return if (leftNum != null && rightNum != null) {
-                    when (op) {
-                        "==", "=" -> leftNum == rightNum
-                        "<>", "!=" -> leftNum != rightNum
-                        "<=" -> leftNum <= rightNum
-                        ">=" -> leftNum >= rightNum
-                        "<" -> leftNum < rightNum
-                        ">" -> leftNum > rightNum
-                        else -> false
-                    }
-                } else {
-                    when (op) {
-                        "==", "=" -> left.equals(right, ignoreCase = true)
-                        "<>", "!=" -> !left.equals(right, ignoreCase = true)
-                        else -> false
-                    }
-                }
-            }
-        }
-        val num = evaluateExpression(cleanCond).toDoubleOrNull()
-        return num != null && num != 0.0
-    }
-
-    private fun evaluateExpression(expr: String): String {
-        val trimmed = expr.trim()
-
-        if (trimmed.startsWith("\"") && trimmed.endsWith("\"")) {
-            return trimmed.removeSurrounding("\"")
-        }
-
-        if (variables.containsKey(trimmed)) {
-            return variables[trimmed] ?: "0"
-        }
-
-        val lower = trimmed.lowercase()
-        when {
-            lower.startsWith("rc(") || lower.startsWith("raiz(") -> {
-                val arg = trimmed.substring(trimmed.indexOf('(') + 1, trimmed.lastIndexOf(')')).trim()
-                val valNum = evaluateExpression(arg).toDoubleOrNull() ?: 0.0
-                return sqrt(valNum).toString()
-            }
-            lower.startsWith("abs(") -> {
-                val arg = trimmed.substring(trimmed.indexOf('(') + 1, trimmed.lastIndexOf(')')).trim()
-                val valNum = evaluateExpression(arg).toDoubleOrNull() ?: 0.0
-                return abs(valNum).toString()
-            }
-            lower.startsWith("trunc(") -> {
-                val arg = trimmed.substring(trimmed.indexOf('(') + 1, trimmed.lastIndexOf(')')).trim()
-                val valNum = evaluateExpression(arg).toDoubleOrNull() ?: 0.0
-                return truncate(valNum).toLong().toString()
-            }
-            lower.startsWith("redon(") -> {
-                val arg = trimmed.substring(trimmed.indexOf('(') + 1, trimmed.lastIndexOf(')')).trim()
-                val valNum = evaluateExpression(arg).toDoubleOrNull() ?: 0.0
-                return Math.round(valNum).toString()
-            }
-            lower.startsWith("azar(") || lower.startsWith("aleatorio(") -> {
-                val arg = trimmed.substring(trimmed.indexOf('(') + 1, trimmed.lastIndexOf(')')).trim()
-                val maxVal = evaluateExpression(arg).toIntOrNull() ?: 100
-                return Random.nextInt(0, maxVal).toString()
-            }
-        }
-
-        val num = trimmed.toDoubleOrNull()
-        if (num != null) return if (num % 1.0 == 0.0) num.toLong().toString() else num.toString()
-
-        for (op in listOf("+", "-", "*", "/", "%")) {
-            if (trimmed.contains(op)) {
-                val lastIdx = trimmed.lastIndexOf(op)
-                if (lastIdx > 0 && lastIdx < trimmed.length - 1) {
-                    val left = evaluateExpression(trimmed.substring(0, lastIdx)).toDoubleOrNull() ?: 0.0
-                    val right = evaluateExpression(trimmed.substring(lastIdx + 1)).toDoubleOrNull() ?: 0.0
-                    val res = when (op) {
-                        "+" -> left + right
-                        "-" -> left - right
-                        "*" -> left * right
-                        "/" -> if (right != 0.0) left / right else 0.0
-                        "%" -> left % right
-                        else -> 0.0
-                    }
-                    return if (res % 1.0 == 0.0) res.toLong().toString() else res.toString()
-                }
-            }
-        }
-
-        return trimmed
-    }
-
-    private fun extractSiBlocks(lines: List<String>, startIdx: Int): Triple<List<String>, List<String>, Int> {
-        val thenBlock = mutableListOf<String>()
-        val elseBlock = mutableListOf<String>()
-        var inElse = false
-        var depth = 1
-        var i = startIdx + 1
-
-        while (i < lines.size) {
-            val line = lines[i].trim()
-            val lower = line.lowercase()
-
-            if (lower.startsWith("si ")) depth++
-            if (lower == "finsi") {
-                depth--
-                if (depth == 0) return Triple(thenBlock, elseBlock, i)
-            }
-
-            if (depth == 1 && lower == "sino") {
-                inElse = true
-                i++
-                continue
-            }
-
-            if (inElse) elseBlock.add(line) else thenBlock.add(line)
-            i++
-        }
-
-        return Triple(thenBlock, elseBlock, i)
-    }
-
-    private fun extractBlock(lines: List<String>, startIdx: Int, openKw: String, closeKw: String): Pair<List<String>, Int> {
-        val block = mutableListOf<String>()
-        var depth = 1
-        var i = startIdx + 1
-
-        while (i < lines.size) {
-            val line = lines[i].trim()
-            val lower = line.lowercase()
-
-            if (lower.startsWith(openKw)) depth++
-            if (lower == closeKw) {
-                depth--
-                if (depth == 0) return Pair(block, i)
-            }
-
-            block.add(line)
-            i++
-        }
-        return Pair(block, i)
-    }
-
-    private fun extractRepetirBlock(lines: List<String>, startIdx: Int): Triple<List<String>, Int, String> {
-        val block = mutableListOf<String>()
-        var i = startIdx + 1
-        var condStr = "falso"
-
-        while (i < lines.size) {
-            val line = lines[i].trim()
-            val lower = line.lowercase()
-
-            if (lower.startsWith("hasta que ")) {
-                condStr = line.substring("hasta que ".length).trim()
-                return Triple(block, i, condStr)
-            }
-            block.add(line)
-            i++
-        }
-        return Triple(block, i, condStr)
-    }
-
-    private fun parseParaHeader(headerLine: String, lines: List<String>, startIdx: Int): Triple<ParaInfo?, List<String>, Int> {
-        val bodyBlock = mutableListOf<String>()
-        var i = startIdx + 1
-        var depth = 1
-
-        while (i < lines.size) {
-            val line = lines[i].trim()
-            val lower = line.lowercase()
-
-            if (lower.startsWith("para ")) depth++
-            if (lower == "finpara") {
-                depth--
-                if (depth == 0) break
-            }
-            bodyBlock.add(line)
-            i++
-        }
-
-        try {
-            val headerLower = headerLine.lowercase()
-            val hastaIdx = headerLower.indexOf("hasta")
-            val hacerIdx = headerLower.indexOf("hacer")
-
-            if (hastaIdx != -1) {
-                val assignPart = headerLine.substring(4, hastaIdx).trim()
-                val sep = if (assignPart.contains("<-")) "<-" else "="
-                val parts = assignPart.split(sep)
-                val varName = parts[0].trim()
-                val startVal = evaluateExpression(parts[1].trim()).toIntOrNull() ?: 1
-
-                var stepVal = 1
-                val pasoIdx = headerLower.indexOf("con paso")
-                val endPartStr = if (pasoIdx != -1) {
-                    val stepPart = headerLine.substring(pasoIdx + 8, if (hacerIdx != -1) hacerIdx else headerLine.length).trim()
-                    stepVal = evaluateExpression(stepPart).toIntOrNull() ?: 1
-                    headerLine.substring(hastaIdx + 5, pasoIdx).trim()
-                } else {
-                    headerLine.substring(hastaIdx + 5, if (hacerIdx != -1) hacerIdx else headerLine.length).trim()
-                }
-
-                val endVal = evaluateExpression(endPartStr).toIntOrNull() ?: 10
-                return Triple(ParaInfo(varName, startVal, endVal, stepVal), bodyBlock, i)
-            }
-        } catch (e: Exception) {
-            // Ignore parse errors
-        }
-
-        return Triple(null, bodyBlock, i)
-    }
-
-    private data class ParaInfo(val varName: String, val startVal: Int, val endVal: Int, val stepVal: Int)
 }

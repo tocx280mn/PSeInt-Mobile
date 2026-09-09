@@ -1,0 +1,14 @@
+desc=Para la materia "Programación Estructurada" de la carrera Ingeniero en Administración y Sistemas en la Facultad de Ingeniería Mecánica y Eléctrica de la Universidad Autónoma de Nuevo León, Monterrey, N.L., México (enviado por el docente Belisario Domínguez).
+allow_dinamyc_dimensions=0
+use_nassi_schneiderman=0
+force_define_vars=1
+force_init_vars=1
+allow_concatenation=0
+enable_string_functions=1
+enable_user_functions=1
+force_dot_and_comma=1
+allow_word_operators=0
+overload_equal=1
+coloquial_conditions=0
+lazy_syntax=0
+base_zero_arrays=1

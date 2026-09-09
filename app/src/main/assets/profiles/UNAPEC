@@ -1,0 +1,14 @@
+desc=Perfil para la materia Fundamentos de Informatica & Algoritmos de la carrera Ingenieria de Software (ISO) en la Universidad  Acción Pro Educación y Cultura (dictada por el profesor David Valdez Linares, perfil enviado por el estudiante Anyel Martich).
+allow_dinamyc_dimensions=1
+use_nassi_schneiderman=1
+force_define_vars=1
+force_init_vars=1
+allow_concatenation=1
+enable_string_functions=1
+enable_user_functions=1
+force_semicolon=1
+allow_word_operators=1
+overload_equal=1
+coloquial_conditions=1
+lazy_syntax=1
+base_zero_arrays=1

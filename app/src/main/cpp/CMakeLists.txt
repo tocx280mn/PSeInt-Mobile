@@ -1,46 +1,37 @@
 cmake_minimum_required(VERSION 3.22.1)
-
-project("pseint")
-
-# Add the PSeInt core sources
-file(GLOB PSEINT_SOURCES
-    "../../../pseint/pseint/SynCheck.cpp"
-    "../../../pseint/pseint/intercambio.cpp"
-    "../../../pseint/pseint/main.cpp"
-    "../../../pseint/pseint/Ejecutar.cpp"
-    "../../../pseint/pseint/global.cpp"
-    "../../../pseint/pseint/zockets.cpp"
-    "../../../pseint/pseint/utils.cpp"
-    "../../../pseint/pseint/zcurlib.cpp"
-    "../../../pseint/pseint/Evaluar.cpp"
-    "../../../pseint/pseint/new_memoria.cpp"
-    "../../../pseint/pseint/FuncsManager.cpp"
-    "../../../pseint/pseint/DataValue.cpp"
-    "../../../pseint/pseint/case_map.cpp"
-    "../../../pseint/pseint/zcurlib_lnx.cpp"
-    "../../../pseint/pseint/zcurlib_win.cpp"
-    "../../../pseint/pseint/LangSettings.cpp"
-    "../../../pseint/pseint/ErrorHandler.cpp"
-    "../../../pseint/pseint/FuncsPredefs.cpp"
-    "../../../pseint/pseint/ProgramaDump.cpp"
-    "../../../pseint/pseint/Keywords.cpp"
-    "../../../pseint/pseint/strFuncs.cpp"
-    "pseint_jni.cpp"
-)
-
-add_library(
-        ${CMAKE_PROJECT_NAME}
-        SHARED
-        ${PSEINT_SOURCES}
-)
-
-# Add Android logging library
-find_library(
-        log-lib
-        log
-)
-
-target_link_libraries(
-        ${CMAKE_PROJECT_NAME}
-        ${log-lib}
-)
+project(pseint_mobile LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CORE "${CMAKE_CURRENT_SOURCE_DIR}/../../../build/generated/pseintCore")
+set(SOURCES SynCheck intercambio Ejecutar global utils Evaluar new_memoria
+    FuncsManager DataValue case_map LangSettings FuncsPredefs Keywords strFuncs)
+list(TRANSFORM SOURCES PREPEND "${CORE}/")
+list(TRANSFORM SOURCES APPEND ".cpp")
+add_library(pseint SHARED ${SOURCES} mobile_runtime.cpp pseint_jni.cpp)
+target_include_directories(pseint PRIVATE "${CORE}" "${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_options(pseint PRIVATE -fexceptions -frtti -fsigned-char)
+if(NOT ANDROID)
+    find_package(JNI REQUIRED)
+    target_include_directories(pseint PRIVATE ${JNI_INCLUDE_DIRS})
+    if(MINGW)
+        target_link_options(pseint PRIVATE -static)
+    endif()
+    # Independent desktop console executable: no mobile hooks, parser changes or
+    # Kotlin implementation. Used as the compatibility oracle by the JVM tests.
+    set(REFERENCE "${CMAKE_CURRENT_SOURCE_DIR}/../../../build/generated/pseintReference")
+    set(REFERENCE_SOURCES SynCheck intercambio main Ejecutar global zockets utils
+        zcurlib zcurlib_lnx zcurlib_win Evaluar new_memoria FuncsManager DataValue
+        case_map LangSettings ErrorHandler FuncsPredefs ProgramaDump Keywords strFuncs)
+    list(TRANSFORM REFERENCE_SOURCES PREPEND "${REFERENCE}/")
+    list(TRANSFORM REFERENCE_SOURCES APPEND ".cpp")
+    add_executable(pseint-desktop ${REFERENCE_SOURCES})
+    set_source_files_properties("${REFERENCE}/main.cpp" PROPERTIES COMPILE_DEFINITIONS "main=pseintDesktopMain")
+    target_sources(pseint-desktop PRIVATE desktop_driver.cpp)
+    target_include_directories(pseint-desktop PRIVATE "${REFERENCE}")
+    target_compile_definitions(pseint-desktop PRIVATE USE_ZOCKETS)
+    target_compile_options(pseint-desktop PRIVATE -fsigned-char)
+    if(MINGW)
+        target_link_options(pseint-desktop PRIVATE -static)
+        target_link_libraries(pseint-desktop PRIVATE ws2_32)
+    endif()
+endif()

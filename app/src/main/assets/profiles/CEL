@@ -1,0 +1,16 @@
+version=20150304
+desc=Perfil para la materia "Metodología de la Programación" de la carrera "Programación Básica" del "Centro de Estudios Latinoamericano" (enviado por el Ing. Diego Romero).
+force_init_vars=1
+force_define_vars=1
+force_semicolon=1
+allow_concatenation=1
+allow_word_operators=0
+base_zero_arrays=1
+allow_dinamyc_dimensions=1
+lazy_syntax=0
+coloquial_conditions=0
+use_nassi_schneiderman=0
+enable_user_functions=1
+overload_equal=1
+enable_string_functions=1
+integer_only_switch=0

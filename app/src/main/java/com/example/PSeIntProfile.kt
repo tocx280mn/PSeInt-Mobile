@@ -10,7 +10,29 @@ data class PSeIntProfile(
     var allowEqualsAssignment: Boolean = true,
     var forceDefineVariables: Boolean = false,
     var strictTypes: Boolean = false,
-    var editorFontSize: Int = 14
+    var editorFontSize: Int = 14,
+    // Nuevas configuraciones requeridas
+    var uninitializedVariables: Boolean = false,
+    var allowStringConcatenation: Boolean = false,
+    var enableStringFunctions: Boolean = false,
+    var allowWordOperators: Boolean = false,
+    var base0Arrays: Boolean = false,
+    var dynamicArrays: Boolean = false,
+    var allowArrayResize: Boolean = false,
+    var allowFunctions: Boolean = false,
+    var flexibleSyntax: Boolean = false,
+    var colloquialConditions: Boolean = false,
+    var restrictSegunToNumeric: Boolean = false,
+    var allowOmitStep1: Boolean = false,
+    var useNassiShneiderman: Boolean = false,
+    var alternativeIoShapes: Boolean = false,
+    var allowAccentsInVariables: Boolean = false,
+    var preferAlgoritmo: Boolean = false,
+    var preferFuncion: Boolean = false,
+    var allowRepetirMientrasQue: Boolean = false,
+    var enableParaCada: Boolean = false,
+    var preferRepetirMientrasQue: Boolean = false,
+    var protectParaCounter: Boolean = false
 ) {
     companion object {
         val Flexible = PSeIntProfile(
@@ -20,90 +42,68 @@ data class PSeIntProfile(
             requireSemicolons = false,
             allowEqualsAssignment = true,
             forceDefineVariables = false,
-            strictTypes = false
+            strictTypes = false,
+            allowStringConcatenation = true,
+            enableStringFunctions = true,
+            allowWordOperators = true,
+            dynamicArrays = true,
+            allowArrayResize = true,
+            allowFunctions = true,
+            flexibleSyntax = true,
+            allowAccentsInVariables = true,
+            allowOmitStep1 = true,
+            allowRepetirMientrasQue = true,
+            colloquialConditions = true,
+            preferAlgoritmo = true,
+            preferFuncion = true,
+            enableParaCada = true,
+            protectParaCounter = true
         )
 
         val Estricto = PSeIntProfile(
             name = "Estricto",
-            description = "Perfil estricto. Exige definir variables obligatoriamente y usar asignación <-.",
+            description = "Exige declarar e inicializar variables, usar ; y asignar con <-. Arreglos en base 0.",
             allowImplicitVariables = false,
-            requireSemicolons = false,
+            requireSemicolons = true,
             allowEqualsAssignment = false,
             forceDefineVariables = true,
-            strictTypes = true
+            strictTypes = true,
+            uninitializedVariables = true,
+            base0Arrays = true,
+            enableStringFunctions = true,
+            allowWordOperators = true,
+            allowArrayResize = true,
+            allowFunctions = true,
+            restrictSegunToNumeric = true,
+            protectParaCounter = true
         )
 
-        val PopularNames = listOf(
-            "Flexible", "Estricto", "Personalizado",
-            "111Mil", "AIEP", "Agustiniano", "Areandina", "Avansys", "Babar", "BeehiveSchool",
-            "Bethlemitas", "BiffiLaSalle", "CATCE", "CBM", "CBTA09", "CBTis118", "CBTis155",
-            "CBTis45", "CCS", "CECEP", "CECEYTE23-Tocumbo", "CECYTEO-Pl1", "CECyTEA", "CECyTEM",
-            "CECyTEMichoacan", "CEDUC", "CEL", "CELPO", "CENSA-Avanzado", "CENSA-Basico",
-            "CESCA-HNTG", "CESCA-JKDRC", "CETIS50", "CETYS", "CETis156", "CETis42", "CEVaP",
-            "CFGS-DAW", "CFT-Valparaiso", "CIAF", "CIISA", "CLRM", "CNB-Saltillo", "CNTAutachi",
-            "COAR-Puno", "COBAO", "COBAY", "COEES", "COLVIA", "CPRAfundacion", "CPereyra", "CSM",
-            "CTPCIT", "CUC", "CUDI", "CUFM", "CUL", "CULTCA-VE", "CUNORI", "CUNSUROC", "CelestinoMarco",
-            "CoDisOl", "ColNacJMF", "ColRosarioBogota", "ColegioAvances", "ColegioIntelecto",
-            "ColegioLincoln", "ColegioNuevoGimnasio", "Conalep-Cuautla", "Conalep-Cuernavaca",
-            "Conalep-NicolasRomero", "CorazonDeMaria", "DaVinci", "DonOrioneVictoria", "DuocUC",
-            "EAFIT", "EEST1-Saladillo", "EET322", "EETP480", "EETP647", "EFPIA-UNDAC", "EIA",
-            "ENAP", "EPET12", "EPN", "ESCRio3", "ESPE", "ESPOCH", "ESRN17", "EST50", "ET28", "ETI",
-            "ETUSiemensUTN", "ETecnicaRRoca", "ElJazmin", "ElPilar", "ElValleColegio", "Euded-CPV",
-            "Euded-MARM", "EudoroGranada", "FACENA-UNNE", "FACPYA-UANL", "FAH-USAC", "FCA-UNAM",
-            "FIC-UAT", "FIME-UANL", "FINESI", "FINESI-UNAP-Estricto", "FINESI-UNAP-Flexible",
-            "FIUBA-Schwarz-Sosa", "FJR-Tampico", "FP-UNE", "FPUNA", "IAMayllen", "ICAP", "ICEL",
-            "ICESI", "IDEC", "IEBO26", "IEBrightonPamplona", "IEFelixHenao", "IEHectorAbadGomez",
-            "IELuisLopezDeMesa", "IES-AntonioGaudi", "IES-ClaraDelRey", "IES-DuqueDeAlarcon",
-            "IES-EnriqueTiernoGalvan", "IESNestorAlmendros", "IESTP-FVC", "IESTP-Vilcanota",
-            "IEVillaDeLaCandelaria", "IFD-CoronelOviedo", "IJME", "IPJucutuma", "IPLeones",
-            "IPLosLagos", "IPSS", "IParralenseAC", "ISTP", "ISTP-AbacoChiclayo", "ISTPanuco",
-            "ITA", "ITC", "ITCC", "ITCG", "ITCelaya", "ITChilpancingo", "ITCuliacan", "ITDurango",
-            "ITESM-PrepaTec", "ITESM-TC1001", "ITESO-AYP", "ITG", "ITIZ", "ITL", "ITMina", "ITNL",
-            "ITP-Ecuador", "ITP-ISIC", "ITP-Putumayo", "ITS-Tequila", "ITSAV-AARS", "ITSAV-CLC",
-            "ITSAcayucan", "ITSC", "ITSCC-JJSN", "ITSJuanDeVelasco", "ITSMisantla", "ITSOEH",
-            "ITSR_advan", "ITSR_basic", "ITSSY-Oxkutzcab", "ITST", "ITSX", "ITSZO", "ITTux",
-            "ITZ", "ITZacatecas", "IUGT", "IUP-Tabasco", "IUPSM-Guayana", "IUTAJS", "IUTIRLA",
-            "IUTIRLA-Maturin", "IUTLL", "IUTM-Machiques", "IUTOMS-VE", "Inacap-Maipu", "Inacap-Osorno",
-            "Inacap-Valparaiso", "InstMacedoMartinez", "InstitutoGottau", "JMC", "JeanPiaget",
-            "Juan23-Souto", "LMAC", "LaMision", "LeccionesConTIC", "Leibnitz-PI", "LevVygotsky",
-            "Luzac", "MB-UNC", "MadreVedrunaCastellon", "MalvarArganda", "MartimCerere", "Motolinia",
-            "NesMeyTutoriales", "PCSantaAna", "PIO-IX", "PUCE", "PUCP", "PolitecnicoDeColombia",
-            "PolitecnicoJIC", "Prepa-UAZ", "PrepaGandhi", "PrepaMexico", "Py-UTEC", "RamonCastilla",
-            "SENA-CGMLTI", "SENA-SIGEC", "SENA-hm", "SENA-tadsi-Caqueta", "SENA-vhcg", "SENATI",
-            "SISE", "SISE-Arequipa", "SanLuisRey", "StoTomas", "TECSUP", "TESI", "TESJI", "TESJo",
-            "TLS", "TallerDeInformatica", "TecTijuana", "TecnologiaTecnica", "Torremar", "U-TAD",
-            "UABC-II", "UABJO", "UACJ", "UACM-CL", "UACM-SLT", "UADY", "UAE", "UAEH-ESTi",
-            "UAEM-FCQeI", "UAGRM-IntroInf", "UAGRM-Prog", "UAI-CL", "UAM", "UAMex-UAPT", "UAN",
-            "UARM-TIC", "UASD", "UAT-FMeISCdeM", "UATF-II", "UATF-OBI", "UAnahuac", "UBioBio",
-            "UCA-Nic", "UCAB", "UCAD", "UCC", "UCE", "UCLV-FIMI", "UCM", "UCN", "UCR-CI0202",
-            "UCSC", "UCSH", "UCSP-APV", "UCSP-MPR", "UCTemuco", "UContinental", "UCuenca",
-            "UDD-UCSC", "UDEA", "UDEC", "UDENAR", "UDI", "UDI-Colombia", "UDLA", "UDO-Anaco",
-            "UDO-Anzoategui", "UDOYM", "UEFAL", "UEPillahuaso", "UES21", "UESucumbios", "UETS",
-            "UFRO", "UG", "UGB", "UGFilo", "UIDE", "UIGV", "UIN", "UJAT-DAIA", "UJGH", "ULSA-Noreste",
-            "ULSaOaxaca", "ULagos-Ancud", "ULatino", "ULibertadores", "UMAR", "UMBVirtual",
-            "UManizales", "UMariana", "UMayor", "UNAB-CruzNaranjo", "UNAB-ElSalvador", "UNAB-Olivares",
-            "UNACH", "UNACHI", "UNAD", "UNAJ-PUNO", "UNAM-LCPI", "UNAMBA", "UNAN-Leon", "UNAN-Managua",
-            "UNAP", "UNAPEC", "UNAULA", "UNCP-FIE", "UNDAC-geo", "UNDAC-ingcivil", "UNDAC-sistcomp",
-            "UNE", "UNE-LaCantuta", "UNFV", "UNHEVAL-FICA", "UNI", "UNI-FIC", "UNI-Nicaragua",
-            "UNIAJC", "UNICAES", "UNICAES-Ingenieria", "UNICEN-FIO", "UNICEQ", "UNICOMPU", "UNID",
-            "UNIDA", "UNIFIP", "UNINORTE", "UNISTMO-Ixtepec", "UNITEC-ni", "UNITEC-ve", "UNITEK-PUNO",
-            "UNIVES", "UNJu", "UNL-FICH", "UNLPam", "UNLZ", "UNLa", "UNLa-IntroLS-EPyA", "UNMSM-FII",
-            "UNN", "UNSAM", "UNSL-FCFMN", "UNSM-FISI", "UNSa-Oran", "UNT", "UNTRM", "UNaM-FIO",
-            "UNorte", "UPBicentenario", "UPC", "UPC-Algoritmos", "UPCH", "UPDS", "UPEC", "UPEL-IPC",
-            "UPES", "UPN", "UPONIC", "UPPE", "UPQ", "UPS", "UPSIN", "UPSO", "UPTECMS", "UPTNM",
-            "UPTNMLS", "UPTelesup", "UPTex", "UPTulancingo", "UPVE", "UPanama", "UPlayaAncha",
-            "URACCAN", "URosario", "USACH-IE-DMCC", "USBMed", "USCancun", "USFX-SIS100", "USM",
-            "USPBarranca", "USS-IAP-Patgonia", "USS-ICI", "USTATUNJA", "USalesiana", "USergioArboleda",
-            "UTA", "UTA-FISEI-Jara", "UTA-FISEI-Paredes", "UTA-Iquique", "UTCAM", "UTCD", "UTCH",
-            "UTCorregidora", "UTDFT", "UTEC", "UTEtchojoa", "UTFV", "UTH", "UTH-Cofradia", "UTHH",
-            "UTJ", "UTM", "UTMach", "UTMarT", "UTN-FRM", "UTN-FRSFco", "UTN-FRSN", "UTNayarit",
-            "UTNeza", "UTP-Panama", "UTP-Peru", "UTPP", "UTS", "UTSOE", "UTSalamanca", "UTUsumacinta",
-            "UTZAC", "UTalca", "UTalca-IIE", "UTalca-Videojuegos", "UVIM", "UVM-Hispano", "UValparaiso",
-            "UdeCaldas", "UdeM-Managua", "UdeMM", "UnADM", "UniAmazonia", "UniAtlantico", "UniCauca",
-            "UniGuajira", "UniIncca", "UniMagdalena", "UniMinuto", "UniMoron", "UniPiloto",
-            "UniQuindio", "UniSon-LCC", "UniSur", "UniTru", "UniValle", "Unicafam-UA", "Unifranz",
-            "VicenteFierro", "Yucatan", "cbtis53", "cobae-plantel11", "facet", "poligran"
-        )
+        fun loadAllProfiles(context: Context): List<PSeIntProfile> {
+            val list = mutableListOf<PSeIntProfile>()
+            list.add(Flexible)
+            list.add(Estricto)
+            try {
+                val files = context.assets.list("profiles") ?: emptyArray()
+                for (fileName in files) {
+                    if (fileName in setOf("icons", "Flexible", "Estricto", "Personalizado")) continue
+                    runCatching {
+                        val bytes = context.assets.open("profiles/$fileName").use { it.readBytes() }
+                        list.add(loadFromPrf(fileName, decodePSeIntDocument(bytes)))
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            // Añadir el perfil Personalizado del usuario (cargado desde prefs) para que aparezca en el selector
+            try {
+                val custom = loadCustomProfile(context)
+                list.add(custom.copy(description = if (custom.description.isNotEmpty()) custom.description else "Perfil personalizado por el usuario"))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                list.add(PSeIntProfile(name = "Personalizado", description = "Perfil personalizado por el usuario"))
+            }
+            return list.distinctBy { it.name.lowercase() }.sortedBy { it.name.lowercase() }
+        }
 
         fun saveCustomProfile(context: Context, profile: PSeIntProfile) {
             val prefs = context.getSharedPreferences("custom_profile_prefs", Context.MODE_PRIVATE)
@@ -112,6 +112,29 @@ data class PSeIntProfile(
                 putBoolean("allowEqualsAssignment", profile.allowEqualsAssignment)
                 putBoolean("requireSemicolons", profile.requireSemicolons)
                 putBoolean("strictTypes", profile.strictTypes)
+                putBoolean("allowImplicitVariables", profile.allowImplicitVariables)
+                putInt("editorFontSize", profile.editorFontSize)
+                putBoolean("uninitializedVariables", profile.uninitializedVariables)
+                putBoolean("allowStringConcatenation", profile.allowStringConcatenation)
+                putBoolean("enableStringFunctions", profile.enableStringFunctions)
+                putBoolean("allowWordOperators", profile.allowWordOperators)
+                putBoolean("base0Arrays", profile.base0Arrays)
+                putBoolean("dynamicArrays", profile.dynamicArrays)
+                putBoolean("allowArrayResize", profile.allowArrayResize)
+                putBoolean("allowFunctions", profile.allowFunctions)
+                putBoolean("flexibleSyntax", profile.flexibleSyntax)
+                putBoolean("colloquialConditions", profile.colloquialConditions)
+                putBoolean("restrictSegunToNumeric", profile.restrictSegunToNumeric)
+                putBoolean("allowOmitStep1", profile.allowOmitStep1)
+                putBoolean("useNassiShneiderman", profile.useNassiShneiderman)
+                putBoolean("alternativeIoShapes", profile.alternativeIoShapes)
+                putBoolean("allowAccentsInVariables", profile.allowAccentsInVariables)
+                putBoolean("preferAlgoritmo", profile.preferAlgoritmo)
+                putBoolean("preferFuncion", profile.preferFuncion)
+                putBoolean("allowRepetirMientrasQue", profile.allowRepetirMientrasQue)
+                putBoolean("enableParaCada", profile.enableParaCada)
+                putBoolean("preferRepetirMientrasQue", profile.preferRepetirMientrasQue)
+                putBoolean("protectParaCounter", profile.protectParaCounter)
                 apply()
             }
         }
@@ -124,8 +147,136 @@ data class PSeIntProfile(
                 forceDefineVariables = prefs.getBoolean("forceDefineVariables", true),
                 allowEqualsAssignment = prefs.getBoolean("allowEqualsAssignment", false),
                 requireSemicolons = prefs.getBoolean("requireSemicolons", false),
-                strictTypes = prefs.getBoolean("strictTypes", false)
+                strictTypes = prefs.getBoolean("strictTypes", false),
+                allowImplicitVariables = prefs.getBoolean("allowImplicitVariables", true),
+                editorFontSize = prefs.getInt("editorFontSize", 14),
+                uninitializedVariables = prefs.getBoolean("uninitializedVariables", false),
+                allowStringConcatenation = prefs.getBoolean("allowStringConcatenation", false),
+                enableStringFunctions = prefs.getBoolean("enableStringFunctions", false),
+                allowWordOperators = prefs.getBoolean("allowWordOperators", false),
+                base0Arrays = prefs.getBoolean("base0Arrays", false),
+                dynamicArrays = prefs.getBoolean("dynamicArrays", false),
+                allowArrayResize = prefs.getBoolean("allowArrayResize", false),
+                allowFunctions = prefs.getBoolean("allowFunctions", false),
+                flexibleSyntax = prefs.getBoolean("flexibleSyntax", false),
+                colloquialConditions = prefs.getBoolean("colloquialConditions", false),
+                restrictSegunToNumeric = prefs.getBoolean("restrictSegunToNumeric", false),
+                allowOmitStep1 = prefs.getBoolean("allowOmitStep1", false),
+                useNassiShneiderman = prefs.getBoolean("useNassiShneiderman", false),
+                alternativeIoShapes = prefs.getBoolean("alternativeIoShapes", false),
+                allowAccentsInVariables = prefs.getBoolean("allowAccentsInVariables", false),
+                preferAlgoritmo = prefs.getBoolean("preferAlgoritmo", false),
+                preferFuncion = prefs.getBoolean("preferFuncion", false),
+                allowRepetirMientrasQue = prefs.getBoolean("allowRepetirMientrasQue", false),
+                enableParaCada = prefs.getBoolean("enableParaCada", false),
+                preferRepetirMientrasQue = prefs.getBoolean("preferRepetirMientrasQue", false),
+                protectParaCounter = prefs.getBoolean("protectParaCounter", false)
             )
+        }
+
+        fun exportProfileToString(profile: PSeIntProfile): String {
+            return profile.toDesktopProfile()
+        }
+
+        fun importProfileFromString(data: String): PSeIntProfile {
+            if (data.lineSequence().any { it.substringBefore('=').trim() in desktopProfileKeys || it.startsWith("version=") || it.startsWith("binprofile=") }) {
+                val name = data.lineSequence().firstOrNull { it.startsWith("name=") }?.substringAfter('=') ?: "Personalizado Importado"
+                return loadFromPrf(name, data)
+            }
+            val lines = data.lines()
+            val map = lines.filter { it.contains("=") }.associate {
+                val parts = it.split("=", limit = 2)
+                parts[0].trim() to parts[1].trim()
+            }
+            require(map.keys.any { it in setOf("forceDefineVariables", "allowEqualsAssignment", "requireSemicolons", "allowImplicitVariables", "allowFunctions") }) {
+                "El archivo no contiene un perfil de PSeInt reconocido."
+            }
+            return PSeIntProfile(
+                name = map["name"] ?: "Personalizado Importado",
+                description = "Perfil importado",
+                forceDefineVariables = map["forceDefineVariables"].toBoolean(),
+                allowEqualsAssignment = map["allowEqualsAssignment"].toBoolean(),
+                requireSemicolons = map["requireSemicolons"].toBoolean(),
+                strictTypes = map["strictTypes"].toBoolean(),
+                allowImplicitVariables = map["allowImplicitVariables"].toBoolean(),
+                uninitializedVariables = map["uninitializedVariables"].toBoolean(),
+                allowStringConcatenation = map["allowStringConcatenation"].toBoolean(),
+                enableStringFunctions = map["enableStringFunctions"].toBoolean(),
+                allowWordOperators = map["allowWordOperators"].toBoolean(),
+                base0Arrays = map["base0Arrays"].toBoolean(),
+                dynamicArrays = map["dynamicArrays"].toBoolean(),
+                allowArrayResize = map["allowArrayResize"].toBoolean(),
+                allowFunctions = map["allowFunctions"].toBoolean(),
+                flexibleSyntax = map["flexibleSyntax"].toBoolean(),
+                colloquialConditions = map["colloquialConditions"].toBoolean(),
+                restrictSegunToNumeric = map["restrictSegunToNumeric"].toBoolean(),
+                allowOmitStep1 = map["allowOmitStep1"].toBoolean(),
+                useNassiShneiderman = map["useNassiShneiderman"].toBoolean(),
+                alternativeIoShapes = map["alternativeIoShapes"].toBoolean(),
+                allowAccentsInVariables = map["allowAccentsInVariables"].toBoolean(),
+                preferAlgoritmo = map["preferAlgoritmo"].toBoolean(),
+                preferFuncion = map["preferFuncion"].toBoolean(),
+                allowRepetirMientrasQue = map["allowRepetirMientrasQue"].toBoolean(),
+                enableParaCada = map["enableParaCada"].toBoolean(),
+                preferRepetirMientrasQue = map["preferRepetirMientrasQue"].toBoolean(),
+                protectParaCounter = map["protectParaCounter"].toBoolean()
+            )
+        }
+
+        fun loadFromPrf(profileName: String, data: String): PSeIntProfile {
+            val lines = data.lines()
+            val map = mutableMapOf<String, String>()
+            val descLines = mutableListOf<String>()
+
+            for (line in lines) {
+                val t = line.trim()
+                if (t.startsWith("#") || t.isEmpty()) continue
+                if (t.startsWith("desc=")) {
+                    descLines.add(t.substring(5).trim())
+                } else if (t.contains("=")) {
+                    val parts = t.split("=", limit = 2)
+                    map[parts[0].trim()] = parts[1].trim()
+                }
+            }
+
+            val version = map["version"]?.toIntOrNull() ?: 0
+            // LangSettings::Reset(0), ProcessConfigLine and Fix, including old profiles.
+            fun setting(key: String, default: Boolean = false): Boolean = map[key]?.firstOrNull()?.lowercaseChar()?.let { it in "1vst" } ?: default
+            val lazy = setting("lazy_syntax", true)
+            val colloquial = setting("coloquial_conditions", true)
+            val repeat = if (version < 20210407) lazy else setting("allow_repeat_while", true)
+
+            return PSeIntProfile(
+                name = profileName,
+                description = if (descLines.isNotEmpty()) descLines.joinToString("\n") else "Perfil original PSeInt",
+                allowImplicitVariables = !setting("force_define_vars"),
+                requireSemicolons = setting("force_semicolon"),
+                allowEqualsAssignment = setting("overload_equal"),
+                forceDefineVariables = setting("force_define_vars"),
+                strictTypes = setting("force_define_vars"),
+                editorFontSize = (map["editor_font_size"]?.toIntOrNull() ?: 14).coerceIn(10, 24),
+                uninitializedVariables = setting("force_init_vars"),
+                allowStringConcatenation = setting("allow_concatenation", true),
+                enableStringFunctions = setting("enable_string_functions", true),
+                allowWordOperators = colloquial || setting("word_operators", true),
+                base0Arrays = setting("base_zero_arrays"),
+                dynamicArrays = setting("allow_dinamyc_dimensions", true),
+                allowArrayResize = setting("allow_resize_arrays", true),
+                allowFunctions = setting("enable_user_functions", true),
+                flexibleSyntax = lazy,
+                colloquialConditions = colloquial,
+                restrictSegunToNumeric = if (version < 20150304) !lazy else setting("integer_only_switch"),
+                allowOmitStep1 = if (version < 20150304) lazy else setting("deduce_negative_for_step", true),
+                useNassiShneiderman = setting("use_nassi_shneiderman", setting("use_nassi_schneiderman")),
+                alternativeIoShapes = setting("use_alternative_io_shapes"),
+                allowAccentsInVariables = if (version < 20160321) lazy else setting("allow_accents", true),
+                preferAlgoritmo = version >= 20160321 && setting("prefer_algoritmo", true),
+                preferFuncion = version >= 20160321 && setting("prefer_funcion", true),
+                allowRepetirMientrasQue = repeat,
+                enableParaCada = if (version < 20210609) lazy else setting("allow_for_each", true),
+                preferRepetirMientrasQue = repeat && setting("prefer_repeat_while"),
+                protectParaCounter = setting("protect_for_counter", true)
+            ).let { profile -> map["binprofile"]?.takeIf { it.length == 24 }?.let { profile.withNativeFlags(it) } ?: profile }
         }
     }
 }

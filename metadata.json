@@ -1,6 +1,0 @@
-{
-  "name": "PSeInt Mobile",
-  "description": "Code editor and simulator for PSeInt pseudocode on mobile.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
